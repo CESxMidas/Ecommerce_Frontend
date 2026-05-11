@@ -1,0 +1,115 @@
+:root {
+  /* ===== BACKGROUND ===== */
+  --bg: #111827;
+  --bg-soft: #1f2937;
+
+  /* ===== TEXT ===== */
+  --text: #e5e7eb;
+  --text-muted: #cbd5e1;
+  --text-title: #ffffff;
+
+  /* ===== PRIMARY ===== */
+  --primary: #3b82f6;
+  --primary-hover: #2563eb;
+
+  /* ===== ACCENT (key/active/license) ===== */
+  --accent: #22c55e;
+  --accent-bg: rgba(34, 197, 94, 0.12);
+  --accent-border: rgba(34, 197, 94, 0.35);
+
+  /* ===== BORDER ===== */
+  --border: #374151;
+
+  /* ===== CARD ===== */
+  --card: #1f2937;
+
+  /* ===== SHADOW ===== */
+  --shadow: 0 8px 20px rgba(0, 0, 0, 0.35);
+
+  /* ===== FONT ===== */
+  --sans: system-ui, "Segoe UI", Roboto, sans-serif;
+  --mono: ui-monospace, Consolas, monospace;
+
+  font: 16px/150% var(--sans);
+  color: var(--text);
+  background: var(--bg);
+}
+
+/* ===== RESET ===== */
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: "Inter", system-ui, sans-serif;
+}
+
+/* ===== ROOT APP ===== */
+#root {
+  width: 100%;
+  min-height: 100vh;
+}
+
+/* ===== TEXT ===== */
+h1,
+h2,
+h3 {
+  color: var(--text-title);
+  font-weight: 600;
+}
+
+/* ===== CONTAINER ===== */
+.container {
+  max-width: 1280px;
+  margin: auto;
+  padding: 0 20px;
+}
+
+/* ===== BUTTON ===== */
+.btn {
+  background: var(--primary);
+  color: white;
+  padding: 10px 16px;
+  border-radius: 8px;
+  transition: 0.3s;
+  cursor: pointer;
+  border: none;
+}
+
+.btn:hover {
+  background: var(--primary-hover);
+  transform: translateY(-1px);
+}
+
+/* ===== CARD PRODUCT ===== */
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 16px;
+  transition: 0.3s;
+}
+
+.card:hover {
+  box-shadow: var(--shadow);
+  transform: translateY(-3px);
+}
+
+/* ===== BADGE KEY ===== */
+.badge {
+  font-size: 12px;
+  padding: 4px 8px;
+  border-radius: 6px;
+  background: var(--accent-bg);
+  color: var(--accent);
+  border: 1px solid var(--accent-border);
+}
+
+/* ===== LINK ===== */
+a {
+  color: var(--primary);
+  text-decoration: none;
+}
+
+a:hover {
+  color: var(--primary-hover);
+}

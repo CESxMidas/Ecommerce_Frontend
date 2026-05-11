@@ -1,0 +1,24 @@
+.nav-menu li {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+
+  padding: 6px 10px;
+  border-radius: 6px;
+
+  transition: 0.2s;
+}
+
+/* hover đẹp */
+.nav-menu li:hover {
+  background: rgba(255, 255, 255, 0.06);
+  color: white;
+  transform: translateY(-2px);
+}
+
+/* icon */
+.nav-menu svg {
+  font-size: 16px;
+  opacity: 0.9;
+}
