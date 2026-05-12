@@ -1,0 +1,202 @@
+.homeCatSlider {
+  width: 100%;
+}
+
+/* ====================== */
+/* CARD */
+/* ====================== */
+
+.category-card {
+  position: relative;
+
+  height: 320px;
+
+  border-radius: 24px;
+
+  overflow: hidden;
+
+  cursor: pointer;
+
+  transition: 0.35s ease;
+
+  background: #111827;
+}
+
+.category-card:hover {
+  transform: translateY(-8px);
+}
+
+/* ====================== */
+/* IMAGE */
+/* ====================== */
+
+.category-image {
+  width: 100%;
+  height: 100%;
+
+  object-fit: cover;
+
+  transition: 0.5s ease;
+}
+
+.category-card:hover .category-image {
+  transform: scale(1.08);
+}
+
+/* ====================== */
+/* OVERLAY */
+/* ====================== */
+
+.category-overlay {
+  position: absolute;
+  inset: 0;
+
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.92),
+    rgba(0, 0, 0, 0.2),
+    transparent
+  );
+}
+
+/* ====================== */
+/* CONTENT */
+/* ====================== */
+
+.category-content {
+  position: absolute;
+
+  left: 24px;
+  right: 24px;
+  bottom: 24px;
+
+  z-index: 5;
+
+  color: white;
+}
+
+.category-content h3 {
+  font-size: 24px;
+  font-weight: 700;
+
+  margin-bottom: 14px;
+}
+
+/* ====================== */
+/* BUTTON */
+/* ====================== */
+
+.category-content button {
+  border: none;
+
+  background: rgba(255, 255, 255, 0.12);
+
+  color: white;
+
+  padding: 11px 18px;
+
+  border-radius: 12px;
+
+  font-size: 14px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  backdrop-filter: blur(10px);
+
+  transition: 0.3s ease;
+}
+
+.category-content button:hover {
+  background: #2563eb;
+}
+
+/* ====================== */
+/* SWIPER */
+/* ====================== */
+
+.homeCatSlider .swiper {
+  padding-bottom: 10px;
+}
+
+/* ====================== */
+/* NAVIGATION */
+/* ====================== */
+
+.homeCatSlider .swiper-button-next,
+.homeCatSlider .swiper-button-prev {
+  width: 46px !important;
+  height: 46px !important;
+
+  border-radius: 50%;
+
+  background: rgba(15, 23, 42, 0.75);
+
+  border: 1px solid rgba(255,255,255,0.08);
+
+  backdrop-filter: blur(14px);
+
+  transition: all 0.3s ease;
+
+  box-shadow:
+    0 10px 24px rgba(0,0,0,0.22);
+}
+
+/* HOVER */
+.homeCatSlider .swiper-button-next:hover,
+.homeCatSlider .swiper-button-prev:hover {
+  background: rgba(37, 99, 235, 0.95);
+
+  transform: scale(1.08);
+}
+
+/* REMOVE DEFAULT ICON */
+.homeCatSlider .swiper-button-next::after,
+.homeCatSlider .swiper-button-prev::after {
+  display: none;
+}
+
+/* SVG STYLE */
+.homeCatSlider .swiper-button-next svg,
+.homeCatSlider .swiper-button-prev svg {
+  width: 16px !important;
+  height: 16px !important;
+
+  color: white;
+
+  transition: 0.3s ease;
+}
+
+/* SVG HOVER */
+.homeCatSlider .swiper-button-next:hover svg,
+.homeCatSlider .swiper-button-prev:hover svg {
+  transform: scale(1.12);
+}
+
+/* POSITION */
+.homeCatSlider .swiper-button-prev {
+  left: 18px !important;
+}
+
+.homeCatSlider .swiper-button-next {
+  right: 18px !important;
+}
+
+/* ====================== */
+/* RESPONSIVE */
+/* ====================== */
+
+@media (max-width: 768px) {
+  .category-card {
+    height: 250px;
+  }
+
+  .category-content h3 {
+    font-size: 20px;
+  }
+
+  .homeCatSlider .swiper-button-next,
+  .homeCatSlider .swiper-button-prev {
+    display: none !important;
+  }
+}
