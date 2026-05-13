@@ -1,7 +1,12 @@
 import { useState } from "react";
-
-import { Breadcrumbs, Button, Link, Menu, MenuItem } from "@mui/material";
-
+import {
+  Breadcrumbs,
+  Button,
+  Link,
+  Menu,
+  MenuItem,
+  Pagination,
+} from "@mui/material";
 import { IoFilter } from "react-icons/io5";
 import {
   BsLayoutTextWindowReverse,
@@ -10,11 +15,8 @@ import {
 } from "react-icons/bs";
 import Sidebar from "../../components/Sidebar";
 import ProductItem from "../../components/ProductItem";
-
 import products from "../../data/products.json";
-
 import "./index.css";
-
 const ProductListing = () => {
   const [gridCols, setGridCols] = useState(4);
 
@@ -132,6 +134,9 @@ const ProductListing = () => {
               {products.map((item) => (
                 <ProductItem key={item.id} item={item} />
               ))}
+            </div>
+            <div className="customPagination flex items-center justify-center mt-10">
+              <Pagination count={10} showFirstButton showLastButton />
             </div>
           </div>
         </div>

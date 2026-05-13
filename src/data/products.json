@@ -53,6 +53,59 @@
     "oldPrice": 25,
     "price": 14,
     "tag": "TOP"
+  },
+  {
+    "id": 7,
+    "brand": "NVIDIA",
+    "title": "GeForce NOW Ultimate Access",
+    "image": "https://images.unsplash.com/photo-1511512578047-dfb367046420?q=80&w=1200&auto=format&fit=crop",
+    "oldPrice": 25,
+    "price": 14,
+    "tag": "TOP"
+  },
+  {
+    "id": 7,
+    "brand": "NVIDIA",
+    "title": "GeForce NOW Ultimate Access",
+    "image": "https://images.unsplash.com/photo-1511512578047-dfb367046420?q=80&w=1200&auto=format&fit=crop",
+    "oldPrice": 25,
+    "price": 14,
+    "tag": "TOP"
+  },
+  {
+    "id": 8,
+    "brand": "NVIDIA",
+    "title": "GeForce NOW Ultimate Access",
+    "image": "https://images.unsplash.com/photo-1511512578047-dfb367046420?q=80&w=1200&auto=format&fit=crop",
+    "oldPrice": 25,
+    "price": 14,
+    "tag": "TOP"
+  },
+  {
+    "id": 9,
+    "brand": "NVIDIA",
+    "title": "GeForce NOW Ultimate Access",
+    "image": "https://images.unsplash.com/photo-1511512578047-dfb367046420?q=80&w=1200&auto=format&fit=crop",
+    "oldPrice": 25,
+    "price": 14,
+    "tag": "TOP"
+  },
+  {
+    "id": 10,
+    "brand": "NVIDIA",
+    "title": "GeForce NOW Ultimate Access",
+    "image": "https://images.unsplash.com/photo-1511512578047-dfb367046420?q=80&w=1200&auto=format&fit=crop",
+    "oldPrice": 25,
+    "price": 14,
+    "tag": "TOP"
+  },
+  {
+    "id": 11,
+    "brand": "NVIDIA",
+    "title": "GeForce NOW Ultimate Access",
+    "image": "https://images.unsplash.com/photo-1511512578047-dfb367046420?q=80&w=1200&auto=format&fit=crop",
+    "oldPrice": 25,
+    "price": 14,
+    "tag": "TOP"
   }
-  
 ]
