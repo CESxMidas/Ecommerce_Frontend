@@ -2,14 +2,11 @@ import { useState } from "react";
 
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
-
 import { FaTruck } from "react-icons/fa";
-
 import HomeSlider from "../../components/HomeSlider";
 import HomeCatSlider from "../../components/HomeCatSlider";
 import AdsBannerSlider from "../../components/AdsBannerSlider";
 import ProductSlider from "../../components/ProductSlider";
-
 import "./index.css";
 import BlogSlider from "../../components/BlogSlider";
 
@@ -66,10 +63,8 @@ const ProductSection = ({
             )}
           </div>
         </div>
-
         {/* PRODUCTS */}
         <ProductSlider items={productItems} />
-
         {/* ADS */}
         {ads > 0 && <AdsBannerSlider items={ads} />}
       </div>

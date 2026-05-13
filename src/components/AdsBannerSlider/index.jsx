@@ -1,11 +1,8 @@
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Autoplay } from "swiper/modules";
-
 import BannerBox from "../BannerBox";
-
 import "swiper/css";
 import "swiper/css/navigation";
-
 import "./index.css";
 
 const AdsBannerSlider = ({ items = 4 }) => {
