@@ -1,0 +1,68 @@
+/* CategoryCollapse.css */
+
+.categoryCollapse {
+  border-bottom: 1px solid
+    rgba(255,255,255,0.06);
+
+  padding-bottom: 6px;
+
+  margin-bottom: 6px;
+}
+
+/* MAIN ITEM */
+.category-item {
+  border-radius: 10px !important;
+
+  padding: 10px 12px !important;
+
+  transition: 0.2s !important;
+}
+
+.category-item:hover {
+  background: rgba(255,255,255,0.05);
+}
+
+/* SUB ITEM */
+.subcategory-item {
+  padding-left: 50px !important;
+
+  min-height: 42px;
+
+  opacity: 0.9;
+}
+
+.subcategory-item:hover {
+  background: rgba(255,255,255,0.04);
+}
+
+/* TEXT */
+.category-item .MuiListItemText-primary {
+  font-size: 14px;
+
+  color: #d6d6d6;
+
+  font-weight: 500;
+}
+
+.subcategory-item .MuiListItemText-primary {
+  font-size: 13px;
+
+  color: #b8b8b8;
+}
+
+/* ICON */
+.category-icon {
+  margin-right: 12px;
+
+  font-size: 19px !important;
+
+  color: #6aa4ff;
+}
+
+.category-icon-small {
+  margin-right: 10px;
+
+  font-size: 17px !important;
+
+  color: #8aaeff;
+}

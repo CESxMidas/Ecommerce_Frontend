@@ -1,0 +1,100 @@
+.productListing {
+  width: 100%;
+
+  background: linear-gradient(
+    180deg,
+    #04122b 0%,
+    #031022 100%
+  );
+
+  padding-bottom: 60px;
+}
+
+/* ====================== */
+/* BREADCRUMB */
+/* ====================== */
+
+.breadcrumbWrapper {
+  width: 100%;
+
+  padding: 18px 0;
+
+  background: rgba(11, 23, 57, 0.92);
+
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+
+  backdrop-filter: blur(14px);
+}
+
+/* link */
+
+.breadcrumbWrapper a {
+  color: rgba(255, 255, 255, 0.65) !important;
+
+  font-size: 14px !important;
+
+  transition: 0.3s ease;
+}
+
+.breadcrumbWrapper a:hover {
+  color: #3b82f6 !important;
+}
+
+/* current page */
+
+.breadcrumbWrapper .MuiTypography-root {
+  color: white !important;
+
+  font-size: 14px !important;
+
+  font-weight: 600 !important;
+}
+
+/* separator */
+
+.breadcrumbWrapper .MuiBreadcrumbs-separator {
+  color: rgba(255, 255, 255, 0.3);
+}
+
+/* ====================== */
+/* PRODUCT AREA */
+/* ====================== */
+
+.productArea {
+  min-height: 600px;
+
+  border-radius: 24px;
+
+  padding: 30px;
+
+  background: rgba(11, 23, 57, 0.95);
+
+  border: 1px solid rgba(255, 255, 255, 0.06);
+
+  backdrop-filter: blur(14px);
+
+  box-shadow:
+    0 10px 30px rgba(0, 0, 0, 0.25),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+/* title */
+
+.productArea h2 {
+  line-height: 1.2;
+}
+
+/* responsive */
+
+@media (max-width: 992px) {
+  .productListing .container > div {
+    flex-direction: column;
+  }
+
+  .sidebarWrapper,
+  .productArea {
+    width: 100% !important;
+  }
+}

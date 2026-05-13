@@ -1,15 +1,23 @@
 import React from "react";
-import { FaHome, FaTag, FaChevronDown, FaChevronRight } from "react-icons/fa";
+
+import Drawer from "@mui/material/Drawer";
+
+import {
+  FaHome,
+  FaTag,
+  FaChevronDown,
+  FaChevronRight,
+  FaWindows,
+} from "react-icons/fa";
+
 import { MdGames, MdSecurity } from "react-icons/md";
-import { FaWindows } from "react-icons/fa";
+
 import CategoryPanel from "./CategoryPanel";
+
 import "./navigation.css";
+
 const Navigation = () => {
   const [open, setOpen] = React.useState(false);
-
-  const toggleDrawer = (value) => () => {
-    setOpen(value);
-  };
 
   return (
     <div>
@@ -19,8 +27,17 @@ const Navigation = () => {
           {/* LEFT CATEGORY */}
           <div className="w-[18%]">
             <button
-              onClick={toggleDrawer(true)}
-              className="w-full h-[48px] rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-semibold transition-all"
+              onClick={() => setOpen(true)}
+              className="
+                w-full
+                h-[48px]
+                rounded-xl
+                bg-blue-600
+                hover:bg-blue-500
+                text-white
+                font-semibold
+                transition-all
+              "
             >
               ☰ All Categories
             </button>
@@ -44,16 +61,13 @@ const Navigation = () => {
                 <FaChevronDown className="text-[11px]" />
               </button>
 
-              {/* LEVEL 1 */}
               <div className="submenu">
-                {/* ACTION GAMES */}
                 <div className="relative group/sub">
                   <button className="submenu-item">
                     Action Games
                     <FaChevronRight className="text-[11px]" />
                   </button>
 
-                  {/* LEVEL 2 */}
                   <div className="submenu-child">
                     <a href="/" className="submenu-item">
                       Steam Games
@@ -139,7 +153,19 @@ const Navigation = () => {
       </div>
 
       {/* DRAWER */}
-      <CategoryPanel open={open} toggleDrawer={toggleDrawer} />
+      <Drawer
+        anchor="left"
+        open={open}
+        onClose={() => setOpen(false)}
+        PaperProps={{
+          sx: {
+            background: "#071739",
+            width: 320,
+          },
+        }}
+      >
+        <CategoryPanel />
+      </Drawer>
     </div>
   );
 };
