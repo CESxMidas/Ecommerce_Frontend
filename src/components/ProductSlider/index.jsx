@@ -72,7 +72,7 @@ const products = [
   },
 ];
 
-const ProductSlider = () => {
+const ProductSlider = ({ items = 5 }) => {
   return (
     <div className="productSlider mt-8">
       <Swiper
@@ -84,7 +84,7 @@ const ProductSlider = () => {
         }}
         loop
         spaceBetween={18}
-        slidesPerView={5}
+        slidesPerView={items}
         breakpoints={{
           0: {
             slidesPerView: 1.2,
@@ -96,7 +96,7 @@ const ProductSlider = () => {
             slidesPerView: 3,
           },
           1200: {
-            slidesPerView: 5,
+            slidesPerView: items,
           },
         }}
       >
@@ -108,6 +108,6 @@ const ProductSlider = () => {
       </Swiper>
     </div>
   );
-};
+};  
 
 export default ProductSlider;

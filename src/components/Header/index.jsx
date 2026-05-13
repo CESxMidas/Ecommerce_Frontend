@@ -80,7 +80,6 @@ const Header = () => {
           </div>
         </div>
       </div>
-
       <Navigation />
     </header>
   );

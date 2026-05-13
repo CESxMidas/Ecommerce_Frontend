@@ -9,7 +9,6 @@ import Home from "./Pages/Home";
 ReactDOM.createRoot(document.getElementById("root")).render(
   <BrowserRouter>
     <Header />
-
     <Routes>
       <Route path="/" element={<Home />} />
     </Routes>

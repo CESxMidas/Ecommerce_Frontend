@@ -8,7 +8,7 @@ import "swiper/css/navigation";
 
 import "./index.css";
 
-const AdsBannerSlider = () => {
+const AdsBannerSlider = ({ items = 4 }) => {
   return (
     <section className="adsBannerSlider mt-10">
       <div className="w-full">
@@ -21,7 +21,7 @@ const AdsBannerSlider = () => {
           }}
           loop={true}
           spaceBetween={18}
-          slidesPerView={4}
+          slidesPerView={items}
           breakpoints={{
             0: {
               slidesPerView: 1.2,
@@ -33,12 +33,11 @@ const AdsBannerSlider = () => {
               slidesPerView: 3,
             },
             1200: {
-              slidesPerView: 4,
+              slidesPerView: items,
             },
           }}
           className="ads-swiper"
         >
-
           <SwiperSlide>
             <BannerBox
               img="https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?q=80&w=1200&auto=format&fit=crop"
@@ -73,7 +72,6 @@ const AdsBannerSlider = () => {
               link="/"
             />
           </SwiperSlide>
-
         </Swiper>
       </div>
     </section>

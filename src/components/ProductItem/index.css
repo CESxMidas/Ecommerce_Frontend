@@ -102,6 +102,17 @@
   font-weight: 700;
 }
 
+.productTitleLink {
+  text-decoration: none;
+}
+
+.productTitleLink h3 {
+  transition: 0.3s ease;
+}
+
+.productTitleLink:hover h3 {
+  color: #2563eb;
+}
 /* ========================= */
 /* ACTIONS */
 /* ========================= */

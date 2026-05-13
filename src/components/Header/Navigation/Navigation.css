@@ -1,24 +1,96 @@
-.nav-menu li {
+/* NAV ITEM */
+
+.nav-item {
+  position: relative;
+}
+
+/* MAIN LINK */
+
+.nav-link {
   display: flex;
   align-items: center;
-  gap: 6px;
-  cursor: pointer;
+  gap: 8px;
 
-  padding: 6px 10px;
-  border-radius: 6px;
+  height: 44px;
 
-  transition: 0.2s;
+  padding: 0 14px;
+  border-radius: 12px;
+
+  transition: all 0.25s ease;
 }
 
-/* hover đẹp */
-.nav-menu li:hover {
+.nav-link:hover {
+  background: rgba(255, 255, 255, 0.06);
+
+  color: white;
+}
+
+/* SUBMENU */
+
+.submenu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  min-width: 230px;
+  background: #0f172a;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 18px;
+  padding: 10px;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(10px);
+  transition: all 0.25s ease;
+  z-index: 999;
+}
+
+/* SHOW MENU */
+
+.group:hover > .submenu {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+/* SUBMENU ITEM */
+
+.submenu-item {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 14px;
+  border-radius: 12px;
+  color: rgba(255, 255, 255, 0.8);
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.submenu-item:hover {
   background: rgba(255, 255, 255, 0.06);
   color: white;
-  transform: translateY(-2px);
 }
 
-/* icon */
-.nav-menu svg {
-  font-size: 16px;
-  opacity: 0.9;
+/* CHILD MENU */
+
+.submenu-child {
+  position: absolute;
+  top: -11px;
+  left: 105%;
+  min-width: 220px;
+  background: #0f172a;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 18px;
+  padding: 10px;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateX(10px);
+  transition: all 0.25s ease;
+}
+
+/* SHOW CHILD */
+
+.group\/sub:hover > .submenu-child {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(0);
 }

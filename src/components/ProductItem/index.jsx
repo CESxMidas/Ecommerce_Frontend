@@ -6,13 +6,17 @@ import {
   FaStar,
 } from "react-icons/fa";
 
+import { Link } from "react-router-dom";
+
 import "./index.css";
 
 const ProductItem = ({ item }) => {
   return (
     <div className="productItem group">
+
       {/* IMAGE */}
       <div className="productImageWrapper">
+
         {/* BADGES */}
         <div className="productBadges">
           {item.discount && (
@@ -45,23 +49,32 @@ const ProductItem = ({ item }) => {
           </button>
         </div>
 
-        {/* IMAGE */}
-        <img
-          src={item.image}
-          alt={item.title}
-          className="productImage"
-        />
+        {/* IMAGE LINK */}
+        <Link to={`/product/${item.id}`}>
+          <img
+            src={item.image}
+            alt={item.title}
+            className="productImage"
+          />
+        </Link>
       </div>
 
       {/* CONTENT */}
       <div className="productContent">
+
         <span className="brandName">
           {item.brand}
         </span>
 
-        <h3>
-          {item.title}
-        </h3>
+        {/* TITLE LINK */}
+        <Link
+          to={`/product/${item.id}`}
+          className="productTitleLink"
+        >
+          <h3>
+            {item.title}
+          </h3>
+        </Link>
 
         {/* RATING */}
         <div className="ratingWrapper">
