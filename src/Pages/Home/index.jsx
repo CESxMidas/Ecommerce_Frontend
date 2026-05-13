@@ -5,11 +5,13 @@ import Tab from "@mui/material/Tab";
 
 import { FaTruck } from "react-icons/fa";
 
-import HomeCatSlider from "../../HomeCatSlider";
-import HomeSlider from "../../HomeSlider";
-import AdsBannerSlider from "../../AdsBannerSlider";
+import HomeSlider from "../../components/HomeSlider";
+import HomeCatSlider from "../../components/HomeCatSlider";
+import AdsBannerSlider from "../../components/AdsBannerSlider";
+
 
 import "./index.css";
+import ProductSlider from "../../components/ProductSlider";
 
 const Home = () => {
   const [value, setValue] = useState(0);
@@ -25,12 +27,9 @@ const Home = () => {
       {/* POPULAR PRODUCTS */}
 <section className="mt-12">
   <div className="container mx-auto px-6 ">
-
     <div className="popularProducts">
-
       {/* TOP BAR */}
       <div className="popularHeader">
-
         {/* LEFT */}
         <div className="leftSec">
           <h2>
@@ -68,6 +67,7 @@ const Home = () => {
       </div>
 
     </div>
+    <ProductSlider />
   </div>
 </section>
 
