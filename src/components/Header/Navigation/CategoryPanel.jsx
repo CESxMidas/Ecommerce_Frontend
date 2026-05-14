@@ -12,9 +12,7 @@ import {
 const categoryData = [
   {
     title: "Games",
-
     icon: <FaGamepad className="category-icon" />,
-
     items: [
       {
         label: "Action Games",

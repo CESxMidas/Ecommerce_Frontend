@@ -1,50 +1,38 @@
 import React from "react";
-
 import Drawer from "@mui/material/Drawer";
-
 import {
   FaHome,
   FaTag,
   FaChevronDown,
   FaChevronRight,
-  FaWindows,
+  FaWindows
 } from "react-icons/fa";
-
 import { MdGames, MdSecurity } from "react-icons/md";
-
 import CategoryPanel from "./CategoryPanel";
-
-import "./navigation.css";
-
+import "./Navigation.css";
 const Navigation = () => {
   const [open, setOpen] = React.useState(false);
 
   return (
     <div>
       {/* NAVBAR */}
-      <div className="py-3 border-b border-white/10 bg-[#071739]">
-        <div className="container flex items-center justify-between gap-6">
-          {/* LEFT CATEGORY */}
-          <div className="w-[18%]">
+      <div className="navigationWrapper">
+        <div className="container navigationInner">
+          {/* LEFT */}
+          <div className="navLeft">
+            {/* CATEGORY */}
             <button
               onClick={() => setOpen(true)}
-              className="
-                w-full
-                h-[48px]
-                rounded-xl
-                bg-blue-600
-                hover:bg-blue-500
-                text-white
-                font-semibold
-                transition-all
-              "
+              className="categoryBtn"
             >
               ☰ All Categories
             </button>
           </div>
 
           {/* MENU */}
-          <ul className="w-[55%] flex items-center gap-6 text-[15px] font-medium text-white/70">
+          <ul
+            className="navMenu"
+          >
             {/* HOME */}
             <li className="nav-item">
               <a href="/" className="nav-link">
@@ -58,6 +46,7 @@ const Navigation = () => {
               <button className="nav-link">
                 <MdGames />
                 Games
+
                 <FaChevronDown className="text-[11px]" />
               </button>
 
@@ -65,37 +54,59 @@ const Navigation = () => {
                 <div className="relative group/sub">
                   <button className="submenu-item">
                     Action Games
+
                     <FaChevronRight className="text-[11px]" />
                   </button>
 
                   <div className="submenu-child">
-                    <a href="/" className="submenu-item">
+                    <a
+                      href="/"
+                      className="submenu-item"
+                    >
                       Steam Games
                     </a>
 
-                    <a href="/" className="submenu-item">
+                    <a
+                      href="/"
+                      className="submenu-item"
+                    >
                       PUBG
                     </a>
 
-                    <a href="/" className="submenu-item">
+                    <a
+                      href="/"
+                      className="submenu-item"
+                    >
                       CS2
                     </a>
 
-                    <a href="/" className="submenu-item">
+                    <a
+                      href="/"
+                      className="submenu-item"
+                    >
                       GTA V
                     </a>
 
-                    <a href="/" className="submenu-item">
+                    <a
+                      href="/"
+                      className="submenu-item"
+                    >
                       Dota 2
                     </a>
                   </div>
                 </div>
 
-                <a href="/" className="submenu-item">
+                <a
+                  href="/"
+                  className="submenu-item"
+                >
                   RPG Games
                 </a>
 
-                <a href="/" className="submenu-item">
+                <a
+                  href="/"
+                  className="submenu-item"
+                >
                   Strategy Games
                 </a>
               </div>
@@ -106,23 +117,36 @@ const Navigation = () => {
               <button className="nav-link">
                 <MdSecurity />
                 Software
+
                 <FaChevronDown className="text-[11px]" />
               </button>
 
               <div className="submenu w-[260px]">
-                <a href="/" className="submenu-item">
+                <a
+                  href="/"
+                  className="submenu-item"
+                >
                   Windows 11
                 </a>
 
-                <a href="/" className="submenu-item">
+                <a
+                  href="/"
+                  className="submenu-item"
+                >
                   Office 365
                 </a>
 
-                <a href="/" className="submenu-item">
+                <a
+                  href="/"
+                  className="submenu-item"
+                >
                   Adobe Suite
                 </a>
 
-                <a href="/" className="submenu-item">
+                <a
+                  href="/"
+                  className="submenu-item"
+                >
                   Antivirus
                 </a>
               </div>
@@ -146,13 +170,13 @@ const Navigation = () => {
           </ul>
 
           {/* RIGHT */}
-          <div className="w-[27%] text-right text-sm font-medium text-blue-400">
+          <div className="navRight">
             🔥 Free International Delivery
           </div>
         </div>
       </div>
 
-      {/* DRAWER */}
+      {/* CATEGORY DRAWER */}
       <Drawer
         anchor="left"
         open={open}

@@ -1,5 +1,13 @@
-import { Swiper, SwiperSlide } from "swiper/react";
-import { Navigation, Pagination, Autoplay } from "swiper/modules";
+import {
+  Swiper,
+  SwiperSlide,
+} from "swiper/react";
+
+import {
+  Navigation,
+  Pagination,
+  Autoplay,
+} from "swiper/modules";
 
 import "swiper/css";
 import "swiper/css/navigation";
@@ -10,25 +18,36 @@ import "./index.css";
 const slides = [
   {
     id: 1,
+
     title: "Premium Software Collection",
+
     description:
       "Discover powerful applications, productivity tools and premium utilities for your PC.",
+
     image:
       "https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=1600&auto=format&fit=crop",
   },
+
   {
     id: 2,
+
     title: "Next Generation Gaming",
+
     description:
       "Explore trending games, ultra graphics experiences and gaming essentials.",
+
     image:
       "https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=1600&auto=format&fit=crop",
   },
+
   {
     id: 3,
+
     title: "Creative Digital Workspace",
+
     description:
       "Everything you need for editing, design, development and creativity.",
+
     image:
       "https://images.unsplash.com/photo-1498050108023-c5249f4df085?q=80&w=1600&auto=format&fit=crop",
   },
@@ -36,14 +55,21 @@ const slides = [
 
 const HomeSlider = () => {
   return (
-    <div className="w-full mt-6">
-      <div className="home-slider rounded-[28px] overflow-hidden">
+    <div className="container mt-6">
+      <div className="home-slider">
         <Swiper
-          modules={[Navigation, Pagination, Autoplay]}
+          modules={[
+            Navigation,
+            Pagination,
+            Autoplay,
+          ]}
           navigation
-          pagination={{ clickable: true }}
+          pagination={{
+            clickable: true,
+          }}
           autoplay={{
             delay: 4500,
+
             disableOnInteraction: false,
           }}
           loop
@@ -60,7 +86,7 @@ const HomeSlider = () => {
                 <div className="slide-overlay"></div>
 
                 {/* CONTENT */}
-                <div className="relative z-10 max-w-[620px] text-white">
+                <div className="slide-content">
                   <span className="slider-badge">
                     FEATURED
                   </span>
@@ -73,7 +99,7 @@ const HomeSlider = () => {
                     {slide.description}
                   </p>
 
-                  <div className="flex flex-wrap gap-4 mt-8">
+                  <div className="slider-buttons">
                     <button className="primary-btn">
                       Explore Now
                     </button>

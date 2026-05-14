@@ -34,22 +34,25 @@ const CategoryCollapse = ({
       </ListItemButton>
 
       {/* SUB */}
-      <Collapse in={open}>
-  <List disablePadding>
-    {items.map((item, index) => (
-      <ListItemButton
-        key={index}
-        className="subcategory-item"
-      >
-        {item.icon}
+      <Collapse
+        in={open}
+        timeout="auto"
+        unmountOnExit>
+        <List disablePadding>
+          {items.map((item, index) => (
+            <ListItemButton
+              key={index}
+              className="subcategory-item"
+            >
+              {item.icon}
 
-        <ListItemText
-          primary={item.label}
-        />
-      </ListItemButton>
-    ))}
-  </List>
-</Collapse>
+              <ListItemText
+                primary={item.label}
+              />
+            </ListItemButton>
+          ))}
+        </List>
+      </Collapse>
     </div>
   );
 };
