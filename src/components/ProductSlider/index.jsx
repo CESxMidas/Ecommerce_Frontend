@@ -10,7 +10,7 @@ import "./index.css";
 
 import products from "../../data/products.json";
 
-const ProductSlider = ({ items = 5 }) => {
+const ProductSlider = () => {
   return (
     <div className="productSlider mt-8">
       <Swiper
@@ -44,7 +44,7 @@ const ProductSlider = ({ items = 5 }) => {
           },
 
           1200: {
-            slidesPerView: items,
+            slidesPerView: 5,
           },
         }}
       >

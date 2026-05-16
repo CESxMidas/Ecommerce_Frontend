@@ -1,3 +1,5 @@
+/* Pages/Home/index.jsx */
+
 import { useState } from "react";
 
 import Tabs from "@mui/material/Tabs";
@@ -10,20 +12,11 @@ import HomeCatSlider from "../../components/HomeCatSlider";
 import AdsBannerSlider from "../../components/AdsBannerSlider";
 import ProductSlider from "../../components/ProductSlider";
 import BlogSlider from "../../components/BlogSlider";
-
 import "./index.css";
-
 /* =========================================
    PRODUCT SECTION
 ========================================= */
-
-const ProductSection = ({
-  title,
-  subtitle,
-  showTabs = false,
-  ads = 0,
-  productItems = 5,
-}) => {
+const ProductSection = ({ title, subtitle, showTabs = false, ads = 0 }) => {
   const [value, setValue] = useState(0);
 
   return (
@@ -44,9 +37,7 @@ const ProductSection = ({
               <div className="rightSection">
                 <Tabs
                   value={value}
-                  onChange={(e, newValue) =>
-                    setValue(newValue)
-                  }
+                  onChange={(e, newValue) => setValue(newValue)}
                   variant="scrollable"
                   scrollButtons="auto"
                   allowScrollButtonsMobile
@@ -67,23 +58,17 @@ const ProductSection = ({
             )}
           </div>
         </div>
-
         {/* PRODUCTS */}
-        <ProductSlider items={productItems} />
-
+        <ProductSlider />
         {/* ADS */}
-        {ads > 0 && (
-          <AdsBannerSlider items={ads} />
-        )}
+        {ads > 0 && <AdsBannerSlider items={ads} />}
       </div>
     </section>
   );
 };
-
 /* =========================================
    SHIPPING BANNER
 ========================================= */
-
 const ShippingBanner = () => {
   return (
     <section className="mt-16 lg:mt-20">
@@ -94,22 +79,16 @@ const ShippingBanner = () => {
             <div className="shipping-icon">
               <FaTruck />
             </div>
-
             <div>
               <h3>FREE SHIPPING</h3>
             </div>
           </div>
-
           {/* CENTER */}
           <div className="shipping-center">
-            Free Delivery Now On Your First Order
-            and over $200
+            Free Delivery Now On Your First Order and over $200
           </div>
-
           {/* RIGHT */}
-          <div className="shipping-price">
-            - Only $200*
-          </div>
+          <div className="shipping-price">- Only $200*</div>
         </div>
       </div>
     </section>
@@ -123,41 +102,31 @@ const ShippingBanner = () => {
 const Home = () => {
   return (
     <div className="home-page">
+      {/* HERO + CATEGORY */}
       <div className="container mx-auto px-4 lg:px-6">
-        {/* HERO */}
         <HomeSlider />
-
-        {/* CATEGORY */}
         <HomeCatSlider />
       </div>
-
       {/* POPULAR */}
       <ProductSection
         title="Popular Products"
         subtitle="Do not miss the current offers until the end of March"
-        showTabs={true}
+        showTabs
         ads={3}
-        productItems={5}
       />
-
       {/* SHIPPING */}
       <ShippingBanner />
-
       {/* LATEST */}
       <ProductSection
         title="Latest Products"
         subtitle="Newest software and digital products"
         ads={2}
-        productItems={6}
       />
-
       {/* FEATURED */}
       <ProductSection
         title="Featured Products"
         subtitle="Top featured premium collections"
-        productItems={5}
       />
-
       {/* BLOG */}
       <section className="mt-16 lg:mt-20 pb-20">
         <div className="container mx-auto px-4 lg:px-6">
@@ -167,5 +136,4 @@ const Home = () => {
     </div>
   );
 };
-
 export default Home;

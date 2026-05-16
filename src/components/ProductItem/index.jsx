@@ -9,7 +9,7 @@ import { Link } from "react-router-dom";
 import "./index.css";
 const ProductItem = ({ item }) => {
   return (
-    <div className="productItem group">
+    <div className="productItem flex">
 
       {/* IMAGE */}
       <div className="productImageWrapper">

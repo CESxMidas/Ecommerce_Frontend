@@ -1,22 +1,20 @@
 .blogItem {
   background: #111827;
-
-  border: 1px solid rgba(255,255,255,0.06);
-
+  border: 1px solid rgba(255, 255, 255, 0.06);
   border-radius: 22px;
-
   overflow: hidden;
-
+  display: flex;
+  flex-direction: column;
+  height: 100%;
   transition: all 0.35s ease;
 }
 
 .blogItem:hover {
   transform: translateY(-8px);
 
-  border-color: rgba(37,99,235,0.45);
+  border-color: rgba(37, 99, 235, 0.45);
 
-  box-shadow:
-    0 20px 45px rgba(0,0,0,0.25);
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.25);
 }
 
 /* ========================= */
@@ -30,7 +28,7 @@
 
   overflow: hidden;
 
-  height: 240px;
+  aspect-ratio: 16 / 9;
 }
 
 .blogImage {
@@ -56,8 +54,8 @@
 
   background: linear-gradient(
     to top,
-    rgba(0,0,0,0.78),
-    rgba(0,0,0,0.12),
+    rgba(0, 0, 0, 0.78),
+    rgba(0, 0, 0, 0.12),
     transparent
   );
 }
@@ -94,14 +92,16 @@
 
 .blogContent {
   padding: 24px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
 }
-
 .blogMeta {
   display: flex;
   align-items: center;
   gap: 8px;
 
-  color: rgba(255,255,255,0.55);
+  color: rgba(255, 255, 255, 0.55);
 
   font-size: 13px;
 
@@ -125,8 +125,16 @@
   margin-bottom: 14px;
 
   transition: 0.3s ease;
-}
 
+  min-height: 64px;
+
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+
+  overflow: hidden;
+}
 .blogContent h3:hover {
   color: #3b82f6;
 }
@@ -134,12 +142,15 @@
 /* DESC */
 
 .blogContent p {
-  color: rgba(255,255,255,0.6);
-
+  color: rgba(255, 255, 255, 0.6);
+  flex: 1;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
   line-height: 1.8;
-
   font-size: 14px;
-
   margin-bottom: 22px;
 }
 
@@ -148,15 +159,13 @@
 /* ========================= */
 
 .readMoreBtn {
+  margin-top: auto;
   display: inline-flex;
   align-items: center;
   gap: 10px;
-
   color: white;
-
   font-size: 14px;
   font-weight: 700;
-
   transition: 0.3s ease;
 }
 
@@ -177,10 +186,6 @@
 /* ========================= */
 
 @media (max-width: 768px) {
-  .blogImageWrapper {
-    height: 210px;
-  }
-
   .blogContent {
     padding: 20px;
   }
