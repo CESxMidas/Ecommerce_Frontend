@@ -5,11 +5,8 @@ import {
   FaShoppingCart,
   FaStar,
 } from "react-icons/fa";
-
 import { Link } from "react-router-dom";
-
 import "./index.css";
-
 const ProductItem = ({ item }) => {
   return (
     <div className="productItem group">

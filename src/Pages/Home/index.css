@@ -1,16 +1,16 @@
 .home-page {
   width: 100%;
 
-  background: linear-gradient(to bottom, #081225, #0b1730);
-
   min-height: 100vh;
 
   overflow-x: hidden;
+
+  background: linear-gradient(to bottom, #081225, #0b1730);
 }
 
-/* ========================= */
-/* POPULAR PRODUCTS */
-/* ========================= */
+.home-page section {
+  position: relative;
+}
 
 /* ========================= */
 /* POPULAR PRODUCTS */
@@ -22,31 +22,40 @@
 
 .popularHeader {
   width: 100%;
+
   display: flex;
   align-items: center;
   justify-content: space-between;
+
   gap: 40px;
 }
 
-/* LEFT */ 
+/* LEFT */
 
 .leftSec {
   min-width: 420px;
+
   padding-right: 20px;
 }
 
 .leftSec h2 {
   font-size: 46px;
   font-weight: 800;
+
   line-height: 1.05;
+
   color: white;
+
   margin-bottom: 14px;
 }
 
 .leftSec p {
   font-size: 15px;
+
   color: rgba(255, 255, 255, 0.62);
+
   line-height: 1.9;
+
   max-width: 380px;
 }
 
@@ -54,41 +63,8 @@
 
 .rightSection {
   flex: 1;
+
   min-width: 0;
-}
-
-/* ========================= */
-/* MOBILE */
-/* ========================= */
-
-@media (max-width: 992px) {
-  .popularHeader {
-    flex-direction: column;
-
-    align-items: flex-start;
-  }
-
-  .leftSec {
-    min-width: 100%;
-  }
-
-  .leftSec p {
-    max-width: 100%;
-  }
-
-  .rightSection {
-    width: 100%;
-  }
-}
-
-@media (max-width: 768px) {
-  .leftSec h2 {
-    font-size: 32px;
-  }
-
-  .leftSec p {
-    font-size: 14px;
-  }
 }
 
 /* ========================= */
@@ -96,19 +72,26 @@
 /* ========================= */
 
 .customTabs {
-  min-height: auto !important;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  padding: 8px;
-  border-radius: 20px;
-  backdrop-filter: blur(12px);
   width: 100%;
+
+  min-height: auto !important;
+
+  padding: 8px;
+
+  border-radius: 20px;
+
+  background: rgba(255, 255, 255, 0.04);
+
+  border: 1px solid rgba(255, 255, 255, 0.06);
+
+  backdrop-filter: blur(12px);
 }
 
 /* SCROLLER */
 
 .customTabs .MuiTabs-scroller {
   overflow-x: auto !important;
+
   scrollbar-width: none;
 }
 
@@ -132,21 +115,30 @@
 
 .customTabs .MuiTab-root {
   min-height: auto !important;
+
   padding: 13px 24px !important;
+
   border-radius: 14px;
+
   color: rgba(255, 255, 255, 0.72) !important;
+
   font-size: 14px !important;
   font-weight: 700 !important;
+
   text-transform: none !important;
-  transition: all 0.3s ease !important;
+
   white-space: nowrap;
+
+  transition: all 0.3s ease !important;
 }
 
 /* ACTIVE */
 
 .customTabs .Mui-selected {
   background: #2563eb !important;
+
   color: white !important;
+
   box-shadow: 0 8px 24px rgba(37, 99, 235, 0.35);
 }
 
@@ -163,10 +155,15 @@
 .customTabs .MuiTabs-scrollButtons {
   width: 42px;
   height: 42px;
+
   border-radius: 12px;
+
   background: rgba(255, 255, 255, 0.05);
+
   color: white;
+
   margin: 0 4px;
+
   transition: all 0.3s ease;
 }
 
@@ -194,22 +191,33 @@
 
 .freeShipping {
   width: 100%;
+
   min-height: 110px;
-  border: 2px solid #ff4d4f;
-  border-radius: 16px;
-  background: white;
+
+  padding: 0 28px;
+
+  border-radius: 24px;
+
   display: flex;
   align-items: center;
   justify-content: space-between;
+
   gap: 30px;
-  padding: 0 28px;
+
   overflow: hidden;
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12);
+
+  background: linear-gradient(
+    135deg,
+    rgba(15, 23, 42, 0.98),
+    rgba(30, 41, 59, 0.95)
+  );
+
+  border: 1px solid rgba(255, 255, 255, 0.08);
+
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.25);
 }
 
-/* ======================== */
 /* LEFT */
-/* ======================== */
 
 .shipping-left {
   display: flex;
@@ -226,13 +234,13 @@
 
   border-radius: 14px;
 
-  background: rgba(255, 77, 79, 0.08);
+  background: rgba(37, 99, 235, 0.12);
 
   display: flex;
   align-items: center;
   justify-content: center;
 
-  color: #2d3748;
+  color: #60a5fa;
 
   font-size: 28px;
 }
@@ -241,44 +249,42 @@
   font-size: 34px;
   font-weight: 800;
 
-  color: #2d3748;
-
   letter-spacing: 0.5px;
+
+  color: white;
 }
 
-/* ======================== */
 /* CENTER */
-/* ======================== */
 
 .shipping-center {
   flex: 1;
 
   text-align: center;
 
+  padding: 0 20px;
+
   font-size: 18px;
   font-weight: 500;
 
-  color: #4a5568;
+  line-height: 1.7;
 
-  padding: 0 20px;
+  color: rgba(255, 255, 255, 0.72);
 }
 
-/* ======================== */
 /* RIGHT */
-/* ======================== */
 
 .shipping-price {
+  white-space: nowrap;
+
   font-size: 28px;
   font-weight: 800;
 
-  color: #2d3748;
-
-  white-space: nowrap;
+  color: #60a5fa;
 }
 
-/* ======================== */
+/* ========================= */
 /* RESPONSIVE */
-/* ======================== */
+/* ========================= */
 
 @media (max-width: 1200px) {
   .leftSec {
@@ -291,7 +297,7 @@
 }
 
 @media (max-width: 992px) {
-  .popularProducts {
+  .popularHeader {
     flex-direction: column;
 
     align-items: flex-start;
@@ -299,6 +305,10 @@
 
   .leftSec {
     min-width: 100%;
+  }
+
+  .leftSec p {
+    max-width: 100%;
   }
 
   .rightSection {
@@ -329,6 +339,10 @@
     font-size: 34px !important;
   }
 
+  .leftSec p {
+    font-size: 14px;
+  }
+
   .customTabs {
     padding: 6px;
   }
@@ -345,8 +359,6 @@
 
   .shipping-center {
     font-size: 15px;
-
-    line-height: 1.7;
   }
 
   .shipping-price {

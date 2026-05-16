@@ -50,7 +50,7 @@ const HomeCatSlider = () => {
     <div className="homeCatSlider w-full mt-8">
       <div className="container mx-auto">
         {/* HEADER */}
-        <div className="flex items-center justify-between mb-6">
+        <div className="homeCatHeader">
           <div>
             <h2 className="text-3xl font-bold text-white">
               Browse Categories

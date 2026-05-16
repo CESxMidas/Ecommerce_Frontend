@@ -2,13 +2,16 @@ import { useState } from "react";
 
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
+
 import { FaTruck } from "react-icons/fa";
+
 import HomeSlider from "../../components/HomeSlider";
 import HomeCatSlider from "../../components/HomeCatSlider";
 import AdsBannerSlider from "../../components/AdsBannerSlider";
 import ProductSlider from "../../components/ProductSlider";
-import "./index.css";
 import BlogSlider from "../../components/BlogSlider";
+
+import "./index.css";
 
 /* =========================================
    PRODUCT SECTION
@@ -24,11 +27,10 @@ const ProductSection = ({
   const [value, setValue] = useState(0);
 
   return (
-    <section className="mt-12">
-      <div className="container mx-auto px-6">
+    <section className="mt-16 lg:mt-20">
+      <div className="container mx-auto px-4 lg:px-6">
         {/* HEADER */}
         <div className="popularProducts">
-          {/* TOP */}
           <div className="popularHeader">
             {/* LEFT */}
             <div className="leftSec">
@@ -42,7 +44,9 @@ const ProductSection = ({
               <div className="rightSection">
                 <Tabs
                   value={value}
-                  onChange={(e, newValue) => setValue(newValue)}
+                  onChange={(e, newValue) =>
+                    setValue(newValue)
+                  }
                   variant="scrollable"
                   scrollButtons="auto"
                   allowScrollButtonsMobile
@@ -63,10 +67,14 @@ const ProductSection = ({
             )}
           </div>
         </div>
+
         {/* PRODUCTS */}
         <ProductSlider items={productItems} />
+
         {/* ADS */}
-        {ads > 0 && <AdsBannerSlider items={ads} />}
+        {ads > 0 && (
+          <AdsBannerSlider items={ads} />
+        )}
       </div>
     </section>
   );
@@ -78,8 +86,8 @@ const ProductSection = ({
 
 const ShippingBanner = () => {
   return (
-    <section className="mt-10">
-      <div className="container mx-auto">
+    <section className="mt-16 lg:mt-20">
+      <div className="container mx-auto px-4 lg:px-6">
         <div className="freeShipping">
           {/* LEFT */}
           <div className="shipping-left">
@@ -94,11 +102,14 @@ const ShippingBanner = () => {
 
           {/* CENTER */}
           <div className="shipping-center">
-            Free Delivery Now On Your First Order and over $200
+            Free Delivery Now On Your First Order
+            and over $200
           </div>
 
           {/* RIGHT */}
-          <div className="shipping-price">- Only $200*</div>
+          <div className="shipping-price">
+            - Only $200*
+          </div>
         </div>
       </div>
     </section>
@@ -112,11 +123,13 @@ const ShippingBanner = () => {
 const Home = () => {
   return (
     <div className="home-page">
-      {/* HERO */}
-      <HomeSlider />
+      <div className="container mx-auto px-4 lg:px-6">
+        {/* HERO */}
+        <HomeSlider />
 
-      {/* CATEGORY */}
-      <HomeCatSlider />
+        {/* CATEGORY */}
+        <HomeCatSlider />
+      </div>
 
       {/* POPULAR */}
       <ProductSection
@@ -144,7 +157,13 @@ const Home = () => {
         subtitle="Top featured premium collections"
         productItems={5}
       />
-      <BlogSlider />
+
+      {/* BLOG */}
+      <section className="mt-16 lg:mt-20 pb-20">
+        <div className="container mx-auto px-4 lg:px-6">
+          <BlogSlider />
+        </div>
+      </section>
     </div>
   );
 };
