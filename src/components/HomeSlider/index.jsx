@@ -55,7 +55,7 @@ const slides = [
 
 const HomeSlider = () => {
   return (
-    <div className="container mt-6">
+    <div className="mt-6">
       <div className="home-slider">
         <Swiper
           modules={[

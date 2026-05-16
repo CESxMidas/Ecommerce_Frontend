@@ -18,39 +18,29 @@ import {
   BsGrid,
   BsGrid3X3GapFill,
 } from "react-icons/bs";
-
 import Sidebar from "../../components/Sidebar";
 import ProductItem from "../../components/ProductItem";
-
 import products from "../../data/products.json";
 
 import "./index.css";
-
 const ProductListing = () => {
   const [gridCols, setGridCols] = useState(4);
-
   const [anchorEl, setAnchorEl] =
     useState(null);
-
   const open = Boolean(anchorEl);
-
   const handleOpenMenu = (event) => {
     setAnchorEl(event.currentTarget);
   };
-
   const handleCloseMenu = () => {
     setAnchorEl(null);
   };
 
   return (
     <section className="productListing">
-
       {/* BREADCRUMB */}
       <div className="breadcrumbWrapper">
         <div className="container mx-auto px-6">
-
           <Breadcrumbs separator="›">
-
             <Link
               underline="hover"
               color="inherit"
@@ -58,7 +48,6 @@ const ProductListing = () => {
             >
               Home
             </Link>
-
             <Link
               underline="hover"
               color="inherit"
@@ -68,7 +57,6 @@ const ProductListing = () => {
             </Link>
 
           </Breadcrumbs>
-
         </div>
       </div>
 

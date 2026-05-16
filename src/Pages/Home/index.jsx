@@ -28,10 +28,8 @@ const ProductSection = ({ title, subtitle, showTabs = false, ads = 0 }) => {
             {/* LEFT */}
             <div className="leftSec">
               <h2>{title}</h2>
-
               {subtitle && <p>{subtitle}</p>}
             </div>
-
             {/* RIGHT */}
             {showTabs && (
               <div className="rightSection">

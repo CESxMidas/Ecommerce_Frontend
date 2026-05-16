@@ -1,0 +1,37 @@
+.breadcrumbWrapper {
+  width: 100%;
+
+  padding: 18px 0;
+
+  background: rgba(11, 23, 57, 0.92);
+
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+
+  backdrop-filter: blur(14px);
+}
+
+.breadcrumbWrapper a {
+  color: rgba(255, 255, 255, 0.65) !important;
+
+  font-size: 14px !important;
+
+  transition: 0.3s ease;
+}
+
+.breadcrumbWrapper a:hover {
+  color: #3b82f6 !important;
+}
+
+.breadcrumbWrapper .MuiTypography-root {
+  color: white !important;
+
+  font-size: 14px !important;
+
+  font-weight: 600 !important;
+}
+
+.breadcrumbWrapper .MuiBreadcrumbs-separator {
+  color: rgba(255, 255, 255, 0.3);
+}
