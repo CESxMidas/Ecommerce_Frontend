@@ -57,7 +57,7 @@ const ProductItem = ({ item }) => {
       </div>
 
       {/* CONTENT */}
-      <div className="productContent">
+      <div className="productItemContent">
 
         <span className="brandName">
           {item.brand}

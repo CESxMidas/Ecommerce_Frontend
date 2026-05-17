@@ -1,7 +1,5 @@
 /* Pages/ProductListing/index.jsx */
-
 import { useState } from "react";
-
 import {
   Breadcrumbs,
   Button,
@@ -10,9 +8,7 @@ import {
   MenuItem,
   Pagination,
 } from "@mui/material";
-
 import { IoFilter } from "react-icons/io5";
-
 import {
   BsLayoutTextWindowReverse,
   BsGrid,
@@ -21,7 +17,6 @@ import {
 import Sidebar from "../../components/Sidebar";
 import ProductItem from "../../components/ProductItem";
 import products from "../../data/products.json";
-
 import "./index.css";
 const ProductListing = () => {
   const [gridCols, setGridCols] = useState(4);
@@ -34,7 +29,6 @@ const ProductListing = () => {
   const handleCloseMenu = () => {
     setAnchorEl(null);
   };
-
   return (
     <section className="productListing">
       {/* BREADCRUMB */}

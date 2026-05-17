@@ -45,7 +45,7 @@ const BlogItem = ({ item }) => {
           to={`/blog/${item.id}`}
           className="readMoreBtn"
         >
-          Read More 
+          Read More
           <FaArrowRight />
         </Link>
       </div>

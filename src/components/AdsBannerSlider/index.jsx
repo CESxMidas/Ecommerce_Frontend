@@ -4,7 +4,6 @@ import BannerBox from "../BannerBox";
 import "swiper/css";
 import "swiper/css/navigation";
 import "./index.css";
-
 const AdsBannerSlider = ({ items = 4 }) => {
   return (
     <section className="adsBannerSlider mt-10">
@@ -41,28 +40,24 @@ const AdsBannerSlider = ({ items = 4 }) => {
               link="/"
             />
           </SwiperSlide>
-
           <SwiperSlide>
             <BannerBox
               img="https://images.unsplash.com/photo-1498050108023-c5249f4df085?q=80&w=1200&auto=format&fit=crop"
               link="/"
             />
           </SwiperSlide>
-
           <SwiperSlide>
             <BannerBox
               img="https://images.unsplash.com/photo-1541807084-5c52b6b3adef?q=80&w=1200&auto=format&fit=crop"
               link="/"
             />
           </SwiperSlide>
-
           <SwiperSlide>
             <BannerBox
               img="https://images.unsplash.com/photo-1523275335684-37898b6baf30?q=80&w=1200&auto=format&fit=crop"
               link="/"
             />
           </SwiperSlide>
-
           <SwiperSlide>
             <BannerBox
               img="https://images.unsplash.com/photo-1598327105666-5b89351aff97?q=80&w=1200&auto=format&fit=crop"
@@ -74,5 +69,4 @@ const AdsBannerSlider = ({ items = 4 }) => {
     </section>
   );
 };
-
 export default AdsBannerSlider;
