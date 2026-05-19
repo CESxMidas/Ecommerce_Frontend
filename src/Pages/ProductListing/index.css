@@ -254,9 +254,7 @@
 
 .productGrid {
   display: grid;
-
-  gap: 20px;
-
+  gap: 8px;
   margin-top: 20px;
 }
 
@@ -269,7 +267,7 @@
 }
 
 .productGrid.grid4 {
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  grid-template-columns: repeat(4, 1fr);
 }
 
 /* ====================== */
@@ -360,12 +358,134 @@
 /* RESPONSIVE */
 /* ====================== */
 
-@media (max-width: 1200px) {
+/* ====================== */
+/* RESPONSIVE */
+/* ====================== */
+
+@media (max-width: 1400px) {
   .productGrid.grid4 {
     grid-template-columns: repeat(3, 1fr);
   }
 }
 
+/* TABLET */
+
+@media (max-width: 992px) {
+  .listingLayout {
+    flex-direction: column;
+  }
+
+  .sidebarWrapper,
+  .productArea {
+    width: 100%;
+    min-width: 100%;
+  }
+
+  .sidebarWrapper {
+    position: relative;
+    top: 0;
+  }
+
+  .productTopBar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .productTopBar .col1,
+  .productTopBar .col2 {
+    width: 100%;
+  }
+
+  .productTopBar .col2 {
+    justify-content: flex-end;
+  }
+
+  .productGrid.grid1 {
+    grid-template-columns: repeat(1, 1fr);
+  }
+
+  .productGrid.grid2,
+  .productGrid.grid4 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* MOBILE */
+
+@media (max-width: 768px) {
+  .productArea {
+    padding: 20px;
+    border-radius: 20px;
+  }
+
+  .listingTitle {
+    font-size: 24px;
+  }
+
+  .listingSubtitle {
+    font-size: 14px;
+  }
+
+  .productTopBar {
+    padding: 14px;
+    gap: 14px;
+  }
+
+  .productTopBar .col1,
+  .productTopBar .col2 {
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .productCount {
+    width: 100%;
+  }
+
+  .filterBtn,
+  .sortBtn {
+    flex: 1;
+  }
+
+  .productGrid.grid1,
+  .productGrid.grid2,
+  .productGrid.grid4 {
+    grid-template-columns: repeat(1, 1fr);
+  }
+}
+
+/* SMALL MOBILE */
+
+@media (max-width: 576px) {
+  .container {
+    padding-left: 14px !important;
+    padding-right: 14px !important;
+  }
+
+  .productArea {
+    padding: 16px;
+  }
+
+  .gridBtn {
+    width: 44px;
+    height: 44px;
+    min-width: 44px !important;
+  }
+
+  .filterBtn,
+  .sortBtn {
+    height: 44px !important;
+    font-size: 13px !important;
+  }
+
+  .listingTitle {
+    font-size: 22px;
+  }
+
+  .customPagination .MuiPaginationItem-root {
+    width: 40px !important;
+    height: 40px !important;
+  }
+}
 @media (max-width: 992px) {
   .listingLayout {
     flex-direction: column;

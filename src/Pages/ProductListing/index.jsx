@@ -162,12 +162,10 @@ const ProductListing = () => {
               </div>
 
             </div>
-
             {/* TITLE */}
             <h2 className="listingTitle">
               Software Products
             </h2>
-
             <p className="listingSubtitle">
               Showing all premium software &
               digital products
@@ -182,7 +180,6 @@ const ProductListing = () => {
                   : "grid4"
                 }`}
             >
-
               {products.map((item) => (
                 <ProductItem
                   key={item.id}
@@ -191,7 +188,6 @@ const ProductListing = () => {
               ))}
 
             </div>
-
             {/* PAGINATION */}
             <div className="customPagination flex items-center justify-center mt-10">
 
