@@ -5,9 +5,19 @@ import {
   FaShoppingCart,
   FaStar,
 } from "react-icons/fa";
+
 import { Link } from "react-router-dom";
+
+import { useContext } from "react";
+
+import { MyContext } from "../../App";
+
 import "./index.css";
+
 const ProductItem = ({ item }) => {
+
+  const context = useContext(MyContext);
+
   return (
     <div className="productItem flex">
 
@@ -16,6 +26,7 @@ const ProductItem = ({ item }) => {
 
         {/* BADGES */}
         <div className="productBadges">
+
           {item.discount && (
             <span className="discountBadge">
               {item.discount}
@@ -25,10 +36,12 @@ const ProductItem = ({ item }) => {
           <span className="typeBadge">
             {item.tag}
           </span>
+
         </div>
 
         {/* ACTIONS */}
         <div className="productActions">
+
           <button>
             <FaHeart />
           </button>
@@ -37,23 +50,29 @@ const ProductItem = ({ item }) => {
             <FaExchangeAlt />
           </button>
 
-          <button>
+          <button
+            onClick={context.handleOpenProductDetailModal}
+          >
             <FaExpand />
           </button>
 
           <button>
             <FaShoppingCart />
           </button>
+
         </div>
 
         {/* IMAGE LINK */}
         <Link to={`/product/${item.id}`}>
+
           <img
             src={item.image}
             alt={item.title}
             className="productImage"
           />
+
         </Link>
+
       </div>
 
       {/* CONTENT */}
@@ -63,25 +82,30 @@ const ProductItem = ({ item }) => {
           {item.brand}
         </span>
 
-        {/* TITLE LINK */}
+        {/* TITLE */}
         <Link
           to={`/product/${item.id}`}
           className="productTitleLink"
         >
+
           <h3>
             {item.title}
           </h3>
+
         </Link>
 
         {/* RATING */}
         <div className="ratingWrapper">
+
           {[1, 2, 3, 4, 5].map((star) => (
             <FaStar key={star} />
           ))}
+
         </div>
 
         {/* PRICE */}
         <div className="priceWrapper">
+
           <span className="oldPrice">
             ${item.oldPrice}
           </span>
@@ -89,8 +113,11 @@ const ProductItem = ({ item }) => {
           <span className="newPrice">
             ${item.price}
           </span>
+
         </div>
+
       </div>
+
     </div>
   );
 };
