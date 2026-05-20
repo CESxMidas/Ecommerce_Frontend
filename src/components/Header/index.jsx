@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 
 import "./index.css";
 
@@ -30,9 +31,9 @@ const Header = () => {
     useState(false);
 
   return (
-    <header className="w-full">
+    <header className="w-full headerWrapper">
       {/* ================= TOP STRIP ================= */}
-      <div className="py-2 bg-[var(--bg-soft)] border-b border-[var(--border)]">
+      <div className="top-strip py-2">
         <div className="container flex items-center justify-between text-[12px] text-[var(--text-muted)]">
           {/* LEFT */}
           <div>
@@ -41,15 +42,15 @@ const Header = () => {
 
           {/* RIGHT */}
           <div className="hidden md:flex items-center gap-5">
-            <span className="cursor-pointer hover:text-white transition">
+            <span className="topLink">
               Help Center
             </span>
 
-            <span className="cursor-pointer hover:text-white transition">
+            <span className="topLink">
               Order Tracking
             </span>
 
-            <div className="flex items-center gap-1 cursor-pointer hover:text-white transition">
+            <div className="topLink flex items-center gap-1">
               <MdOutlineLanguage />
               EN
             </div>
@@ -58,7 +59,7 @@ const Header = () => {
       </div>
 
       {/* ================= MIDDLE ================= */}
-      <div className="py-4 border-b border-[var(--border)]">
+      <div className="middleHeader py-4">
         <div className="container flex items-center justify-between gap-4">
           {/* LEFT */}
           <div className="flex items-center gap-3">
@@ -73,9 +74,11 @@ const Header = () => {
             </button>
 
             {/* LOGO */}
-            <h1 className="text-2xl md:text-4xl font-bold text-white">
-              KEYSHOP
-            </h1>
+            <Link to="/">
+              <h1 className="logoText">
+                KEYSHOP
+              </h1>
+            </Link>
           </div>
 
           {/* SEARCH */}
@@ -84,44 +87,50 @@ const Header = () => {
           </div>
 
           {/* RIGHT */}
-          <div className="flex justify-end items-center gap-5 md:gap-10 text-[var(--text-muted)]">
+          <div className="flex justify-end items-center gap-5 md:gap-8 text-[var(--text-muted)]">
             {/* LOGIN */}
-            <div className="hidden lg:flex items-center gap-6 text-sm">
-              <span className="cursor-pointer hover:text-white flex items-center gap-1 transition">
+            <div className="hidden lg:flex items-center gap-4 text-sm">
+              <Link
+                to="/login"
+                className="loginBtnHeader"
+              >
                 <FiUser />
                 Login
-              </span>
+              </Link>
 
-              <span className="cursor-pointer hover:text-white transition">
+              <Link
+                to="/register"
+                className="registerBtnHeader"
+              >
                 Register
-              </span>
+              </Link>
             </div>
 
             {/* ICONS */}
-            <div className="flex items-center gap-5 md:gap-8 text-lg">
+            <div className="flex items-center gap-5 md:gap-7 text-lg">
               {/* WISHLIST */}
-              <div className="relative cursor-pointer">
-                <FaHeart className="hover:text-red-400 transition" />
+              <div className="headerIcon">
+                <FaHeart />
 
-                <span className="absolute -top-2 -right-2 text-[10px] bg-red-500 text-white rounded-full w-4 h-4 flex items-center justify-center">
+                <span className="headerBadge bg-red-500">
                   1
                 </span>
               </div>
 
               {/* COMPARE */}
-              <div className="relative cursor-pointer">
-                <BiGitCompare className="hover:text-white transition" />
+              <div className="headerIcon">
+                <BiGitCompare />
 
-                <span className="absolute -top-2 -right-2 text-[10px] bg-blue-500 text-white rounded-full w-4 h-4 flex items-center justify-center">
+                <span className="headerBadge bg-blue-500">
                   3
                 </span>
               </div>
 
               {/* CART */}
-              <div className="relative cursor-pointer">
-                <FaShoppingCart className="hover:text-white transition" />
+              <div className="headerIcon">
+                <FaShoppingCart />
 
-                <span className="absolute -top-2 -right-2 text-[10px] bg-red-500 text-white rounded-full w-4 h-4 flex items-center justify-center">
+                <span className="headerBadge bg-red-500">
                   2
                 </span>
               </div>

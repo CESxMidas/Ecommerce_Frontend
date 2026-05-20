@@ -183,7 +183,7 @@
 }
 
 .modalPrice {
-  font-size: 50px;
+  font-size: 24px;
 
   font-weight: 800;
 
@@ -193,7 +193,7 @@
 }
 
 .modalOldPrice {
-  font-size: 24px;
+  font-size: 18px;
 
   text-decoration: line-through;
 
@@ -202,15 +202,10 @@
 
 .modalDiscount {
   padding: 8px 14px;
-
   border-radius: 999px;
-
   background: rgba(239, 68, 68, 0.15);
-
   color: #f87171;
-
-  font-size: 13px;
-
+  font-size: 12px;
   font-weight: 700;
 }
 
@@ -236,12 +231,9 @@
 
 .modalStock {
   display: flex;
-
   align-items: center;
-
   gap: 10px;
-
-  margin-bottom: 16px;
+  margin-bottom: 12px;
 }
 
 .stockDot {
@@ -279,25 +271,19 @@
 
 .modalColors {
   display: flex;
-
+  margin-left: 12px;
   align-items: center;
 
   gap: 14px;
 }
 
 .colorItem {
-  width: 42px;
-
-  height: 42px;
-
+  width: 24px;
+  height: 24px;
   border-radius: 50%;
-
   border: 2px solid transparent;
-
   cursor: pointer;
-
   transition: all 0.3s ease;
-
   position: relative;
 }
 
@@ -344,19 +330,12 @@
 }
 .quantityBtn {
   width: 52px;
-
-  height: 50px;
-
+  height: 42px;
   border: none;
-
   background: transparent;
-
   color: white;
-
   font-size: 20px;
-
   cursor: pointer;
-
   transition: 0.3s ease;
 }
 
@@ -366,7 +345,7 @@
 .quantityInput {
   width: 64px;
 
-  height: 50px;
+  height: 42px;
 
   display: flex;
 

@@ -1,7 +1,188 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-header .top-strip {
-  border-top: 1px solid rgba(252, 242, 242, 0.1);
-  border-bottom: 1px solid rgba(243, 239, 239, 0.1);
+
+/* ========================= */
+/* ROOT */
+/* ========================= */
+
+.headerWrapper {
+  background: #020817;
+}
+
+/* ========================= */
+/* TOP STRIP */
+/* ========================= */
+
+.top-strip {
+  background: rgba(255, 255, 255, 0.02);
+
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.topLink {
+  cursor: pointer;
+
+  transition: 0.3s ease;
+}
+
+.topLink:hover {
+  color: white;
+}
+
+/* ========================= */
+/* MIDDLE */
+/* ========================= */
+
+.middleHeader {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* ========================= */
+/* LOGO */
+/* ========================= */
+
+.logoText {
+  font-size: 38px;
+
+  font-weight: 800;
+
+  color: white;
+
+  letter-spacing: 1px;
+}
+
+/* ========================= */
+/* MOBILE MENU */
+/* ========================= */
+
+.mobileMenuBtn {
+  width: 42px;
+
+  height: 42px;
+
+  border-radius: 12px;
+
+  border: 1px solid rgba(255, 255, 255, 0.08);
+
+  background: rgba(255, 255, 255, 0.03);
+
+  color: white;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  transition: 0.3s ease;
+}
+
+.mobileMenuBtn:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+/* ========================= */
+/* LOGIN */
+/* ========================= */
+
+.loginBtnHeader,
+.registerBtnHeader {
+  height: 42px;
+
+  padding: 0 20px;
+
+  border-radius: 999px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  gap: 8px;
+
+  font-size: 14px;
+
+  font-weight: 600;
+
+  transition: 0.3s ease;
+}
+
+.loginBtnHeader {
+  border: 1px solid rgba(255, 255, 255, 0.08);
+
+  background: rgba(255, 255, 255, 0.04);
+
+  color: white;
+}
+
+.loginBtnHeader:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.registerBtnHeader {
+  background: #2563eb;
+
+  color: white;
+}
+
+.registerBtnHeader:hover {
+  background: #3b82f6;
+}
+
+/* ========================= */
+/* ICONS */
+/* ========================= */
+
+.headerIcon {
+  position: relative;
+
+  cursor: pointer;
+
+  color: rgba(255, 255, 255, 0.7);
+
+  transition: 0.3s ease;
+}
+
+.headerIcon:hover {
+  color: white;
+
+  transform: translateY(-2px);
+}
+
+.headerBadge {
+  position: absolute;
+
+  top: -8px;
+  right: -10px;
+
+  width: 18px;
+  height: 18px;
+
+  border-radius: 50%;
+
+  color: white;
+
+  font-size: 10px;
+
+  font-weight: 700;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+}
+
+/* ========================= */
+/* RESPONSIVE */
+/* ========================= */
+
+@media (max-width: 768px) {
+  .logoText {
+    font-size: 28px;
+  }
 }
