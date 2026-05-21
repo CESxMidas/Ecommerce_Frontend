@@ -21,6 +21,7 @@ const Cart = () => {
           {/* LEFT */}
           <div className="cartLeft">
             {/* ITEM */}
+            {/* ITEM */}
             <div className="cartItem">
               <div className="cartItemImage">
                 <img
@@ -30,17 +31,39 @@ const Cart = () => {
               </div>
 
               <div className="cartItemInfo">
-                <span className="cartCategory">SOFTWARE</span>
+                <span className="cartCategory">SOFTWARE LICENSE</span>
 
                 <h4>Windows 11 Pro Retail License Key</h4>
 
+                {/* META */}
                 <div className="cartMeta">
                   <span>Platform: PC</span>
 
-                  <span>Digital Delivery</span>
+                  <span>Edition: Pro</span>
+
+                  <span>Delivery: Instant</span>
                 </div>
 
-                <div className="cartPrice">$29.99</div>
+                {/* OPTIONS */}
+                <div className="cartOptions">
+                  <div className="cartColor">
+                    <span>Color:</span>
+
+                    <div
+                      className="colorDot"
+                      style={{ background: "#2563eb" }}
+                    ></div>
+                  </div>
+                </div>
+
+                {/* PRICE */}
+                <div className="cartPriceBox">
+                  <span className="oldPrice">$99.99</span>
+
+                  <span className="cartPrice">$29.99</span>
+
+                  <span className="discountBadge">-70%</span>
+                </div>
               </div>
 
               <div className="cartActions">
@@ -77,13 +100,35 @@ const Cart = () => {
 
                 <h4>Minecraft Java & Bedrock Edition</h4>
 
+                {/* META */}
                 <div className="cartMeta">
                   <span>Platform: PC</span>
 
-                  <span>Instant Activation</span>
+                  <span>Edition: Java + Bedrock</span>
+
+                  <span>Activation: Instant</span>
                 </div>
 
-                <div className="cartPrice">$18.99</div>
+                {/* OPTIONS */}
+                <div className="cartOptions">
+                  <div className="cartColor">
+                    <span>Color:</span>
+
+                    <div
+                      className="colorDot"
+                      style={{ background: "#9333ea" }}
+                    ></div>
+                  </div>
+                </div>
+
+                {/* PRICE */}
+                <div className="cartPriceBox">
+                  <span className="oldPrice">$39.99</span>
+
+                  <span className="cartPrice">$18.99</span>
+
+                  <span className="discountBadge">-52%</span>
+                </div>
               </div>
 
               <div className="cartActions">

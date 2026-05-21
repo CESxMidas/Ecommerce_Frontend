@@ -1,0 +1,62 @@
+/* ========================= */
+/* OTP */
+/* ========================= */
+
+.otpWrapper {
+  display: flex;
+  justify-content: center;
+   margin-top: 26px;
+
+  gap: 10px;
+
+
+  flex-wrap: wrap;
+}
+
+.otpInput {
+  width: 58px;
+  height: 62px;
+
+  border-radius: 22px;
+
+  border: 1px solid
+    rgba(255, 255, 255, 0.08);
+
+  background: rgba(255, 255, 255, 0.03);
+
+  color: white;
+
+  font-size: 30px;
+
+  font-weight: 700;
+
+  text-align: center;
+
+  outline: none;
+
+  transition: all 0.3s ease;
+}
+
+.otpInput:focus {
+  border-color: #3b82f6;
+
+  box-shadow: 0 0 0 4px
+    rgba(37, 99, 235, 0.15);
+
+  transform: translateY(-2px);
+}
+
+@media (max-width: 576px) {
+  .otpWrapper {
+    gap: 10px;
+  }
+
+  .otpInput {
+    width: 52px;
+    height: 58px;
+
+    font-size: 24px;
+
+    border-radius: 16px;
+  }
+}

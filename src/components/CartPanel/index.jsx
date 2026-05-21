@@ -35,7 +35,9 @@ const CartPanel = () => {
         {/* BODY */}
         <div className="cartPanelBody">
           {/* ITEM */}
+          {/* ITEM */}
           <div className="cartItem">
+            {/* IMAGE */}
             <div className="cartItemImage">
               <img
                 src="https://images.unsplash.com/photo-1629654297299-c8506221ca97?q=80&w=1000&auto=format&fit=crop"
@@ -43,44 +45,36 @@ const CartPanel = () => {
               />
             </div>
 
+            {/* INFO */}
             <div className="cartItemInfo">
               <h5>Windows 11 Pro Retail Key</h5>
 
               <span className="cartItemCategory">Software License</span>
 
+              {/* META */}
+              <div className="cartItemMeta">
+                <span>Platform: PC</span>
+
+                <span>Edition: Retail</span>
+              </div>
+
+              {/* BOTTOM */}
               <div className="cartItemBottom">
+                {/* PRICE */}
                 <div className="cartItemPrice">$29.99</div>
 
-                <div className="cartQty">Qty: 1</div>
+                {/* QUANTITY */}
+                <div className="cartQtyBox">
+                  <button>-</button>
+
+                  <span>1</span>
+
+                  <button>+</button>
+                </div>
               </div>
             </div>
 
-            <button className="removeCartItem">
-              <FaTrashAlt />
-            </button>
-          </div>
-
-          {/* ITEM */}
-          <div className="cartItem">
-            <div className="cartItemImage">
-              <img
-                src="https://images.unsplash.com/photo-1606144042614-b2417e99c4e3?q=80&w=1000&auto=format&fit=crop"
-                alt=""
-              />
-            </div>
-
-            <div className="cartItemInfo">
-              <h5>PlayStation Gift Card</h5>
-
-              <span className="cartItemCategory">Digital Gift Card</span>
-
-              <div className="cartItemBottom">
-                <div className="cartItemPrice">$50.00</div>
-
-                <div className="cartQty">Qty: 2</div>
-              </div>
-            </div>
-
+            {/* REMOVE */}
             <button className="removeCartItem">
               <FaTrashAlt />
             </button>

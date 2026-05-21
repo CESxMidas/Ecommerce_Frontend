@@ -1,0 +1,320 @@
+/* ========================= */
+/* PAGE */
+/* ========================= */
+
+.verifyPage {
+  width: 100%;
+  min-height: 100vh;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 30px;
+
+  background: #020817;
+
+  overflow: hidden;
+
+  position: relative;
+}
+
+.verifyPage::before {
+  content: "";
+
+  position: absolute;
+
+  width: 600px;
+  height: 600px;
+
+  background: rgba(37, 99, 235, 0.15);
+
+  border-radius: 50%;
+
+  filter: blur(120px);
+
+  top: -200px;
+  right: -150px;
+}
+
+/* ========================= */
+/* CONTAINER */
+/* ========================= */
+
+.verifyContainer {
+  width: 100%;
+  max-width: 480px;
+
+  position: relative;
+  z-index: 10;
+}
+
+/* ========================= */
+/* CARD */
+/* ========================= */
+
+.verifyCard {
+  width: 100%;
+
+  padding: 36px 28px;
+
+  border-radius: 28px;
+
+  background: rgba(255, 255, 255, 0.03);
+
+  border: 1px solid rgba(255, 255, 255, 0.08);
+
+  backdrop-filter: blur(20px);
+
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.45);
+
+  text-align: center;
+}
+
+/* ========================= */
+/* ICON */
+/* ========================= */
+
+.verifyIcon {
+  width: 110px;
+  height: 110px;
+
+  margin: auto;
+  margin-bottom: 28px;
+
+  border-radius: 30px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: linear-gradient(135deg, #2563eb, #3b82f6);
+
+  color: white;
+
+  font-size: 52px;
+
+  box-shadow: 0 20px 40px rgba(37, 99, 235, 0.3);
+}
+
+/* ========================= */
+/* CONTENT */
+/* ========================= */
+
+.verifyBadge {
+  display: inline-flex;
+
+  padding: 10px 18px;
+
+  border-radius: 999px;
+
+  background: rgba(59, 130, 246, 0.12);
+
+  border: 1px solid rgba(255, 255, 255, 0.08);
+
+  color: #60a5fa;
+
+  font-size: 12px;
+
+  font-weight: 700;
+
+  letter-spacing: 1px;
+
+  margin-bottom: 24px;
+}
+
+.verifyContent h1 {
+  font-size: 52px;
+
+  line-height: 62px;
+
+  font-weight: 800;
+
+  color: white;
+
+  margin-top: 26px;
+
+  padding: 18px;
+}
+
+.verifyContent p {
+  color: rgba(255, 255, 255, 0.6);
+
+  font-size: 16px;
+
+  line-height: 30px;
+
+  max-width: 500px;
+
+  margin: auto;
+}
+
+/* ========================= */
+/* EMAIL */
+/* ========================= */
+
+.verifyEmailBox {
+  width: 100%;
+
+  margin-top: 34px;
+
+  padding: 22px;
+
+  border-radius: 22px;
+
+  background: rgba(255, 255, 255, 0.03);
+
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.verifyEmailBox span {
+  display: block;
+
+  color: rgba(255, 255, 255, 0.45);
+
+  font-size: 13px;
+
+  margin-bottom: 8px;
+}
+
+.verifyEmailBox h4 {
+  color: white;
+
+  font-size: 20px;
+
+  font-weight: 700;
+}
+
+/* ========================= */
+/* ACTIONS */
+/* ========================= */
+
+.verifyActions {
+  display: flex;
+
+  gap: 16px;
+
+  margin-top: 34px;
+}
+
+.verifyBtn,
+.resendBtn {
+  flex: 1;
+
+  height: 58px;
+
+  border-radius: 18px;
+
+  border: none;
+
+  font-size: 15px;
+
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition: all 0.3s ease;
+}
+
+.verifyBtn {
+  background: linear-gradient(135deg, #2563eb, #3b82f6);
+
+  color: white;
+}
+
+.verifyBtn:hover {
+  transform: translateY(-3px);
+
+  box-shadow: 0 15px 30px rgba(37, 99, 235, 0.3);
+}
+
+.resendBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 10px;
+
+  background: rgba(255, 255, 255, 0.03);
+
+  border: 1px solid rgba(255, 255, 255, 0.08);
+
+  color: white;
+}
+
+.resendBtn:hover {
+  background: rgba(255, 255, 255, 0.06);
+
+  transform: translateY(-3px);
+}
+
+/* ========================= */
+/* BOTTOM */
+/* ========================= */
+
+.verifyBottom {
+  margin-top: 28px;
+
+  color: rgba(255, 255, 255, 0.55);
+
+  font-size: 14px;
+}
+
+.verifyBottom a {
+  margin-left: 8px;
+
+  color: #3b82f6;
+
+  text-decoration: none;
+
+  font-weight: 700;
+}
+
+/* ========================= */
+/* RESPONSIVE */
+/* ========================= */
+
+@media (max-width: 768px) {
+  .verifyCard {
+    padding: 36px 24px;
+  }
+
+  .verifyContent h1 {
+    font-size: 38px;
+
+    line-height: 48px;
+  }
+
+  .verifyContent p {
+    font-size: 14px;
+
+    line-height: 26px;
+  }
+
+  .verifyActions {
+    flex-direction: column;
+  }
+
+  .verifyIcon {
+    width: 90px;
+    height: 90px;
+
+    font-size: 42px;
+  }
+}
+
+@media (max-width: 480px) {
+  .verifyPage {
+    padding: 16px;
+  }
+
+  .verifyContent h1 {
+    font-size: 30px;
+
+    line-height: 40px;
+  }
+
+  .verifyEmailBox h4 {
+    font-size: 16px;
+  }
+}

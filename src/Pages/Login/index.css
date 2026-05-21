@@ -205,14 +205,6 @@
   justify-content: space-between;
 }
 
-.passwordLabel a {
-  color: #3b82f6;
-
-  text-decoration: none;
-
-  font-size: 13px;
-}
-
 /* ========================= */
 /* INPUT */
 /* ========================= */
@@ -235,7 +227,7 @@
 
   border: 1px solid rgba(255, 255, 255, 0.06);
 
-  transition: 0.3s ease;
+  transition: all 0.3s ease;
 }
 
 .inputBox:focus-within {
@@ -248,6 +240,8 @@
   font-size: 20px;
 
   color: rgba(255, 255, 255, 0.45);
+
+  flex-shrink: 0;
 }
 
 .inputBox input {
@@ -269,6 +263,54 @@
 }
 
 /* ========================= */
+/* SHOW PASSWORD */
+/* ========================= */
+
+.showPasswordBtn {
+  border: none;
+
+  background: transparent;
+
+  color: rgba(255, 255, 255, 0.55);
+
+  font-size: 22px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  cursor: pointer;
+
+  transition: all 0.3s ease;
+}
+
+.showPasswordBtn:hover {
+  color: white;
+}
+
+/* ========================= */
+/* FORGOT */
+/* ========================= */
+
+.forgotBtn {
+  border: none;
+
+  background: transparent;
+
+  color: #3b82f6;
+
+  cursor: pointer;
+
+  font-size: 14px;
+
+  transition: all 0.3s ease;
+}
+
+.forgotBtn:hover {
+  color: #60a5fa;
+}
+
+/* ========================= */
 /* REMEMBER */
 /* ========================= */
 
@@ -282,6 +324,10 @@
   align-items: center;
 
   gap: 10px;
+}
+
+.rememberLeft input {
+  accent-color: #2563eb;
 }
 
 .rememberLeft label {
@@ -302,7 +348,11 @@
 
   border-radius: 16px;
 
-  background: linear-gradient(135deg, #2563eb, #3b82f6);
+  background: linear-gradient(
+    135deg,
+    #2563eb,
+    #3b82f6
+  );
 
   color: white;
 
@@ -312,13 +362,22 @@
 
   cursor: pointer;
 
-  transition: 0.3s ease;
+  transition: all 0.3s ease;
 }
 
 .loginBtn:hover {
   transform: translateY(-2px);
 
-  box-shadow: 0 15px 30px rgba(37, 99, 235, 0.3);
+  box-shadow: 0 15px 30px
+    rgba(37, 99, 235, 0.3);
+}
+
+.loginBtn:disabled {
+  opacity: 0.7;
+
+  cursor: not-allowed;
+
+  transform: none;
 }
 
 /* ========================= */
@@ -427,6 +486,10 @@
   font-weight: 700;
 }
 
+.bottomText a:hover {
+  color: #60a5fa;
+}
+
 /* ========================= */
 /* RESPONSIVE */
 /* ========================= */
@@ -460,10 +523,14 @@
     overflow-y: auto;
   }
 
-  .loginCard {
-    padding: 26px;
+  .loginRight {
+    padding: 16px;
+  }
 
-    border-radius: 24px;
+  .loginCard {
+    padding: 24px;
+
+    border-radius: 22px;
   }
 
   .loginTop h2 {
@@ -472,5 +539,19 @@
 
   .socialLogin {
     gap: 10px;
+  }
+
+  .socialLogin button {
+    height: 56px;
+
+    font-size: 20px;
+  }
+
+  .inputBox {
+    height: 54px;
+  }
+
+  .loginBtn {
+    height: 54px;
   }
 }

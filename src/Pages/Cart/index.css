@@ -411,17 +411,19 @@
 /* ========================= */
 /* COUPON */
 /* ========================= */
-
 .cartPage .couponBox {
   display: flex;
 
-  gap: 10px;
+  align-items: center;
+
+  gap: 12px;
 
   margin-bottom: 22px;
 }
-
 .cartPage .couponBox input {
   flex: 1;
+
+  min-width: 0;
 
   height: 56px;
 
@@ -439,17 +441,19 @@
 
   transition: all 0.3s ease;
 }
-
 .cartPage .couponBox input:focus {
   border-color: rgba(59, 130, 246, 0.6);
 
   box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.12);
 }
-
 .cartPage .couponBox button {
+  flex-shrink: 0;
+
+  min-width: 96px;
+
   height: 56px;
 
-  padding: 0 20px;
+  padding: 0 22px;
 
   border: none;
 
@@ -536,6 +540,10 @@
 /* RESPONSIVE */
 /* ========================= */
 
+/* ========================= */
+/* RESPONSIVE */
+/* ========================= */
+
 @media (max-width: 1200px) {
   .cartPage .cartWrapper {
     flex-direction: column;
@@ -551,48 +559,356 @@
   }
 }
 
+/* ========================= */
+/* TABLET */
+/* ========================= */
+
+@media (max-width: 992px) {
+  .cartPage {
+    padding: 40px 0;
+  }
+
+  .cartPage .cartTop h2 {
+    font-size: 34px;
+  }
+
+  .cartPage .cartItem {
+    gap: 18px;
+  }
+
+  .cartPage .cartItemImage {
+    width: 120px;
+    height: 120px;
+  }
+
+  .cartPage .cartItemInfo h4 {
+    font-size: 20px;
+    line-height: 28px;
+  }
+
+  .cartPage .cartPrice {
+    font-size: 24px;
+  }
+
+  .cartPage .summaryCard {
+    padding: 24px;
+  }
+}
+
+/* ========================= */
+/* MOBILE */
+/* ========================= */
+
 @media (max-width: 768px) {
   .cartPage {
-    padding: 30px 0;
+    padding: 24px 0;
   }
 
   .cartPage .cartTop {
     flex-direction: column;
-
     align-items: flex-start;
+    gap: 16px;
   }
+
+  .cartPage .cartTop h2 {
+    font-size: 28px;
+  }
+
+  .cartPage .continueShopping {
+    width: 100%;
+    justify-content: center;
+  }
+
+  /* ITEM */
 
   .cartPage .cartItem {
     flex-direction: column;
-
     align-items: flex-start;
+
+    padding: 18px;
+
+    border-radius: 22px;
   }
 
   .cartPage .cartItemImage {
     width: 100%;
-    height: 240px;
+    height: 220px;
   }
+
+  .cartPage .cartItemInfo {
+    width: 100%;
+  }
+
+  .cartPage .cartItemInfo h4 {
+    font-size: 18px;
+    line-height: 28px;
+  }
+
+  .cartPage .cartCategory {
+    font-size: 11px;
+    padding: 7px 12px;
+  }
+
+  .cartPage .cartMeta {
+    gap: 10px;
+  }
+
+  .cartPage .cartPrice {
+    font-size: 24px;
+  }
+
+  /* ACTION */
 
   .cartPage .cartActions {
     width: 100%;
 
     flex-direction: row;
+    flex-wrap: wrap;
 
     align-items: center;
     justify-content: space-between;
+
+    gap: 14px;
+
+    margin-top: 10px;
   }
 
+  .cartPage .cartQuantity {
+    order: 1;
+  }
+
+  .cartPage .cartTotal {
+    font-size: 22px;
+
+    order: 2;
+  }
+
+  .cartPage .removeBtn {
+    order: 3;
+  }
+
+  /* SUMMARY */
+
+  .cartPage .summaryCard {
+    padding: 20px;
+
+    border-radius: 22px;
+  }
+
+  .cartPage .summaryCard h3 {
+    font-size: 24px;
+  }
+
+  .cartPage .summaryTotal {
+    font-size: 22px;
+  }
+
+  /* COUPON */
+
+  .cartPage .couponBox {
+    flex-direction: column;
+  }
+
+  .cartPage .couponBox input,
+  .cartPage .couponBox button {
+    width: 100%;
+  }
+
+  /* BUTTON */
+
+  .cartPage .checkoutBtn,
+  .cartPage .paypalBtn {
+    height: 54px;
+    border-radius: 16px;
+  }
+}
+.cartItemMeta {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 6px;
+
+  margin-top: 10px;
+}
+
+.cartItemMeta span {
+  font-size: 13px;
+
+  color: rgba(255, 255, 255, 0.5);
+}
+
+/* ========================= */
+/* QUANTITY */
+/* ========================= */
+
+.cartQtyBox {
+  display: flex;
+
+  align-items: center;
+
+  overflow: hidden;
+
+  border-radius: 12px;
+
+  background: rgba(255, 255, 255, 0.04);
+
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.cartQtyBox button {
+  width: 34px;
+  height: 34px;
+
+  border: none;
+
+  background: transparent;
+
+  color: white;
+
+  font-size: 16px;
+
+  cursor: pointer;
+
+  transition: 0.3s ease;
+}
+
+.cartQtyBox button:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.cartQtyBox span {
+  width: 36px;
+
+  text-align: center;
+
+  color: white;
+
+  font-size: 14px;
+
+  font-weight: 700;
+}
+/* OPTIONS */
+
+.cartPage .cartOptions {
+  display: flex;
+  align-items: center;
+
+  gap: 16px;
+
+  margin-bottom: 18px;
+}
+
+.cartPage .cartColor {
+  display: flex;
+  align-items: center;
+
+  gap: 10px;
+}
+
+.cartPage .cartColor span {
+  font-size: 14px;
+
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.cartPage .colorDot {
+  width: 18px;
+  height: 18px;
+
+  border-radius: 50%;
+
+  border: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+/* PRICE BOX */
+
+.cartPage .cartPriceBox {
+  display: flex;
+  align-items: center;
+
+  gap: 14px;
+
+  flex-wrap: wrap;
+}
+
+.cartPage .oldPrice {
+  font-size: 24px;
+
+  color: rgba(255, 255, 255, 0.35);
+
+  text-decoration: line-through;
+
+  font-weight: 700;
+}
+
+.cartPage .discountBadge {
+  padding: 6px 12px;
+
+  border-radius: 999px;
+
+  background: rgba(239, 68, 68, 0.14);
+
+  color: #f87171;
+
+  font-size: 13px;
+
+  font-weight: 700;
+} 
+/* ========================= */
+/* SMALL MOBILE */
+/* ========================= */
+
+@media (max-width: 480px) {
   .cartPage .cartTop h2 {
-    font-size: 32px;
+    font-size: 24px;
+  }
+
+  .cartPage .cartTop p {
+    font-size: 13px;
+  }
+
+  .cartPage .cartItem {
+    padding: 16px;
+  }
+
+  .cartPage .cartItemImage {
+    height: 180px;
   }
 
   .cartPage .cartItemInfo h4 {
-    font-size: 20px;
+    font-size: 16px;
+    line-height: 24px;
+  }
 
-    line-height: 30px;
+  .cartPage .cartPrice {
+    font-size: 22px;
+  }
+
+  .cartPage .cartQuantity button {
+    width: 40px;
+    height: 40px;
+  }
+
+  .cartPage .cartQuantity span {
+    width: 40px;
+    font-size: 14px;
+  }
+
+  .cartPage .cartTotal {
+    font-size: 18px;
   }
 
   .cartPage .summaryCard {
-    padding: 22px;
+    padding: 18px;
+  }
+
+  .cartPage .summaryCard h3 {
+    font-size: 22px;
+  }
+
+  .cartPage .summaryRow,
+  .cartPage .summaryTotal {
+    font-size: 14px;
   }
 }

@@ -1,7 +1,5 @@
 import "./App.css";
-
 import { createContext, useState } from "react";
-
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
@@ -10,36 +8,56 @@ import ProductListing from "./Pages/ProductListing";
 import ProductDetail from "./components/ProductDetail";
 import ProductDetailModal from "./components/ProductDetailModal";
 import Login from "./Pages/Login";
-
 import Dialog from "@mui/material/Dialog";
 import Register from "./Pages/Register";
 import CartPanel from "./components/CartPanel";
 import Cart from "./Pages/Cart";
+import Verify from "./components/Verify";
+import toast, { Toaster } from "react-hot-toast";
+
 const MyContext = createContext();
 function AppContent() {
   const location = useLocation();
-  const [
-    openCartPanel,
-    setOpenCartPanel,
-    openProductDetailModal,
-    setOpenProductDetailModal,
-  ] = useState(false);
-
+  const [openCartPanel, setOpenCartPanel] = useState(false);
+  const [openProductDetailModal, setOpenProductDetailModal] = useState(false);
   const handleOpenProductDetailModal = () => {
     setOpenProductDetailModal(true);
   };
   const handleCloseProductDetailModal = () => {
     setOpenProductDetailModal(false);
   };
+const openAlertBox = (type, message) => {
+  switch (type) {
+    case "success":
+      toast.success(message);
+      break;
+
+    case "error":
+      toast.error(message);
+      break;
+
+    case "warning":
+      toast(message, {
+        icon: "⚠️",
+      });
+      break;
+
+    default:
+      toast(message);
+  }
+};
   const values = {
     handleOpenProductDetailModal,
     handleCloseProductDetailModal,
     openCartPanel,
     setOpenCartPanel,
+    openAlertBox,
   };
   // HIDE HEADER FOOTER
   const authPages =
-    location.pathname === "/login" || location.pathname === "/register";
+    location.pathname === "/login" ||
+    location.pathname === "/register" ||
+    location.pathname === "/verifyAccount";
   return (
     <MyContext.Provider value={values}>
       {!authPages && <Header />}
@@ -48,7 +66,9 @@ function AppContent() {
         <Route path="/productListing" element={<ProductListing />} />
         <Route path="/cart" element={<Cart />} />
         <Route path="/product/:id" element={<ProductDetail />} />
+        <Route path="/verifyAccount" element={<Verify />} />
         {/* LOGIN */}
+
         <Route path="/login" element={<Login />} />
         {/* REGISTER */}
         <Route path="/register" element={<Register />} />
@@ -64,7 +84,7 @@ function AppContent() {
       >
         <ProductDetailModal />
       </Dialog>
-      <CartPanel />
+     {!authPages && <CartPanel />}
     </MyContext.Provider>
   );
 }
@@ -72,11 +92,22 @@ function AppContent() {
 function App() {
   return (
     <BrowserRouter>
+      <Toaster
+        position="top-right"
+        reverseOrder={false}
+        toastOptions={{
+          duration: 2500,
+          style: {
+            background: "#0f172a",
+            color: "#fff",
+            border: "1px solid rgba(255,255,255,0.08)",
+          },
+        }}
+      />
       <AppContent />
     </BrowserRouter>
   );
 }
-
 export default App;
 
 export { MyContext };
