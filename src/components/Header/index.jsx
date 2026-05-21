@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { useContext } from "react";
 
+import { MyContext } from "../../App";
 import "./index.css";
 
 // MUI
@@ -9,11 +11,7 @@ import Drawer from "@mui/material/Drawer";
 // ICONS
 import { MdOutlineLanguage } from "react-icons/md";
 
-import {
-  FaShoppingCart,
-  FaHeart,
-  FaBars,
-} from "react-icons/fa";
+import { FaShoppingCart, FaHeart, FaBars } from "react-icons/fa";
 
 import { BiGitCompare } from "react-icons/bi";
 
@@ -27,28 +25,21 @@ import Navigation from "./Navigation/Navigation";
 import CategoryPanel from "./Navigation/CategoryPanel";
 
 const Header = () => {
-  const [openCategory, setOpenCategory] =
-    useState(false);
-
+  const [openCategory, setOpenCategory] = useState(false);
+  const context = useContext(MyContext);
   return (
     <header className="w-full headerWrapper">
       {/* ================= TOP STRIP ================= */}
       <div className="top-strip py-2">
         <div className="container flex items-center justify-between text-[12px] text-[var(--text-muted)]">
           {/* LEFT */}
-          <div>
-            🔥 Get up to 50% off new season styles
-          </div>
+          <div>🔥 Get up to 50% off new season styles</div>
 
           {/* RIGHT */}
           <div className="hidden md:flex items-center gap-5">
-            <span className="topLink">
-              Help Center
-            </span>
+            <span className="topLink">Help Center</span>
 
-            <span className="topLink">
-              Order Tracking
-            </span>
+            <span className="topLink">Order Tracking</span>
 
             <div className="topLink flex items-center gap-1">
               <MdOutlineLanguage />
@@ -66,18 +57,14 @@ const Header = () => {
             {/* MOBILE MENU */}
             <button
               className="mobileMenuBtn lg:hidden"
-              onClick={() =>
-                setOpenCategory(true)
-              }
+              onClick={() => setOpenCategory(true)}
             >
               <FaBars />
             </button>
 
             {/* LOGO */}
             <Link to="/">
-              <h1 className="logoText">
-                KEYSHOP
-              </h1>
+              <h1 className="logoText">KEYSHOP</h1>
             </Link>
           </div>
 
@@ -90,18 +77,12 @@ const Header = () => {
           <div className="flex justify-end items-center gap-5 md:gap-8 text-[var(--text-muted)]">
             {/* LOGIN */}
             <div className="hidden lg:flex items-center gap-4 text-sm">
-              <Link
-                to="/login"
-                className="loginBtnHeader"
-              >
+              <Link to="/login" className="loginBtnHeader">
                 <FiUser />
                 Login
               </Link>
 
-              <Link
-                to="/register"
-                className="registerBtnHeader"
-              >
+              <Link to="/register" className="registerBtnHeader">
                 Register
               </Link>
             </div>
@@ -112,27 +93,24 @@ const Header = () => {
               <div className="headerIcon">
                 <FaHeart />
 
-                <span className="headerBadge bg-red-500">
-                  1
-                </span>
+                <span className="headerBadge bg-red-500">1</span>
               </div>
 
               {/* COMPARE */}
               <div className="headerIcon">
                 <BiGitCompare />
 
-                <span className="headerBadge bg-blue-500">
-                  3
-                </span>
+                <span className="headerBadge bg-blue-500">3</span>
               </div>
 
               {/* CART */}
-              <div className="headerIcon">
+              <div
+                className="headerIcon"
+                onClick={() => context.setOpenCartPanel(true)}
+              >
                 <FaShoppingCart />
 
-                <span className="headerBadge bg-red-500">
-                  2
-                </span>
+                <span className="headerBadge bg-red-500">2</span>
               </div>
             </div>
           </div>
@@ -151,9 +129,7 @@ const Header = () => {
       <Drawer
         anchor="left"
         open={openCategory}
-        onClose={() =>
-          setOpenCategory(false)
-        }
+        onClose={() => setOpenCategory(false)}
         PaperProps={{
           sx: {
             background: "#071739",

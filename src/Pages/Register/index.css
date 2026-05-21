@@ -1,0 +1,416 @@
+/* ========================= */
+/* PAGE */
+/* ========================= */
+
+.registerPage {
+  width: 100%;
+  height: 100vh;
+
+  display: flex;
+
+  overflow: hidden;
+
+  background: #020817;
+}
+
+/* ========================= */
+/* LEFT */
+/* ========================= */
+
+.registerLeft {
+  width: 54%;
+
+  position: relative;
+
+  overflow: hidden;
+}
+
+.registerLeft img {
+  width: 100%;
+  height: 100%;
+
+  object-fit: cover;
+}
+
+.registerOverlay {
+  position: absolute;
+  inset: 0;
+
+  background: linear-gradient(
+    180deg,
+    rgba(2, 8, 23, 0.25),
+    rgba(2, 8, 23, 0.94)
+  );
+
+  z-index: 2;
+}
+
+.registerLeftContent {
+  position: absolute;
+
+  left: 60px;
+  bottom: 55px;
+
+  z-index: 10;
+
+  max-width: 520px;
+}
+
+.registerBadge {
+  display: inline-flex;
+
+  padding: 10px 20px;
+
+  border-radius: 999px;
+
+  background: rgba(59, 130, 246, 0.14);
+
+  border: 1px solid rgba(255, 255, 255, 0.08);
+
+  color: #60a5fa;
+
+  font-size: 12px;
+
+  font-weight: 700;
+
+  margin-bottom: 24px;
+}
+
+.registerLeftContent h1 {
+  font-size: 58px;
+  line-height: 68px;
+
+  font-weight: 800;
+
+  color: white;
+
+  margin-bottom: 20px;
+}
+
+.registerLeftContent p {
+  font-size: 17px;
+
+  line-height: 30px;
+
+  color: rgba(255, 255, 255, 0.68);
+}
+
+/* ========================= */
+/* RIGHT */
+/* ========================= */
+
+.registerRight {
+  width: 46%;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  padding: 28px;
+
+  background: radial-gradient(
+    circle at top,
+    rgba(37, 99, 235, 0.14),
+    transparent 40%
+  );
+}
+
+/* ========================= */
+/* CARD */
+/* ========================= */
+
+.registerCard {
+  width: 100%;
+  max-width: 500px;
+
+  padding: 34px;
+
+  border-radius: 28px;
+
+  background: rgba(255, 255, 255, 0.03);
+
+  border: 1px solid rgba(255, 255, 255, 0.06);
+
+  backdrop-filter: blur(20px);
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.04),
+    0 25px 80px rgba(0, 0, 0, 0.55);
+}
+
+/* ========================= */
+/* TOP */
+/* ========================= */
+
+.registerTop {
+  margin-bottom: 28px;
+}
+
+.registerTop h2 {
+  font-size: 34px;
+
+  color: white;
+
+  margin-bottom: 10px;
+
+  font-weight: 700;
+}
+
+.registerTop p {
+  color: rgba(255, 255, 255, 0.55);
+
+  line-height: 26px;
+
+  font-size: 15px;
+}
+
+/* ========================= */
+/* FORM */
+/* ========================= */
+
+.formGroup {
+  margin-bottom: 20px;
+}
+
+.formGroup label {
+  display: block;
+
+  color: white;
+
+  font-size: 14px;
+
+  font-weight: 600;
+
+  margin-bottom: 10px;
+}
+
+/* ========================= */
+/* INPUT */
+/* ========================= */
+
+.inputBox {
+  width: 100%;
+  height: 56px;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 12px;
+
+  padding: 0 18px;
+
+  border-radius: 16px;
+
+  background: rgba(255, 255, 255, 0.03);
+
+  border: 1px solid rgba(255, 255, 255, 0.06);
+
+  transition: 0.3s ease;
+}
+
+.inputBox:focus-within {
+  border-color: rgba(59, 130, 246, 0.8);
+
+  box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.12);
+}
+
+.inputIcon {
+  font-size: 20px;
+
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.inputBox input {
+  flex: 1;
+
+  background: transparent;
+
+  border: none;
+
+  outline: none;
+
+  color: white;
+
+  font-size: 14px;
+}
+
+.inputBox input::placeholder {
+  color: rgba(255, 255, 255, 0.3);
+}
+
+/* ========================= */
+/* BUTTON */
+/* ========================= */
+
+.registerBtn {
+  width: 100%;
+  height: 56px;
+
+  border: none;
+
+  border-radius: 16px;
+
+  background: linear-gradient(135deg, #2563eb, #3b82f6);
+
+  color: white;
+
+  font-size: 15px;
+
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition: 0.3s ease;
+}
+
+.registerBtn:hover {
+  transform: translateY(-2px);
+
+  box-shadow: 0 15px 30px rgba(37, 99, 235, 0.3);
+}
+
+/* ========================= */
+/* DIVIDER */
+/* ========================= */
+
+.divider {
+  position: relative;
+
+  text-align: center;
+
+  margin: 26px 0;
+}
+
+.divider::before {
+  content: "";
+
+  position: absolute;
+
+  top: 50%;
+  left: 0;
+
+  width: 100%;
+  height: 1px;
+
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.divider span {
+  position: relative;
+
+  padding: 0 14px;
+
+  background: #07111f;
+
+  color: rgba(255, 255, 255, 0.45);
+
+  font-size: 12px;
+}
+
+/* ========================= */
+/* SOCIAL */
+/* ========================= */
+
+.socialRegister {
+  display: flex;
+
+  gap: 16px;
+
+  margin-bottom: 24px;
+}
+
+.socialRegister button {
+  flex: 1;
+
+  height: 60px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  border-radius: 18px;
+
+  border: 1px solid rgba(255, 255, 255, 0.06);
+
+  background: rgba(255, 255, 255, 0.03);
+
+  color: white;
+
+  font-size: 22px;
+
+  cursor: pointer;
+
+  transition: 0.3s ease;
+}
+
+.socialRegister button:hover {
+  background: rgba(255, 255, 255, 0.05);
+
+  transform: translateY(-2px);
+}
+.socialRegister button:nth-child(1):hover {
+  border-color: #4285f4;
+  color: #4285f4;
+}
+
+.socialRegister button:nth-child(2):hover {
+  border-color: #fff;
+  color: #fff;
+}
+
+.socialRegister button:nth-child(3):hover {
+  border-color: #5865f2;
+  color: #5865f2;
+}
+
+/* ========================= */
+/* BOTTOM */
+/* ========================= */
+
+.bottomText {
+  text-align: center;
+
+  color: rgba(255, 255, 255, 0.55);
+
+  font-size: 14px;
+}
+
+.bottomText a {
+  color: #3b82f6;
+
+  margin-left: 6px;
+
+  text-decoration: none;
+
+  font-weight: 700;
+}
+
+/* ========================= */
+/* RESPONSIVE */
+/* ========================= */
+
+@media (max-width: 992px) {
+  .registerLeft {
+    display: none;
+  }
+
+  .registerRight {
+    width: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  .registerCard {
+    padding: 26px;
+
+    border-radius: 24px;
+  }
+
+  .registerTop h2 {
+    font-size: 28px;
+  }
+}
