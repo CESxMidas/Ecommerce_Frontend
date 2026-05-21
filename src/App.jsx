@@ -14,6 +14,9 @@ import CartPanel from "./components/CartPanel";
 import Cart from "./Pages/Cart";
 import Verify from "./components/Verify";
 import toast, { Toaster } from "react-hot-toast";
+import ForgotPassword from "./Pages/ForgotPassword";
+import ResetPassword from "./Pages/ResetPassword";
+import CheckOut from "./Pages/CheckOut";
 
 const MyContext = createContext();
 function AppContent() {
@@ -26,26 +29,26 @@ function AppContent() {
   const handleCloseProductDetailModal = () => {
     setOpenProductDetailModal(false);
   };
-const openAlertBox = (type, message) => {
-  switch (type) {
-    case "success":
-      toast.success(message);
-      break;
+  const openAlertBox = (type, message) => {
+    switch (type) {
+      case "success":
+        toast.success(message);
+        break;
 
-    case "error":
-      toast.error(message);
-      break;
+      case "error":
+        toast.error(message);
+        break;
 
-    case "warning":
-      toast(message, {
-        icon: "⚠️",
-      });
-      break;
+      case "warning":
+        toast(message, {
+          icon: "⚠️",
+        });
+        break;
 
-    default:
-      toast(message);
-  }
-};
+      default:
+        toast(message);
+    }
+  };
   const values = {
     handleOpenProductDetailModal,
     handleCloseProductDetailModal,
@@ -57,7 +60,9 @@ const openAlertBox = (type, message) => {
   const authPages =
     location.pathname === "/login" ||
     location.pathname === "/register" ||
-    location.pathname === "/verifyAccount";
+    location.pathname === "/verifyAccount" ||
+    location.pathname === "/forgot-password" ||
+    location.pathname === "/reset-password";
   return (
     <MyContext.Provider value={values}>
       {!authPages && <Header />}
@@ -67,11 +72,15 @@ const openAlertBox = (type, message) => {
         <Route path="/cart" element={<Cart />} />
         <Route path="/product/:id" element={<ProductDetail />} />
         <Route path="/verifyAccount" element={<Verify />} />
+        <Route path="/checkout" element={<CheckOut />} />
         {/* LOGIN */}
-
         <Route path="/login" element={<Login />} />
         {/* REGISTER */}
         <Route path="/register" element={<Register />} />
+        {/*FORGOT PASSWORD */}
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        {/*RESET PASSWORD*/}
+        <Route path="/reset-password" element={<ResetPassword />} />
       </Routes>
       {!authPages && <Footer />}
       {/* PRODUCT MODAL */}
@@ -84,7 +93,7 @@ const openAlertBox = (type, message) => {
       >
         <ProductDetailModal />
       </Dialog>
-     {!authPages && <CartPanel />}
+      {!authPages && <CartPanel />}
     </MyContext.Provider>
   );
 }

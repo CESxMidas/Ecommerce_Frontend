@@ -1,15 +1,30 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 
-import { MdOutlineMarkEmailRead } from "react-icons/md";
+import {
+  MdOutlineMarkEmailRead,
+} from "react-icons/md";
+
 import { FiRefreshCcw } from "react-icons/fi";
 
-import { Link } from "react-router-dom";
+import {
+  Link,
+  useNavigate,
+} from "react-router-dom";
 
 import OTPBox from "../../components/OTPBox";
+
+import { MyContext } from "../../App";
 
 import "./index.css";
 
 const Verify = () => {
+  const context = useContext(MyContext);
+
+  const navigate = useNavigate();
+
+  const [loading, setLoading] =
+    useState(false);
+
   const [otp, setOtp] = useState([
     "",
     "",
@@ -19,22 +34,64 @@ const Verify = () => {
     "",
   ]);
 
-  const verifyOTP = () => {
+  /* ========================= */
+  /* VERIFY OTP */
+  /* ========================= */
+
+  const verifyOTP = async () => {
     const otpValue = otp.join("");
 
-    console.log("OTP => ", otpValue);
+    if (otpValue.length < 6) {
+      context.openAlertBox(
+        "error",
+        "Please enter full OTP code"
+      );
 
-    // API VERIFY
+      return;
+    }
+
+    try {
+      setLoading(true);
+
+      console.log("OTP => ", otpValue);
+
+      // FAKE API
+      await new Promise((resolve) =>
+        setTimeout(resolve, 1200)
+      );
+
+      context.openAlertBox(
+        "success",
+        "Email verified successfully"
+      );
+
+      navigate("/");
+    } catch (error) {
+      console.log(error);
+      
+      context.openAlertBox(
+        "error",
+        "Verification failed"
+      );
+    } finally {
+      setLoading(false);
+    }
   };
 
+  /* ========================= */
+  /* RESEND OTP */
+  /* ========================= */
+
   const resendOTP = () => {
-    console.log("Resend OTP");
+    context.openAlertBox(
+      "success",
+      "Verification code resent"
+    );
   };
 
   return (
     <section className="verifyPage">
       <div className="verifyContainer">
-        {/* CARD */}
         <div className="verifyCard">
           {/* ICON */}
           <div className="verifyIcon">
@@ -71,15 +128,21 @@ const Verify = () => {
           </div>
 
           {/* OTP */}
-          <OTPBox otp={otp} setOtp={setOtp} />
+          <OTPBox
+            otp={otp}
+            setOtp={setOtp}
+          />
 
           {/* ACTIONS */}
           <div className="verifyActions">
             <button
               className="verifyBtn"
               onClick={verifyOTP}
+              disabled={loading}
             >
-              Verify Account
+              {loading
+                ? "Verifying..."
+                : "Verify Account"}
             </button>
 
             <button
@@ -87,6 +150,7 @@ const Verify = () => {
               onClick={resendOTP}
             >
               <FiRefreshCcw />
+
               Resend Code
             </button>
           </div>
