@@ -1,9 +1,5 @@
 import { useState, useContext } from "react";
-
-import {
-  Link,
-  useNavigate,
-} from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import { MyContext } from "../../App";
 
@@ -30,10 +26,6 @@ const Login = () => {
 
   const context = useContext(MyContext);
 
-  /* ========================= */
-  /* STATES */
-  /* ========================= */
-
   const [isPasswordShow, setIsPasswordShow] =
     useState(false);
 
@@ -46,10 +38,6 @@ const Login = () => {
       password: "",
       remember: false,
     });
-
-  /* ========================= */
-  /* INPUT CHANGE */
-  /* ========================= */
 
   const onChangeInput = (e) => {
     const { name, value, type, checked } =
@@ -64,17 +52,12 @@ const Login = () => {
     });
   };
 
-  /* ========================= */
-  /* VALIDATE */
-  /* ========================= */
-
   const validateValue = () => {
     if (!formFields.email.trim()) {
       context.openAlertBox(
         "error",
         "Email is required"
       );
-
       return false;
     }
 
@@ -87,7 +70,6 @@ const Login = () => {
         "error",
         "Invalid email format"
       );
-
       return false;
     }
 
@@ -96,25 +78,11 @@ const Login = () => {
         "error",
         "Password is required"
       );
-
-      return false;
-    }
-
-    if (formFields.password.length < 6) {
-      context.openAlertBox(
-        "error",
-        "Password must be at least 6 characters"
-      );
-
       return false;
     }
 
     return true;
   };
-
-  /* ========================= */
-  /* LOGIN */
-  /* ========================= */
 
   const login = async (e) => {
     e.preventDefault();
@@ -127,34 +95,18 @@ const Login = () => {
       setLoading(true);
 
       await new Promise((resolve) =>
-        setTimeout(resolve, 1200)
+        setTimeout(resolve, 1000)
       );
-
-      const user = {
-        name: "Hoang",
-        email: formFields.email,
-        isVerified: false,
-      };
 
       context.openAlertBox(
         "success",
         "Login successful"
       );
 
-      if (!user.isVerified) {
-        context.openAlertBox(
-          "warning",
-          "Please verify your email"
-        );
-
-        navigate("/verifyAccount");
-
-        return;
-      }
-
       navigate("/");
     } catch (error) {
       console.log(error);
+      
       context.openAlertBox(
         "error",
         "Something went wrong"
@@ -164,16 +116,15 @@ const Login = () => {
     }
   };
 
-
   return (
     <section className="loginPage">
-      {/* LEFT SIDE */}
+      {/* LEFT */}
       <div className="loginLeft">
         <div className="loginOverlay"></div>
 
         <img
           src="https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=2070&auto=format&fit=crop"
-          alt=""
+          alt="gaming"
         />
 
         <div className="loginLeftContent">
@@ -196,7 +147,7 @@ const Login = () => {
         </div>
       </div>
 
-      {/* RIGHT SIDE */}
+      {/* RIGHT */}
       <div className="loginRight">
         <div className="loginCard">
           <div className="loginTop">
@@ -208,7 +159,6 @@ const Login = () => {
             </p>
           </div>
 
-          {/* FORM */}
           <form
             className="loginForm"
             onSubmit={login}
@@ -223,9 +173,9 @@ const Login = () => {
                 <input
                   type="email"
                   name="email"
+                  placeholder="Enter your email"
                   value={formFields.email}
                   onChange={onChangeInput}
-                  placeholder="Enter your email"
                 />
               </div>
             </div>
@@ -253,9 +203,9 @@ const Login = () => {
                       : "password"
                   }
                   name="password"
+                  placeholder="Enter password"
                   value={formFields.password}
                   onChange={onChangeInput}
-                  placeholder="Enter your password"
                 />
 
                 <button
@@ -327,7 +277,7 @@ const Login = () => {
             </button>
           </div>
 
-          {/* REGISTER */}
+          {/* BOTTOM */}
           <div className="bottomText">
             Don’t have an account?
 
