@@ -1,14 +1,4 @@
 /* ========================= */
-/* RESET */
-/* ========================= */
-
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-/* ========================= */
 /* PAGE */
 /* ========================= */
 
@@ -28,7 +18,7 @@
 /* ========================= */
 
 .loginLeft {
-  width: 54%;
+  flex: 1.1;
 
   position: relative;
 
@@ -44,12 +34,13 @@
 
 .loginOverlay {
   position: absolute;
+
   inset: 0;
 
   background: linear-gradient(
     180deg,
-    rgba(2, 8, 23, 0.2),
-    rgba(2, 8, 23, 0.94)
+    rgba(2, 8, 23, 0.15),
+    rgba(2, 8, 23, 0.95)
   );
 
   z-index: 2;
@@ -58,18 +49,18 @@
 .loginLeftContent {
   position: absolute;
 
-  left: 60px;
-  bottom: 55px;
+  left: 40px;
+  bottom: 40px;
 
   z-index: 10;
 
-  max-width: 500px;
+  max-width: 480px;
 }
 
 .loginBadge {
   display: inline-flex;
 
-  padding: 10px 20px;
+  padding: 10px 18px;
 
   border-radius: 999px;
 
@@ -83,25 +74,25 @@
 
   font-weight: 700;
 
-  margin-bottom: 24px;
+  margin-bottom: 20px;
 }
 
 .loginLeftContent h1 {
-  font-size: 72px;
+  font-size: 58px;
 
-  line-height: 82px;
+  line-height: 66px;
 
   font-weight: 800;
 
   color: white;
 
-  margin-bottom: 20px;
+  margin-bottom: 18px;
 }
 
 .loginLeftContent p {
-  font-size: 17px;
+  font-size: 15px;
 
-  line-height: 30px;
+  line-height: 28px;
 
   color: rgba(255, 255, 255, 0.68);
 }
@@ -111,7 +102,9 @@
 /* ========================= */
 
 .loginRight {
-  width: 46%;
+  flex: 0.9;
+
+  min-width: 0;
 
   display: flex;
 
@@ -119,7 +112,7 @@
 
   justify-content: center;
 
-  padding: 28px;
+  padding: 20px;
 
   overflow: hidden;
 
@@ -136,11 +129,14 @@
 
 .loginCard {
   width: 100%;
-  max-width: 500px;
 
-  padding: 34px;
+  max-width: 480px;
 
-  border-radius: 28px;
+  padding: 28px;
+
+  overflow: hidden;
+
+  border-radius: 26px;
 
   background: rgba(255, 255, 255, 0.03);
 
@@ -156,15 +152,15 @@
 /* ========================= */
 
 .loginTop {
-  margin-bottom: 28px;
+  margin-bottom: 24px;
 }
 
 .loginTop h2 {
-  font-size: 34px;
+  font-size: 32px;
 
   color: white;
 
-  margin-bottom: 10px;
+  margin-bottom: 8px;
 
   font-weight: 700;
 }
@@ -172,9 +168,9 @@
 .loginTop p {
   color: rgba(255, 255, 255, 0.55);
 
-  line-height: 26px;
+  line-height: 24px;
 
-  font-size: 15px;
+  font-size: 14px;
 }
 
 /* ========================= */
@@ -182,7 +178,7 @@
 /* ========================= */
 
 .formGroup {
-  margin-bottom: 20px;
+  margin-bottom: 18px;
 }
 
 .formGroup label {
@@ -198,11 +194,21 @@
 }
 
 .passwordLabel {
+  width: 100%;
+
   display: flex;
 
   align-items: center;
 
   justify-content: space-between;
+
+  gap: 10px;
+
+  margin-bottom: 10px;
+}
+
+.passwordLabel label {
+  margin-bottom: 0;
 }
 
 /* ========================= */
@@ -211,7 +217,8 @@
 
 .inputBox {
   width: 100%;
-  height: 56px;
+
+  height: 54px;
 
   display: flex;
 
@@ -219,7 +226,7 @@
 
   gap: 12px;
 
-  padding: 0 18px;
+  padding: 0 16px;
 
   border-radius: 16px;
 
@@ -247,15 +254,17 @@
 .inputBox input {
   flex: 1;
 
-  background: transparent;
+  min-width: 0;
 
   border: none;
 
   outline: none;
 
+  background: transparent;
+
   color: white;
 
-  font-size: 14px;
+  font-size: 15px;
 }
 
 .inputBox input::placeholder {
@@ -263,59 +272,56 @@
 }
 
 /* ========================= */
-/* SHOW PASSWORD */
+/* BUTTONS */
 /* ========================= */
 
 .showPasswordBtn {
-  border: none;
-
-  background: transparent;
+  padding: 0;
 
   color: rgba(255, 255, 255, 0.55);
 
   font-size: 22px;
 
   display: flex;
+
   align-items: center;
+
   justify-content: center;
 
-  cursor: pointer;
-
-  transition: all 0.3s ease;
+  flex-shrink: 0;
 }
-
-.showPasswordBtn:hover {
-  color: white;
-}
-
-/* ========================= */
-/* FORGOT */
-/* ========================= */
 
 .forgotBtn {
-  border: none;
+  display: inline-flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  width: fit-content;
+
+  padding: 0;
 
   background: transparent;
 
   color: #3b82f6;
 
-  cursor: pointer;
-
   font-size: 14px;
 
-  transition: all 0.3s ease;
-}
+  font-weight: 600;
 
-.forgotBtn:hover {
-  color: #60a5fa;
-}
+  white-space: nowrap;
 
+  text-decoration: none;
+
+  flex-shrink: 0;
+}
 /* ========================= */
 /* REMEMBER */
 /* ========================= */
 
 .rememberBox {
-  margin-bottom: 22px;
+  margin-bottom: 20px;
 }
 
 .rememberLeft {
@@ -326,10 +332,6 @@
   gap: 10px;
 }
 
-.rememberLeft input {
-  accent-color: #2563eb;
-}
-
 .rememberLeft label {
   color: rgba(255, 255, 255, 0.6);
 
@@ -337,22 +339,17 @@
 }
 
 /* ========================= */
-/* BUTTON */
+/* LOGIN BUTTON */
 /* ========================= */
 
 .loginBtn {
   width: 100%;
-  height: 56px;
 
-  border: none;
+  height: 54px;
 
   border-radius: 16px;
 
-  background: linear-gradient(
-    135deg,
-    #2563eb,
-    #3b82f6
-  );
+  background: linear-gradient(135deg, #2563eb, #3b82f6);
 
   color: white;
 
@@ -360,24 +357,7 @@
 
   font-weight: 700;
 
-  cursor: pointer;
-
   transition: all 0.3s ease;
-}
-
-.loginBtn:hover {
-  transform: translateY(-2px);
-
-  box-shadow: 0 15px 30px
-    rgba(37, 99, 235, 0.3);
-}
-
-.loginBtn:disabled {
-  opacity: 0.7;
-
-  cursor: not-allowed;
-
-  transform: none;
 }
 
 /* ========================= */
@@ -389,7 +369,7 @@
 
   text-align: center;
 
-  margin: 26px 0;
+  margin: 22px 0;
 }
 
 .divider::before {
@@ -425,23 +405,17 @@
 .socialLogin {
   display: flex;
 
-  gap: 16px;
+  gap: 12px;
 
-  margin-bottom: 24px;
+  margin-bottom: 20px;
 }
 
 .socialLogin button {
   flex: 1;
 
-  height: 64px;
+  height: 56px;
 
-  display: flex;
-
-  align-items: center;
-
-  justify-content: center;
-
-  border-radius: 18px;
+  border-radius: 16px;
 
   border: 1px solid rgba(255, 255, 255, 0.06);
 
@@ -449,19 +423,13 @@
 
   color: white;
 
-  font-size: 24px;
+  font-size: 22px;
 
-  cursor: pointer;
+  display: flex;
 
-  transition: all 0.3s ease;
-}
+  align-items: center;
 
-.socialLogin button:hover {
-  background: rgba(255, 255, 255, 0.06);
-
-  transform: translateY(-3px);
-
-  border-color: rgba(59, 130, 246, 0.35);
+  justify-content: center;
 }
 
 /* ========================= */
@@ -481,24 +449,22 @@
 
   margin-left: 6px;
 
-  text-decoration: none;
-
   font-weight: 700;
-}
-
-.bottomText a:hover {
-  color: #60a5fa;
 }
 
 /* ========================= */
 /* RESPONSIVE */
 /* ========================= */
 
-@media (max-width: 1200px) {
+@media (max-width: 1240px) {
   .loginLeftContent h1 {
-    font-size: 56px;
+    font-size: 46px;
 
-    line-height: 64px;
+    line-height: 54px;
+  }
+
+  .loginCard {
+    max-width: 430px;
   }
 }
 
@@ -508,50 +474,42 @@
   }
 
   .loginRight {
-    width: 100%;
-
-    padding: 20px;
+    flex: 1;
   }
 
   .loginCard {
-    max-width: 520px;
+    max-width: 500px;
   }
 }
 
 @media (max-width: 768px) {
-  .loginPage {
+  body {
     overflow-y: auto;
+  }
+
+  .loginPage {
+    height: auto;
+
+    min-height: 100vh;
   }
 
   .loginRight {
     padding: 16px;
   }
+}
 
-  .loginCard {
-    padding: 24px;
+@media (max-width: 480px) {
+  .passwordLabel {
+    flex-direction: column;
 
-    border-radius: 22px;
-  }
-
-  .loginTop h2 {
-    font-size: 28px;
+    align-items: flex-start;
   }
 
   .socialLogin {
-    gap: 10px;
+    flex-direction: column;
   }
 
-  .socialLogin button {
-    height: 56px;
-
-    font-size: 20px;
-  }
-
-  .inputBox {
-    height: 54px;
-  }
-
-  .loginBtn {
-    height: 54px;
+  .loginTop h2 {
+    font-size: 24px;
   }
 }

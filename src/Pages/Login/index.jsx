@@ -164,13 +164,6 @@ const Login = () => {
     }
   };
 
-  /* ========================= */
-  /* FORGOT PASSWORD */
-  /* ========================= */
-
-  const forgotPassword = () => {
-    navigate("/forgot-password");
-  };
 
   return (
     <section className="loginPage">
@@ -242,13 +235,12 @@ const Login = () => {
               <div className="passwordLabel">
                 <label>Password</label>
 
-                <button
-                  type="button"
+                <Link
+                  to="/forgot-password"
                   className="forgotBtn"
-                  onClick={forgotPassword}
                 >
                   Forgot Password?
-                </button>
+                </Link>
               </div>
 
               <div className="inputBox">
