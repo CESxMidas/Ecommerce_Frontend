@@ -4,7 +4,7 @@
 
 .forgotPage {
   width: 100%;
-  height: 100vh;
+  min-height: 100vh;
 
   display: flex;
   align-items: center;
@@ -15,7 +15,6 @@
   background: #020817;
 
   position: relative;
-
   overflow: hidden;
 }
 
@@ -41,7 +40,7 @@
 /* CONTAINER */
 /* ========================= */
 
-.forgotContainer {
+.forgotPage .forgotContainer {
   width: 100%;
   max-width: 520px;
 
@@ -53,7 +52,7 @@
 /* CARD */
 /* ========================= */
 
-.forgotCard {
+.forgotPage .forgotCard {
   width: 100%;
 
   padding: 44px 36px;
@@ -62,13 +61,11 @@
 
   background: rgba(255, 255, 255, 0.03);
 
-  border: 1px solid
-    rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.08);
 
   backdrop-filter: blur(20px);
 
-  box-shadow: 0 20px 60px
-    rgba(0, 0, 0, 0.45);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.45);
 
   text-align: center;
 }
@@ -77,12 +74,11 @@
 /* ICON */
 /* ========================= */
 
-.forgotIcon {
+.forgotPage .forgotIcon {
   width: 100px;
   height: 100px;
 
-  margin: auto;
-  margin-bottom: 26px;
+  margin: auto auto 26px;
 
   border-radius: 28px;
 
@@ -90,25 +86,20 @@
   align-items: center;
   justify-content: center;
 
-  background: linear-gradient(
-    135deg,
-    #2563eb,
-    #3b82f6
-  );
+  background: linear-gradient(135deg, #2563eb, #3b82f6);
 
   color: white;
 
   font-size: 48px;
 
-  box-shadow: 0 20px 40px
-    rgba(37, 99, 235, 0.3);
+  box-shadow: 0 20px 40px rgba(37, 99, 235, 0.3);
 }
 
 /* ========================= */
 /* TOP */
 /* ========================= */
 
-.forgotBadge {
+.forgotPage .forgotBadge {
   display: inline-flex;
 
   padding: 10px 18px;
@@ -117,8 +108,7 @@
 
   background: rgba(59, 130, 246, 0.12);
 
-  border: 1px solid
-    rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.08);
 
   color: #60a5fa;
 
@@ -129,8 +119,8 @@
   margin-bottom: 22px;
 }
 
-.forgotTop h1 {
-  font-size: 48px;
+.forgotPage .forgotTop h1 {
+  font-size: 36px;
 
   line-height: 58px;
 
@@ -141,27 +131,31 @@
   margin-bottom: 18px;
 }
 
-.forgotTop p {
+.forgotPage .forgotTop p {
   color: rgba(255, 255, 255, 0.6);
 
   line-height: 28px;
 
   font-size: 15px;
 
-  margin-bottom: 34px;
+  margin-bottom: 24px;
 }
 
 /* ========================= */
 /* FORM */
 /* ========================= */
 
-.formGroup {
+.forgotPage .forgotForm {
+  width: 100%;
+}
+
+.forgotPage .formGroup {
   margin-bottom: 24px;
 
   text-align: left;
 }
 
-.formGroup label {
+.forgotPage .formGroup label {
   display: block;
 
   margin-bottom: 10px;
@@ -177,7 +171,7 @@
 /* INPUT */
 /* ========================= */
 
-.inputBox {
+.forgotPage .inputBox {
   width: 100%;
   height: 58px;
 
@@ -192,26 +186,24 @@
 
   background: rgba(255, 255, 255, 0.03);
 
-  border: 1px solid
-    rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.08);
 
   transition: 0.3s ease;
 }
 
-.inputBox:focus-within {
+.forgotPage .inputBox:focus-within {
   border-color: #3b82f6;
 
-  box-shadow: 0 0 0 4px
-    rgba(37, 99, 235, 0.12);
+  box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.12);
 }
 
-.inputIcon {
+.forgotPage .inputIcon {
   font-size: 22px;
 
   color: rgba(255, 255, 255, 0.45);
 }
 
-.inputBox input {
+.forgotPage .inputBox input {
   flex: 1;
 
   background: transparent;
@@ -225,7 +217,7 @@
   font-size: 14px;
 }
 
-.inputBox input::placeholder {
+.forgotPage .inputBox input::placeholder {
   color: rgba(255, 255, 255, 0.3);
 }
 
@@ -233,7 +225,7 @@
 /* BUTTON */
 /* ========================= */
 
-.forgotBtn {
+.forgotPage .forgotBtn {
   width: 100%;
   height: 58px;
 
@@ -241,11 +233,7 @@
 
   border-radius: 18px;
 
-  background: linear-gradient(
-    135deg,
-    #2563eb,
-    #3b82f6
-  );
+  background: linear-gradient(135deg, #2563eb, #3b82f6);
 
   color: white;
 
@@ -258,26 +246,17 @@
   transition: 0.3s ease;
 }
 
-.forgotBtn:hover {
+.forgotPage .forgotBtn:hover {
   transform: translateY(-3px);
 
-  box-shadow: 0 15px 30px
-    rgba(37, 99, 235, 0.3);
-}
-
-.forgotBtn:disabled {
-  opacity: 0.7;
-
-  cursor: not-allowed;
-
-  transform: none;
+  box-shadow: 0 15px 30px rgba(37, 99, 235, 0.3);
 }
 
 /* ========================= */
 /* BOTTOM */
 /* ========================= */
 
-.forgotBottom {
+.forgotPage .forgotBottom {
   margin-top: 26px;
 
   color: rgba(255, 255, 255, 0.55);
@@ -285,7 +264,7 @@
   font-size: 14px;
 }
 
-.forgotBottom a {
+.forgotPage .forgotBottom a {
   margin-left: 8px;
 
   color: #3b82f6;
@@ -293,36 +272,4 @@
   text-decoration: none;
 
   font-weight: 700;
-}
-
-/* ========================= */
-/* RESPONSIVE */
-/* ========================= */
-
-@media (max-width: 768px) {
-  .forgotCard {
-    padding: 34px 24px;
-  }
-
-  .forgotTop h1 {
-    font-size: 38px;
-
-    line-height: 48px;
-  }
-}
-
-@media (max-width: 480px) {
-  .forgotPage {
-    padding: 18px;
-  }
-
-  .forgotTop h1 {
-    font-size: 30px;
-
-    line-height: 40px;
-  }
-
-  .forgotCard {
-    padding: 28px 20px;
-  }
 }

@@ -69,7 +69,7 @@ const ForgotPassword = () => {
 
             <h1>
               Forgot Your
-              <br />
+
               Password?
             </h1>
 

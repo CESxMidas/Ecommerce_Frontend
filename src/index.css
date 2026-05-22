@@ -178,6 +178,10 @@ select {
   color: white;
 }
 
+[data-sonner-toaster],
+.react-hot-toast {
+  z-index: 999999 !important;
+}
 /* ====================== */
 /* RESPONSIVE */
 /* ====================== */

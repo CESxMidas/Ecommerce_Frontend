@@ -72,6 +72,7 @@ function AppContent() {
         <Route path="/cart" element={<Cart />} />
         <Route path="/product/:id" element={<ProductDetail />} />
         <Route path="/verifyAccount" element={<Verify />} />
+        {/* checkout */}
         <Route path="/checkout" element={<CheckOut />} />
         {/* LOGIN */}
         <Route path="/login" element={<Login />} />

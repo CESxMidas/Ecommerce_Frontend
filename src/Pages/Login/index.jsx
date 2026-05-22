@@ -1,5 +1,6 @@
 import { useState, useContext } from "react";
-import { Link, useNavigate } from "react-router-dom";
+
+import { Link } from "react-router-dom";
 
 import { MyContext } from "../../App";
 
@@ -22,11 +23,9 @@ import {
 import "./index.css";
 
 const Login = () => {
-  const navigate = useNavigate();
-
   const context = useContext(MyContext);
 
-  const [isPasswordShow, setIsPasswordShow] =
+  const [showPassword, setShowPassword] =
     useState(false);
 
   const [loading, setLoading] =
@@ -38,6 +37,10 @@ const Login = () => {
       password: "",
       remember: false,
     });
+
+  /* ====================== */
+  /* INPUT CHANGE */
+  /* ====================== */
 
   const onChangeInput = (e) => {
     const { name, value, type, checked } =
@@ -52,12 +55,17 @@ const Login = () => {
     });
   };
 
+  /* ====================== */
+  /* VALIDATE */
+  /* ====================== */
+
   const validateValue = () => {
     if (!formFields.email.trim()) {
       context.openAlertBox(
         "error",
         "Email is required"
       );
+
       return false;
     }
 
@@ -70,6 +78,7 @@ const Login = () => {
         "error",
         "Invalid email format"
       );
+
       return false;
     }
 
@@ -78,11 +87,16 @@ const Login = () => {
         "error",
         "Password is required"
       );
+
       return false;
     }
 
     return true;
   };
+
+  /* ====================== */
+  /* LOGIN */
+  /* ====================== */
 
   const login = async (e) => {
     e.preventDefault();
@@ -95,18 +109,16 @@ const Login = () => {
       setLoading(true);
 
       await new Promise((resolve) =>
-        setTimeout(resolve, 1000)
+        setTimeout(resolve, 1200)
       );
 
       context.openAlertBox(
         "success",
         "Login successful"
       );
-
-      navigate("/");
     } catch (error) {
       console.log(error);
-      
+
       context.openAlertBox(
         "error",
         "Something went wrong"
@@ -119,16 +131,16 @@ const Login = () => {
   return (
     <section className="loginPage">
       {/* LEFT */}
-      <div className="loginLeft">
-        <div className="loginOverlay"></div>
-
+      <div className="loginPage__left">
         <img
           src="https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=2070&auto=format&fit=crop"
           alt="gaming"
         />
 
-        <div className="loginLeftContent">
-          <span className="loginBadge">
+        <div className="loginPage__overlay"></div>
+
+        <div className="loginPage__content">
+          <span className="loginPage__badge">
             NEXT LEVEL GAMING
           </span>
 
@@ -148,9 +160,9 @@ const Login = () => {
       </div>
 
       {/* RIGHT */}
-      <div className="loginRight">
-        <div className="loginCard">
-          <div className="loginTop">
+      <div className="loginPage__right">
+        <div className="loginPage__card">
+          <div className="loginPage__top">
             <h2>Welcome Back 👋</h2>
 
             <p>
@@ -160,15 +172,15 @@ const Login = () => {
           </div>
 
           <form
-            className="loginForm"
+            className="loginPage__form"
             onSubmit={login}
           >
             {/* EMAIL */}
-            <div className="formGroup">
+            <div className="loginPage__group">
               <label>Email Address</label>
 
-              <div className="inputBox">
-                <HiOutlineMail className="inputIcon" />
+              <div className="loginPage__input">
+                <HiOutlineMail className="loginPage__icon" />
 
                 <input
                   type="email"
@@ -181,24 +193,15 @@ const Login = () => {
             </div>
 
             {/* PASSWORD */}
-            <div className="formGroup">
-              <div className="passwordLabel">
-                <label>Password</label>
+            <div className="loginPage__group">
+              <label>Password</label>
 
-                <Link
-                  to="/forgot-password"
-                  className="forgotBtn"
-                >
-                  Forgot Password?
-                </Link>
-              </div>
-
-              <div className="inputBox">
-                <HiOutlineLockClosed className="inputIcon" />
+              <div className="loginPage__input">
+                <HiOutlineLockClosed className="loginPage__icon" />
 
                 <input
                   type={
-                    isPasswordShow
+                    showPassword
                       ? "text"
                       : "password"
                   }
@@ -210,28 +213,34 @@ const Login = () => {
 
                 <button
                   type="button"
-                  className="showPasswordBtn"
+                  className="loginPage__showBtn"
                   onClick={() =>
-                    setIsPasswordShow(
-                      !isPasswordShow
+                    setShowPassword(
+                      !showPassword
                     )
                   }
                 >
-                  {isPasswordShow ? (
+                  {showPassword ? (
                     <IoEyeOffOutline />
                   ) : (
                     <IoEyeOutline />
                   )}
                 </button>
               </div>
+
+              <Link
+                to="/forgot-password"
+                className="loginPage__forgot"
+              >
+                Forgot Password?
+              </Link>
             </div>
 
             {/* REMEMBER */}
-            <div className="rememberBox">
-              <div className="rememberLeft">
+            <div className="loginPage__remember">
+              <label className="loginPage__rememberLabel">
                 <input
                   type="checkbox"
-                  id="remember"
                   name="remember"
                   checked={
                     formFields.remember
@@ -239,16 +248,14 @@ const Login = () => {
                   onChange={onChangeInput}
                 />
 
-                <label htmlFor="remember">
-                  Remember me
-                </label>
-              </div>
+                <span>Remember me</span>
+              </label>
             </div>
 
             {/* BUTTON */}
             <button
               type="submit"
-              className="loginBtn"
+              className="loginPage__submit"
               disabled={loading}
             >
               {loading
@@ -258,12 +265,12 @@ const Login = () => {
           </form>
 
           {/* DIVIDER */}
-          <div className="divider">
+          <div className="loginPage__divider">
             <span>OR CONTINUE WITH</span>
           </div>
 
           {/* SOCIAL */}
-          <div className="socialLogin">
+          <div className="loginPage__social">
             <button type="button">
               <FaGoogle />
             </button>
@@ -278,7 +285,7 @@ const Login = () => {
           </div>
 
           {/* BOTTOM */}
-          <div className="bottomText">
+          <div className="loginPage__bottom">
             Don’t have an account?
 
             <Link to="/register">

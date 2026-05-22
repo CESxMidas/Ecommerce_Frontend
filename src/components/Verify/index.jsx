@@ -50,7 +50,7 @@ const Verify = () => {
 
             <h1>
               Verify Your
-              <br />
+
               Email Address
             </h1>
 
