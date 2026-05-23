@@ -1,17 +1,22 @@
 import { IoMdSearch } from "react-icons/io";
+
 import "./index.css";
+
 const SearchBox = () => {
   return (
-    <div className="flex w-full">
+    <div className="searchBox">
+      {/* INPUT */}
       <input
         type="text"
         placeholder="Search products..."
-        className="flex-1 px-3 py-2 text-sm bg-[var(--card)] border border-[var(--border)] outline-none"
+        className="searchBox__input"
       />
 
-      <button className="px-4 flex items-center gap-1 bg-[var(--primary)] hover:bg-[var(--primary-hover)] text-white transition">
-        <IoMdSearch />
-        Search
+      {/* BUTTON */}
+      <button className="searchBox__btn">
+        <IoMdSearch className="text-[18px]" />
+
+        <span>Search</span>
       </button>
     </div>
   );

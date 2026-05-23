@@ -1,13 +1,13 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
 /* ========================= */
-/* ROOT */
+/* HEADER WRAPPER */
 /* ========================= */
 
 .headerWrapper {
   background: #020817;
+
+  position: relative;
+
+  z-index: 999;
 }
 
 /* ========================= */
@@ -25,7 +25,7 @@
 .topLink {
   cursor: pointer;
 
-  transition: 0.3s ease;
+  transition: all 0.3s ease;
 }
 
 .topLink:hover {
@@ -33,7 +33,7 @@
 }
 
 /* ========================= */
-/* MIDDLE */
+/* MIDDLE HEADER */
 /* ========================= */
 
 .middleHeader {
@@ -52,10 +52,16 @@
   color: white;
 
   letter-spacing: 1px;
+
+  transition: all 0.3s ease;
+}
+
+.logoText:hover {
+  color: var(--primary);
 }
 
 /* ========================= */
-/* MOBILE MENU */
+/* MOBILE MENU BUTTON */
 /* ========================= */
 
 .mobileMenuBtn {
@@ -77,15 +83,19 @@
 
   justify-content: center;
 
-  transition: 0.3s ease;
+  transition: all 0.3s ease;
+
+  cursor: pointer;
 }
 
 .mobileMenuBtn:hover {
   background: rgba(255, 255, 255, 0.08);
+
+  transform: translateY(-2px);
 }
 
 /* ========================= */
-/* LOGIN */
+/* LOGIN BUTTONS */
 /* ========================= */
 
 .loginBtnHeader,
@@ -108,7 +118,7 @@
 
   font-weight: 600;
 
-  transition: 0.3s ease;
+  transition: all 0.3s ease;
 }
 
 .loginBtnHeader {
@@ -121,6 +131,8 @@
 
 .loginBtnHeader:hover {
   background: rgba(255, 255, 255, 0.08);
+
+  transform: translateY(-2px);
 }
 
 .registerBtnHeader {
@@ -131,10 +143,52 @@
 
 .registerBtnHeader:hover {
   background: #3b82f6;
+
+  transform: translateY(-2px);
 }
 
 /* ========================= */
-/* ICONS */
+/* USER MENU BUTTON */
+/* ========================= */
+
+.userMenuBtn {
+  display: flex;
+
+  align-items: center;
+
+  gap: 10px;
+
+  padding: 10px 14px;
+
+  border-radius: 999px;
+
+  background: rgba(255, 255, 255, 0.04);
+
+  border: 1px solid rgba(255, 255, 255, 0.08);
+
+  color: white;
+
+  transition: all 0.3s ease;
+
+  cursor: pointer;
+}
+
+.userMenuBtn:hover {
+  background: rgba(255, 255, 255, 0.08);
+
+  border-color: rgba(255, 255, 255, 0.15);
+
+  transform: translateY(-2px);
+}
+
+.userMenuName {
+  font-size: 14px;
+
+  font-weight: 600;
+}
+
+/* ========================= */
+/* HEADER ICONS */
 /* ========================= */
 
 .headerIcon {
@@ -144,7 +198,7 @@
 
   color: rgba(255, 255, 255, 0.7);
 
-  transition: 0.3s ease;
+  transition: all 0.3s ease;
 }
 
 .headerIcon:hover {
@@ -153,13 +207,19 @@
   transform: translateY(-2px);
 }
 
+/* ========================= */
+/* BADGE */
+/* ========================= */
+
 .headerBadge {
   position: absolute;
 
   top: -8px;
+
   right: -10px;
 
   width: 18px;
+
   height: 18px;
 
   border-radius: 50%;
@@ -175,14 +235,90 @@
   align-items: center;
 
   justify-content: center;
+
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}
+
+/* ========================= */
+/* MUI MENU */
+/* ========================= */
+
+.MuiPaper-root {
+  background: #0f172a !important;
+
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+
+  border-radius: 14px !important;
+
+  min-width: 220px !important;
+
+  margin-top: 10px !important;
+
+  overflow: hidden !important;
+
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.45) !important;
+}
+
+.MuiMenuItem-root {
+  color: white !important;
+
+  font-size: 14px !important;
+
+  gap: 12px !important;
+
+  padding: 12px 18px !important;
+
+  transition: all 0.2s ease !important;
+}
+
+.MuiMenuItem-root:hover {
+  background: rgba(255, 255, 255, 0.06) !important;
+}
+
+.MuiMenuItem-root svg {
+  font-size: 18px;
+}
+
+/* ========================= */
+/* LOGOUT ITEM */
+/* ========================= */
+
+.logoutMenuItem {
+  color: #ef4444 !important;
+}
+
+.logoutMenuItem:hover {
+  background: rgba(239, 68, 68, 0.1) !important;
 }
 
 /* ========================= */
 /* RESPONSIVE */
 /* ========================= */
 
+@media (max-width: 992px) {
+  .userMenuBtn {
+    padding: 8px 12px;
+  }
+
+  .userMenuName {
+    display: none;
+  }
+}
+
 @media (max-width: 768px) {
   .logoText {
     font-size: 28px;
+  }
+
+  .headerIcon {
+    font-size: 18px;
+  }
+
+  .headerBadge {
+    width: 16px;
+
+    height: 16px;
+
+    font-size: 9px;
   }
 }
