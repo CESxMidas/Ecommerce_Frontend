@@ -1,0 +1,47 @@
+.myAccountPage {
+  width: 100%;
+
+  min-height: 100vh;
+
+  padding: 40px 0;
+
+  background:
+    radial-gradient(
+      circle at top left,
+      rgba(37, 99, 235, 0.18),
+      transparent 30%
+    ),
+    radial-gradient(
+      circle at bottom right,
+      rgba(59, 130, 246, 0.12),
+      transparent 30%
+    ),
+    linear-gradient(
+      135deg,
+      #020617 0%,
+      #071028 40%,
+      #020617 100%
+    );
+}
+
+.myAccountLayout {
+  display: flex;
+
+  gap: 30px;
+
+  align-items: flex-start;
+}
+
+.accountContent {
+  flex: 1;
+}
+
+@media (max-width: 992px) {
+  .myAccountLayout {
+    flex-direction: column;
+  }
+
+  .accountContent {
+    width: 100%;
+  }
+}

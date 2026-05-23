@@ -1,12 +1,7 @@
 import "./App.css";
 import { createContext, useState } from "react";
 
-import {
-  BrowserRouter,
-  Routes,
-  Route,
-  useLocation,
-} from "react-router-dom";
+import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 
 import Header from "./components/Header";
 import Footer from "./components/Footer";
@@ -32,6 +27,7 @@ import ForgotPassword from "./Pages/ForgotPassword";
 import ResetPassword from "./Pages/ResetPassword";
 
 import CheckOut from "./Pages/CheckOut";
+import MyAccount from "./Pages/MyAccount";
 
 const MyContext = createContext();
 
@@ -40,11 +36,9 @@ function AppContent() {
 
   // ================= UI STATE =================
 
-  const [openCartPanel, setOpenCartPanel] =
-    useState(false);
+  const [openCartPanel, setOpenCartPanel] = useState(false);
 
-  const [openProductDetailModal, setOpenProductDetailModal] =
-    useState(false);
+  const [openProductDetailModal, setOpenProductDetailModal] = useState(false);
 
   // ================= AUTH STATE =================
 
@@ -100,10 +94,7 @@ function AppContent() {
   // ================= LOGIN =================
 
   const login = (userData) => {
-    localStorage.setItem(
-      "user",
-      JSON.stringify(userData)
-    );
+    localStorage.setItem("user", JSON.stringify(userData));
 
     setAuth({
       isLogin: true,
@@ -162,59 +153,32 @@ function AppContent() {
 
       {/* ROUTES */}
       <Routes>
+        {/* Home */}
         <Route path="/" element={<Home />} />
-
-        <Route
-          path="/productListing"
-          element={<ProductListing />}
-        />
-
+        {/* ProductListing */}
+        <Route path="/productListing" element={<ProductListing />} />
+        {/* Cart */}
         <Route path="/cart" element={<Cart />} />
-
-        <Route
-          path="/product/:id"
-          element={<ProductDetail />}
-        />
-
-        <Route
-          path="/verifyAccount"
-          element={<Verify />}
-        />
-
-        {/* CHECKOUT */}
+        {/* ProductDetail */}
+        <Route path="/product/:id" element={<ProductDetail />} />
+        {/* Verify */}
+        <Route path="/verifyAccount" element={<Verify />} />
+        {/* CheckOut */}
         <Route
           path="/checkout"
-          element={
-            auth.isLogin ? (
-              <CheckOut />
-            ) : (
-              <Login />
-            )
-          }
+          element={auth.isLogin ? <CheckOut /> : <Login />}
         />
-
         {/* LOGIN */}
         <Route path="/login" element={<Login />} />
-
         {/* REGISTER */}
-        <Route
-          path="/register"
-          element={<Register />}
-        />
-
+        <Route path="/register" element={<Register />} />
         {/* FORGOT PASSWORD */}
-        <Route
-          path="/forgot-password"
-          element={<ForgotPassword />}
-        />
-
+        <Route path="/forgot-password" element={<ForgotPassword />} />
         {/* RESET PASSWORD */}
-        <Route
-          path="/reset-password"
-          element={<ResetPassword />}
-        />
+        <Route path="/reset-password" element={<ResetPassword />} />
+        {/* MYACCOUNT */}
+        <Route path="/myaccount" element={<MyAccount />} />
       </Routes>
-
       {/* FOOTER */}
       {!authPages && <Footer />}
 
@@ -228,7 +192,6 @@ function AppContent() {
       >
         <ProductDetailModal />
       </Dialog>
-
       {/* CART PANEL */}
       {!authPages && <CartPanel />}
     </MyContext.Provider>
@@ -246,12 +209,10 @@ function App() {
           style: {
             background: "#0f172a",
             color: "#fff",
-            border:
-              "1px solid rgba(255,255,255,0.08)",
+            border: "1px solid rgba(255,255,255,0.08)",
           },
         }}
       />
-
       <AppContent />
     </BrowserRouter>
   );

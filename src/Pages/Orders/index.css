@@ -1,0 +1,159 @@
+.ordersPage {
+  width: 100%;
+}
+
+/* ====================== */
+/* HEADER */
+/* ====================== */
+
+.ordersHeader {
+  margin-bottom: 24px;
+}
+
+.ordersHeader h2 {
+  font-size: 36px;
+
+  font-weight: 700;
+
+  color: #e1e2e4;
+
+  margin-bottom: 6px;
+}
+
+.ordersHeader p {
+  font-size: 15px;
+
+  color: #64748b;
+}
+
+/* ====================== */
+/* TABLE WRAPPER */
+/* ====================== */
+
+.ordersTableWrapper {
+  width: 100%;
+
+  overflow-x: auto;
+
+  border-radius: 20px;
+
+  background: white;
+
+  border: 1px solid #e2e8f0;
+
+  box-shadow:
+    0 10px 30px rgba(0, 0, 0, 0.05);
+}
+
+/* ====================== */
+/* TABLE */
+/* ====================== */
+
+.ordersTable {
+  width: 100%;
+
+  min-width: 1200px;
+
+  border-collapse: collapse;
+}
+
+/* ====================== */
+/* THEAD */
+/* ====================== */
+
+.ordersTable thead {
+  background: #f8fafc;
+}
+
+.ordersTable th {
+  padding: 18px 20px;
+
+  text-align: left;
+
+  font-size: 13px;
+
+  font-weight: 700;
+
+  color: #475569;
+
+  white-space: nowrap;
+
+  border-bottom: 1px solid #e2e8f0;
+}
+
+/* ====================== */
+/* TBODY */
+/* ====================== */
+
+.ordersTable td {
+  padding: 18px 20px;
+
+  font-size: 14px;
+
+  color: #0f172a;
+
+  border-bottom: 1px solid #f1f5f9;
+
+  white-space: nowrap;
+}
+
+.ordersTable tbody tr {
+  transition: all 0.3s ease;
+}
+
+.ordersTable tbody tr:hover {
+  background: #f8fafc;
+}
+
+/* ====================== */
+/* STATUS */
+/* ====================== */
+
+.status {
+  padding: 6px 14px;
+
+  border-radius: 999px;
+
+  font-size: 12px;
+
+  font-weight: 700;
+}
+
+/* DELIVERED */
+
+.status.delivered {
+  background: rgba(34, 197, 94, 0.12);
+
+  color: #16a34a;
+}
+
+/* PENDING */
+
+.status.pending {
+  background: rgba(245, 158, 11, 0.12);
+
+  color: #d97706;
+}
+
+/* CANCELLED */
+
+.status.cancelled {
+  background: rgba(239, 68, 68, 0.12);
+
+  color: #dc2626;
+}
+
+/* ====================== */
+/* RESPONSIVE */
+/* ====================== */
+
+@media (max-width: 768px) {
+  .ordersHeader h2 {
+    font-size: 24px;
+  }
+
+  .ordersTable th,
+  .ordersTable td {
+    padding: 14px 16px;
+  }
+}

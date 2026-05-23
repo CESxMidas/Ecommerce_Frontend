@@ -36,14 +36,14 @@
 .bannerContent h3 {
   font-size: 28px;
   font-weight: 800;
-  line-height: 1.2;
+  line-height: 1;
   margin-bottom: 8px;
 }
 
 .bannerContent p {
   font-size: 14px;
   color: rgba(255, 255, 255, 0.82);
-  margin-bottom: 18px;
+  margin-bottom: 12px;
 }
 /* BUTTON */
 .bannerContent button {

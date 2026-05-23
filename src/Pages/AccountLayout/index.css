@@ -1,0 +1,86 @@
+/* ========================= */
+/* ACCOUNT LAYOUT */
+/* ========================= */
+
+.accountLayout {
+  width: 100%;
+
+  min-height: 100vh;
+
+  padding: 40px 0;
+
+  background:
+    radial-gradient(
+      circle at top left,
+      rgba(37, 99, 235, 0.12),
+      transparent 30%
+    ),
+    radial-gradient(
+      circle at bottom right,
+      rgba(59, 130, 246, 0.08),
+      transparent 30%
+    ),
+    linear-gradient(
+      135deg,
+      #020617 0%,
+      #071028 45%,
+      #020617 100%
+    );
+}
+
+/* ========================= */
+/* WRAPPER */
+/* ========================= */
+
+.accountWrapper {
+  display: flex;
+
+  align-items: flex-start;
+
+  gap: 24px;
+}
+
+/* ========================= */
+/* RIGHT CONTENT */
+/* ========================= */
+
+.accountContent {
+  flex: 1;
+}
+
+/* ========================= */
+/* CARD */
+/* ========================= */
+
+.accountCard {
+  background: white;
+
+  border-radius: 18px;
+
+  border: 1px solid #e2e8f0;
+
+  padding: 30px;
+
+  box-shadow:
+    0 10px 30px rgba(0, 0, 0, 0.08);
+}
+
+/* ========================= */
+/* RESPONSIVE */
+/* ========================= */
+
+@media (max-width: 992px) {
+  .accountWrapper {
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 768px) {
+  .accountLayout {
+    padding: 24px 0;
+  }
+
+  .accountCard {
+    padding: 22px 18px;
+  }
+}
