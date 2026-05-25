@@ -1,3 +1,5 @@
+import { NavLink } from "react-router-dom";
+
 import {
   FaRegUser,
   FaRegHeart,
@@ -11,110 +13,89 @@ import {
 
 import "./index.css";
 
-const AccountSidebar = ({
-  activeTab,
-  setActiveTab,
-}) => {
+const AccountSidebar = () => {
   return (
     <div className="accountSidebar">
-      {/* IMAGE */}
+      {/* TOP */}
 
-      <div className="sidebarTop">
-        <div className="sidebarAvatar">
+      <div className="accountSidebar__top">
+        <div className="accountSidebar__avatar">
           <img
-            src="https://cdn-icons-png.flaticon.com/512/8345/8345328.png"
+            src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png"
             alt=""
           />
         </div>
 
-        <h3 className="sidebarName">
-          User Name
+        <h3 className="accountSidebar__name">
+          Hoang Do
         </h3>
 
-        <p className="sidebarEmail">
-          user@gmail.com
+        <p className="accountSidebar__email">
+          hoangdo@gmail.com
         </p>
       </div>
 
       {/* MENU */}
 
-      <ul className="sidebarMenu">
-        {/* PROFILE */}
-
-        <li
-          className={
-            activeTab === "profile"
-              ? "active"
-              : ""
-          }
-          onClick={() =>
-            setActiveTab("profile")
+      <div className="accountSidebar__menu">
+        <NavLink
+          to="/myaccount"
+          className={({ isActive }) =>
+            isActive
+              ? "accountSidebar__link active"
+              : "accountSidebar__link"
           }
         >
           <FaRegUser />
 
           <span>My Profile</span>
-        </li>
+        </NavLink>
 
-        {/* ADDRESS */}
-
-        <li
-          className={
-            activeTab === "address"
-              ? "active"
-              : ""
-          }
-          onClick={() =>
-            setActiveTab("address")
+        <NavLink
+          to="/address"
+          className={({ isActive }) =>
+            isActive
+              ? "accountSidebar__link active"
+              : "accountSidebar__link"
           }
         >
           <IoLocationOutline />
 
           <span>Address</span>
-        </li>
+        </NavLink>
 
-        {/* WISHLIST */}
-
-        <li
-          className={
-            activeTab === "wishlist"
-              ? "active"
-              : ""
-          }
-          onClick={() =>
-            setActiveTab("wishlist")
+        <NavLink
+          to="/my-list"
+          className={({ isActive }) =>
+            isActive
+              ? "accountSidebar__link active"
+              : "accountSidebar__link"
           }
         >
           <FaRegHeart />
 
           <span>My List</span>
-        </li>
+        </NavLink>
 
-        {/* ORDERS */}
-
-        <li
-          className={
-            activeTab === "orders"
-              ? "active"
-              : ""
-          }
-          onClick={() =>
-            setActiveTab("orders")
+        <NavLink
+          to="/orders"
+          className={({ isActive }) =>
+            isActive
+              ? "accountSidebar__link active"
+              : "accountSidebar__link"
           }
         >
           <IoBagHandleOutline />
 
           <span>My Orders</span>
-        </li>
+        </NavLink>
 
-        {/* LOGOUT */}
-
-        <li className="logoutItem">
+        <button className="accountSidebar__logout">
           <IoLogOutOutline />
 
           <span>Logout</span>
-        </li>
-      </ul>
+        </button>
+      </div>
     </div>
   );
 };

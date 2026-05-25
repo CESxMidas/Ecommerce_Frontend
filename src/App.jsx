@@ -28,6 +28,8 @@ import ResetPassword from "./Pages/ResetPassword";
 
 import CheckOut from "./Pages/CheckOut";
 import MyAccount from "./Pages/MyAccount";
+import MyOrders from "./Pages/Orders";
+import MyListItem from "./Pages/MyListItem";
 
 const MyContext = createContext();
 
@@ -177,7 +179,11 @@ function AppContent() {
         {/* RESET PASSWORD */}
         <Route path="/reset-password" element={<ResetPassword />} />
         {/* MYACCOUNT */}
-        <Route path="/myaccount" element={<MyAccount />} />
+        <Route path="/myAccount" element={<MyAccount />} />
+        {/* MYORDERS */}
+        <Route path="/orders" element={<MyOrders />} />
+        {/* MYLISTPRODUCT */}
+        <Route path="/my-list" element={<MyListItem />} />
       </Routes>
       {/* FOOTER */}
       {!authPages && <Footer />}
