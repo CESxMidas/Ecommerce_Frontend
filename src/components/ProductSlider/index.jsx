@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Autoplay } from "swiper/modules";
 
@@ -5,12 +6,58 @@ import "swiper/css";
 import "swiper/css/navigation";
 
 import ProductItem from "../ProductItem";
+import { fetchProducts } from "../../services/productService";
 
 import "./index.css";
 
-import products from "../../data/products.json";
+const ProductSlider = ({ limit }) => {
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-const ProductSlider = () => {
+  useEffect(() => {
+    let cancelled = false;
+
+    const load = async () => {
+      try {
+        const data = await fetchProducts();
+
+        if (!cancelled) {
+          setProducts(limit ? data.slice(0, limit) : data);
+        }
+      } catch {
+        if (!cancelled) {
+          setProducts([]);
+        }
+      } finally {
+        if (!cancelled) {
+          setLoading(false);
+        }
+      }
+    };
+
+    load();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [limit]);
+
+  if (loading) {
+    return (
+      <p className="mt-8 text-white/60 text-center">
+        Loading products...
+      </p>
+    );
+  }
+
+  if (products.length === 0) {
+    return (
+      <p className="mt-8 text-white/60 text-center">
+        No products available.
+      </p>
+    );
+  }
+
   return (
     <div className="productSlider mt-8">
       <Swiper
@@ -20,29 +67,24 @@ const ProductSlider = () => {
           delay: 3500,
           disableOnInteraction: false,
         }}
-        loop
+        loop={products.length > 5}
         spaceBetween={20}
         breakpoints={{
           0: {
             slidesPerView: 1.15,
           },
-
           480: {
             slidesPerView: 1.5,
           },
-
           576: {
             slidesPerView: 2,
           },
-
           768: {
             slidesPerView: 2.4,
           },
-
           992: {
             slidesPerView: 3,
           },
-
           1200: {
             slidesPerView: 5,
           },

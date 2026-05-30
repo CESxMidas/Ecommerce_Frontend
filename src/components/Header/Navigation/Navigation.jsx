@@ -1,27 +1,54 @@
-import React from "react";
+import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import Drawer from "@mui/material/Drawer";
-import {
-  FaHome,
-  FaTag,
-  FaChevronDown,
-  FaChevronRight,
-  FaWindows
-} from "react-icons/fa";
-import { MdGames, MdSecurity } from "react-icons/md";
+import { FaHome, FaTag, FaChevronDown } from "react-icons/fa";
+
 import CategoryPanel from "./CategoryPanel";
+import { fetchCategories } from "../../../services/categoryService";
+import {
+  getCategoryIcon,
+  getCategoryListingUrl,
+} from "../../../utils/categoryUtils";
+
 import "./Navigation.css";
+
 const Navigation = () => {
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
+  const [categories, setCategories] = useState([]);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    const load = async () => {
+      try {
+        const data = await fetchCategories();
+
+        if (!cancelled) {
+          setCategories(data);
+        }
+      } catch {
+        if (!cancelled) {
+          setCategories([]);
+        }
+      }
+    };
+
+    load();
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  const closeDrawer = () => setOpen(false);
 
   return (
     <div>
-      {/* NAVBAR */}
       <div className="navigationWrapper">
         <div className="container navigationInner">
-          {/* LEFT */}
           <div className="navLeft">
-            {/* CATEGORY */}
             <button
+              type="button"
               onClick={() => setOpen(true)}
               className="categoryBtn"
             >
@@ -29,158 +56,88 @@ const Navigation = () => {
             </button>
           </div>
 
-          {/* MENU */}
-          <ul
-            className="navMenu"
-          >
-            {/* HOME */}
+          <ul className="navMenu">
             <li className="nav-item">
-              <a href="/" className="nav-link">
+              <Link to="/" className="nav-link">
                 <FaHome />
                 Home
-              </a>
+              </Link>
             </li>
 
-            {/* GAMES */}
-            <li className="nav-item relative group">
-              <button className="nav-link">
-                <MdGames />
-                Games
+            {categories.map((category) => (
+              <li
+                key={category.id}
+                className={`nav-item${category.children?.length ? " relative group" : ""}`}
+              >
+                {category.children?.length > 0 ? (
+                  <>
+                    <button type="button" className="nav-link">
+                      {getCategoryIcon(category.icon, "nav-link-icon")}
+                      {category.name}
+                      <FaChevronDown className="text-[11px]" />
+                    </button>
 
-                <FaChevronDown className="text-[11px]" />
-              </button>
+                    <div className="submenu">
+                      <Link
+                        to={getCategoryListingUrl(category)}
+                        className="submenu-item submenu-item--all"
+                        onClick={closeDrawer}
+                      >
+                        All {category.name}
+                        {category.productCount > 0 && (
+                          <span className="navCount">
+                            {category.productCount}
+                          </span>
+                        )}
+                      </Link>
 
-              <div className="submenu">
-                <div className="relative group/sub">
-                  <button className="submenu-item">
-                    Action Games
+                      {category.children.map((child) => (
+                        <Link
+                          key={child.id}
+                          to={getCategoryListingUrl(child)}
+                          className="submenu-item"
+                          onClick={closeDrawer}
+                        >
+                          {child.name}
+                          {child.productCount > 0 && (
+                            <span className="navCount">
+                              {child.productCount}
+                            </span>
+                          )}
+                        </Link>
+                      ))}
+                    </div>
+                  </>
+                ) : (
+                  <Link
+                    to={getCategoryListingUrl(category)}
+                    className="nav-link"
+                  >
+                    {getCategoryIcon(category.icon, "nav-link-icon")}
+                    {category.name}
+                  </Link>
+                )}
+              </li>
+            ))}
 
-                    <FaChevronRight className="text-[11px]" />
-                  </button>
-
-                  <div className="submenu-child">
-                    <a
-                      href="/"
-                      className="submenu-item"
-                    >
-                      Steam Games
-                    </a>
-
-                    <a
-                      href="/"
-                      className="submenu-item"
-                    >
-                      PUBG
-                    </a>
-
-                    <a
-                      href="/"
-                      className="submenu-item"
-                    >
-                      CS2
-                    </a>
-
-                    <a
-                      href="/"
-                      className="submenu-item"
-                    >
-                      GTA V
-                    </a>
-
-                    <a
-                      href="/"
-                      className="submenu-item"
-                    >
-                      Dota 2
-                    </a>
-                  </div>
-                </div>
-
-                <a
-                  href="/"
-                  className="submenu-item"
-                >
-                  RPG Games
-                </a>
-
-                <a
-                  href="/"
-                  className="submenu-item"
-                >
-                  Strategy Games
-                </a>
-              </div>
-            </li>
-
-            {/* SOFTWARE */}
-            <li className="nav-item relative group">
-              <button className="nav-link">
-                <MdSecurity />
-                Software
-
-                <FaChevronDown className="text-[11px]" />
-              </button>
-
-              <div className="submenu w-[260px]">
-                <a
-                  href="/"
-                  className="submenu-item"
-                >
-                  Windows 11
-                </a>
-
-                <a
-                  href="/"
-                  className="submenu-item"
-                >
-                  Office 365
-                </a>
-
-                <a
-                  href="/"
-                  className="submenu-item"
-                >
-                  Adobe Suite
-                </a>
-
-                <a
-                  href="/"
-                  className="submenu-item"
-                >
-                  Antivirus
-                </a>
-              </div>
-            </li>
-
-            {/* WINDOWS */}
             <li className="nav-item">
-              <a href="/" className="nav-link">
-                <FaWindows />
-                Windows
-              </a>
-            </li>
-
-            {/* DEALS */}
-            <li className="nav-item">
-              <a href="/" className="nav-link">
+              <Link to="/productListing?sort=popular" className="nav-link">
                 <FaTag />
                 Deals
-              </a>
+              </Link>
             </li>
           </ul>
 
-          {/* RIGHT */}
           <div className="navRight">
             🔥 Free International Delivery
           </div>
         </div>
       </div>
 
-      {/* CATEGORY DRAWER */}
       <Drawer
         anchor="left"
         open={open}
-        onClose={() => setOpen(false)}
+        onClose={closeDrawer}
         PaperProps={{
           sx: {
             background: "#071739",
@@ -188,7 +145,7 @@ const Navigation = () => {
           },
         }}
       >
-        <CategoryPanel />
+        <CategoryPanel onNavigate={closeDrawer} />
       </Drawer>
     </div>
   );

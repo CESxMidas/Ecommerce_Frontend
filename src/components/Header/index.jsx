@@ -214,6 +214,8 @@ const Header = () => {
                     {/* ACCOUNT */}
 
                     <MenuItem
+                      component={Link}
+                      to="/myAccount"
                       onClick={handleClose}
                       className="flex gap-2"
                     >
@@ -225,6 +227,8 @@ const Header = () => {
                     {/* ORDERS */}
 
                     <MenuItem
+                      component={Link}
+                      to="/orders"
                       onClick={handleClose}
                       className="flex gap-2"
                     >
@@ -236,6 +240,8 @@ const Header = () => {
                     {/* WISHLIST */}
 
                     <MenuItem
+                      component={Link}
+                      to="/my-list"
                       onClick={handleClose}
                       className="flex gap-2"
                     >
@@ -300,22 +306,20 @@ const Header = () => {
             >
               {/* WISHLIST */}
 
-              <div className="headerIcon">
+              <Link to="/my-list" className="headerIcon">
                 <FaHeart />
 
-                <span className="headerBadge bg-red-500">
-                  1
-                </span>
-              </div>
+                {context.wishlist?.length > 0 && (
+                  <span className="headerBadge bg-red-500">
+                    {context.wishlist.length}
+                  </span>
+                )}
+              </Link>
 
               {/* COMPARE */}
 
               <div className="headerIcon">
                 <BiGitCompare />
-
-                <span className="headerBadge bg-blue-500">
-                  3
-                </span>
               </div>
 
               {/* CART */}
@@ -328,9 +332,11 @@ const Header = () => {
               >
                 <FaShoppingCart />
 
-                <span className="headerBadge bg-red-500">
-                  2
-                </span>
+                {context.cartSummary?.count > 0 && (
+                  <span className="headerBadge bg-red-500">
+                    {context.cartSummary.count}
+                  </span>
+                )}
               </div>
             </div>
           </div>
@@ -359,11 +365,11 @@ const Header = () => {
           sx: {
             background: "#071739",
 
-            width: 320,
+            width: "min(320px, 100vw)",
           },
         }}
       >
-        <CategoryPanel />
+        <CategoryPanel onNavigate={() => setOpenCategory(false)} />
       </Drawer>
     </header>
   );

@@ -160,6 +160,28 @@
 /* RESPONSIVE */
 /* ========================= */
 
+.sidebarCategoryLabel {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.sidebarCategoryLabel em {
+  font-style: normal;
+  font-size: 11px;
+  font-weight: 700;
+  color: #93c5fd;
+  background: rgba(37, 99, 235, 0.15);
+  padding: 2px 8px;
+  border-radius: 999px;
+}
+
+.sidebarEmpty {
+  margin: 0;
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.55);
+}
+
 @media (max-width: 992px) {
   .sidebar {
     padding-right: 0;

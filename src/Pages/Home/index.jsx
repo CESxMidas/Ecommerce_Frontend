@@ -57,7 +57,7 @@ const ProductSection = ({ title, subtitle, showTabs = false, ads = 0 }) => {
           </div>
         </div>
         {/* PRODUCTS */}
-        <ProductSlider />
+        <ProductSlider limit={10} />
         {/* ADS */}
         {ads > 0 && <AdsBannerSlider items={ads} />}
       </div>

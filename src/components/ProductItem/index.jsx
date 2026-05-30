@@ -5,119 +5,100 @@ import {
   FaShoppingCart,
   FaStar,
 } from "react-icons/fa";
-
 import { Link } from "react-router-dom";
-
 import { useContext } from "react";
-
 import { MyContext } from "../../App";
-
+import {
+  computeDiscountLabel,
+  getListPrice,
+  getProductDisplayName,
+  getProductThumbnail,
+  getSalePrice,
+} from "../../utils/productSchema";
+import { formatPrice } from "../../utils/products";
 import "./index.css";
 
 const ProductItem = ({ item }) => {
-
   const context = useContext(MyContext);
+  const salePrice = getSalePrice(item);
+  const listPrice = getListPrice(item);
+  const discount = computeDiscountLabel(item);
+  const displayName = getProductDisplayName(item);
+  const thumbnail = getProductThumbnail(item);
+  const vendor = item.vendor || item.brand || item.categoryName;
 
   return (
     <div className="productItem flex">
-
-      {/* IMAGE */}
       <div className="productImageWrapper">
-
-        {/* BADGES */}
         <div className="productBadges">
+          {discount && <span className="discountBadge">{discount}</span>}
 
-          {item.discount && (
-            <span className="discountBadge">
-              {item.discount}
-            </span>
+          {(item.badge || item.tag) && (
+            <span className="typeBadge">{item.badge || item.tag}</span>
           )}
-
-          <span className="typeBadge">
-            {item.tag}
-          </span>
-
         </div>
 
-        {/* ACTIONS */}
         <div className="productActions">
-
-          <button>
+          <button
+            type="button"
+            onClick={() => context.toggleWishlist(item)}
+            className={context.isInWishlist(item.id) ? "active" : ""}
+          >
             <FaHeart />
           </button>
 
-          <button>
+          <button type="button">
             <FaExchangeAlt />
           </button>
 
           <button
-            onClick={context.handleOpenProductDetailModal}
+            type="button"
+            onClick={() => context.handleOpenProductDetailModal(item)}
           >
             <FaExpand />
           </button>
 
-          <button>
+          <button type="button" onClick={() => context.addToCart(item)}>
             <FaShoppingCart />
           </button>
-
         </div>
 
-        {/* IMAGE LINK */}
-        <Link to={`/product/${item.id}`}>
-
+        <Link to={`/product/${item.slug || item.id}`}>
           <img
-            src={item.image}
-            alt={item.title}
+            src={thumbnail}
+            alt={displayName}
             className="productImage"
+            loading="lazy"
           />
-
         </Link>
-
       </div>
 
-      {/* CONTENT */}
       <div className="productItemContent">
+        <span className="brandName">{vendor}</span>
 
-        <span className="brandName">
-          {item.brand}
-        </span>
-
-        {/* TITLE */}
-        <Link
-          to={`/product/${item.id}`}
-          className="productTitleLink"
-        >
-
-          <h3>
-            {item.title}
-          </h3>
-
+        <Link to={`/product/${item.slug || item.id}`} className="productTitleLink">
+          <h3>{displayName}</h3>
         </Link>
 
-        {/* RATING */}
         <div className="ratingWrapper">
-
-          {[1, 2, 3, 4, 5].map((star) => (
-            <FaStar key={star} />
+          {Array.from({ length: 5 }).map((_, index) => (
+            <FaStar
+              key={index}
+              className={
+                index < Math.round(item.rating || 0) ? "starFilled" : ""
+              }
+            />
           ))}
-
         </div>
 
-        {/* PRICE */}
         <div className="priceWrapper">
+          {listPrice != null && (
+            <span className="oldPrice">{formatPrice(listPrice)}</span>
+          )}
 
-          <span className="oldPrice">
-            ${item.oldPrice}
-          </span>
-
-          <span className="newPrice">
-            ${item.price}
-          </span>
-
+          <span className="newPrice">{formatPrice(salePrice)}</span>
         </div>
-
       </div>
-
     </div>
   );
 };

@@ -1,11 +1,19 @@
-import { useContext, useState } from "react";
-
+import { useContext, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { MyContext } from "../../App";
-
+import { placeOrder } from "../../services/orderService";
+import {
+  getProductDisplayName,
+  getProductThumbnail,
+  getSalePrice,
+} from "../../utils/productSchema";
+import { formatPrice } from "../../utils/products";
 import "./index.css";
 
 const CheckOut = () => {
   const context = useContext(MyContext);
+  const navigate = useNavigate();
+  const { cartItems, cartSummary } = context;
 
   /* ========================= */
   /* STATES */
@@ -27,6 +35,20 @@ const CheckOut = () => {
       city: "",
       address: "",
     });
+
+  useEffect(() => {
+    if (!context.user) return;
+
+    const nameParts = (context.user.name || "").trim().split(" ");
+
+    setFormFields((prev) => ({
+      ...prev,
+      firstName: nameParts[0] || "",
+      lastName: nameParts.slice(1).join(" ") || "",
+      email: context.user.email || prev.email,
+      phone: context.user.phone || prev.phone,
+    }));
+  }, [context.user]);
 
   /* ========================= */
   /* INPUT CHANGE */
@@ -115,33 +137,51 @@ const CheckOut = () => {
   /* PLACE ORDER */
   /* ========================= */
 
-  const placeOrder = async () => {
+  const handlePlaceOrder = async () => {
     const isValid = validateValue();
 
     if (!isValid) return;
 
+    if (cartItems.length === 0) {
+      context.openAlertBox("error", "Your cart is empty");
+      return;
+    }
+
     try {
       setLoading(true);
 
-      await new Promise((resolve) =>
-        setTimeout(resolve, 1500)
-      );
-
-      console.log({
-        ...formFields,
+      const order = await placeOrder({
+        name: `${formFields.firstName} ${formFields.lastName}`.trim(),
+        phone: formFields.phone,
+        address: `${formFields.address}, ${formFields.city}, ${formFields.country}`,
+        pincode: "000000",
+        total: cartSummary.total,
+        email: context.user?.email || formFields.email,
+        userId: context.user?.email || formFields.email,
+        items: cartItems.map((item) => ({
+          productId: item.productId,
+          quantity: item.quantity,
+          product: item.product,
+        })),
         paymentMethod,
       });
+
+      await context.clearCart();
+
+      context.showLicenseKeysFromOrder(order);
 
       context.openAlertBox(
         "success",
         "Order placed successfully"
       );
+
+      if (!order?.items?.some((item) => item.licenseKeys?.length)) {
+        navigate("/orders");
+      }
     } catch (error) {
-        console.log(error);
-        
       context.openAlertBox(
         "error",
-        "Something went wrong"
+        error.message || "Something went wrong"
       );
     } finally {
       setLoading(false);
@@ -372,72 +412,57 @@ const CheckOut = () => {
             <div className="summaryCard">
               <h2>Order Summary</h2>
 
-              {/* ITEM */}
-              <div className="summaryItem">
-                <img
-                  src="https://images.unsplash.com/photo-1629654297299-c8506221ca97?q=80&w=1200&auto=format&fit=crop"
-                  alt=""
-                />
+              {cartItems.map((item) => (
+                <div className="summaryItem" key={item.productId}>
+                  <img
+                    src={getProductThumbnail(item.product)}
+                    alt={getProductDisplayName(item.product)}
+                  />
 
-                <div className="summaryInfo">
-                  <h4>
-                    Windows 11 Pro Key
-                  </h4>
+                  <div className="summaryInfo">
+                    <h4>{getProductDisplayName(item.product)}</h4>
 
-                  <span>
-                    Qty: 1
-                  </span>
+                    <span>Qty: {item.quantity}</span>
 
-                  <div className="price">
-                    $29.99
+                    <div className="price">
+                      {formatPrice(
+                        getSalePrice(item.product) * item.quantity
+                      )}
+                    </div>
                   </div>
                 </div>
-              </div>
+              ))}
 
-              {/* TOTAL */}
               <div className="summaryPrice">
                 <div className="priceRow">
-                  <span>
-                    Subtotal
-                  </span>
-
-                  <span>
-                    $29.99
-                  </span>
+                  <span>Subtotal</span>
+                  <span>{formatPrice(cartSummary.subtotal)}</span>
                 </div>
 
-                <div className="priceRow">
-                  <span>
-                    Discount
-                  </span>
-
-                  <span className="discount">
-                    -$5.00
-                  </span>
-                </div>
+                {cartSummary.savings > 0 && (
+                  <div className="priceRow">
+                    <span>Discount</span>
+                    <span className="discount">
+                      -{formatPrice(cartSummary.savings)}
+                    </span>
+                  </div>
+                )}
 
                 <div className="priceRow">
                   <span>Tax</span>
-
-                  <span>
-                    $2.00
-                  </span>
+                  <span>{formatPrice(cartSummary.tax)}</span>
                 </div>
 
                 <div className="priceRow total">
                   <span>Total</span>
-
-                  <span>
-                    $26.99
-                  </span>
+                  <span>{formatPrice(cartSummary.total)}</span>
                 </div>
               </div>
 
-              {/* BUTTON */}
               <button
                 className="placeOrderBtn"
-                onClick={placeOrder}
-                disabled={loading}
+                onClick={handlePlaceOrder}
+                disabled={loading || cartItems.length === 0}
               >
                 {loading
                   ? "Processing..."

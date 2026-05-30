@@ -1,13 +1,97 @@
-import { Breadcrumbs } from "@mui/material";
-import { Link } from "react-router-dom";
+import { Breadcrumbs, Link as MuiLink } from "@mui/material";
+import { Link, useParams } from "react-router-dom";
 import "./index.css";
 import ProductZoom from "../ProductZoom";
-import { useState } from "react";
+import { useContext, useEffect, useState } from "react";
+import { MyContext } from "../../App";
+import { fetchProductById } from "../../services/productService";
+import {
+  computeDiscountLabel,
+  getListPrice,
+  getProductDisplayName,
+  getSalePrice,
+  isLicenseKeyProduct,
+} from "../../utils/productSchema";
+import { formatPrice, getProductImages } from "../../utils/products";
 
 const ProductDetail = () => {
+  const context = useContext(MyContext);
+  const { id } = useParams();
+  const [product, setProduct] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState("");
+
   const [quantity, setQuantity] = useState(1);
   const [activeTab, setActiveTab] = useState("description");
   const [rating, setRating] = useState(0);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    const load = async () => {
+      setLoading(true);
+      setLoadError("");
+
+      try {
+        const data = await fetchProductById(id);
+
+        if (!cancelled) {
+          setProduct(data);
+        }
+      } catch (error) {
+        if (!cancelled) {
+          setProduct(null);
+          setLoadError(error.message || "Failed to load product");
+        }
+      } finally {
+        if (!cancelled) {
+          setLoading(false);
+        }
+      }
+    };
+
+    load();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [id]);
+
+  if (loading) {
+    return (
+      <div className="productDetailSection pb-20">
+        <div className="container mx-auto px-4 py-20 text-center text-white">
+          <p>Loading product...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!product) {
+    return (
+      <div className="productDetailSection pb-20">
+        <div className="container mx-auto px-4 py-20 text-center text-white">
+          <p className="mb-4">
+            {loadError || "Product not found."}
+          </p>
+
+          <Link
+            to="/productListing"
+            className="text-blue-400 hover:text-blue-300"
+          >
+            Back to products
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
+  const images = getProductImages(product);
+  const displayName = getProductDisplayName(product);
+  const salePrice = getSalePrice(product);
+  const listPrice = getListPrice(product);
+  const discount = computeDiscountLabel(product);
+  const vendor = product.vendor || product.brand || product.categoryName;
   const increaseQuantity = () => {
     setQuantity((prev) => prev + 1);
   };
@@ -29,17 +113,27 @@ const ProductDetail = () => {
           <div className="breadcrumbWrapper">
             <div className="container mx-auto px-4 lg:px-6">
               <Breadcrumbs separator="›">
-                <Link underline="hover" color="inherit" href="/">
+                <MuiLink
+                  component={Link}
+                  to="/"
+                  underline="hover"
+                  color="inherit"
+                >
                   Home
-                </Link>
+                </MuiLink>
 
-                <Link underline="hover" color="inherit" href="/">
+                <MuiLink
+                  component={Link}
+                  to="/productListing"
+                  underline="hover"
+                  color="inherit"
+                >
                   Products
-                </Link>
+                </MuiLink>
 
-                <Link underline="hover" color="inherit" href="/">
-                  Windows 11 Pro
-                </Link>
+                <MuiLink underline="hover" color="inherit">
+                  {displayName}
+                </MuiLink>
               </Breadcrumbs>
             </div>
           </div>
@@ -55,56 +149,62 @@ const ProductDetail = () => {
           <div className="productTopWrapper flex flex-col xl:flex-row gap-10 xl:gap-16 mt-10 xl:mt-14 items-start">
             {/* LEFT */}
             <div className="w-full xl:w-[42%]">
-              <ProductZoom image="https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=2000&auto=format&fit=crop" />
+              <ProductZoom key={product.id} images={images} />
             </div>
 
             {/* RIGHT */}
             <div className="w-full xl:w-[58%] text-white pt-1">
               {/* CATEGORY */}
-              <div className="productCategory">Software License</div>
+              <div className="productCategory">{vendor}</div>
 
               {/* TITLE */}
               <h1 className="text-[28px] leading-[40px] md:text-[34px] md:leading-[46px] xl:text-[38px] xl:leading-[52px] font-extrabold mb-5">
-                Windows 11 Pro Retail Key
-                <br />
-                Lifetime Activation
+                {displayName}
               </h1>
 
               {/* META */}
               <div className="flex items-center gap-4 flex-wrap mb-5">
                 <div className="productStars">★★★★★</div>
 
-                <span className="text-white/55 text-sm">128 Reviews</span>
+                <span className="text-white/55 text-sm">
+                  {product.reviewsCount || 0} Reviews
+                </span>
 
                 <span className="text-green-400 font-bold text-sm">
-                  1.2k Sold
+                  {product.categoryName}
                 </span>
               </div>
 
               {/* PRICE */}
               <div className="flex items-center gap-4 flex-wrap mb-6">
                 <span className="text-[34px] md:text-[40px] font-extrabold text-blue-500">
-                  $29.99
+                  {formatPrice(salePrice)}
                 </span>
 
-                <span className="text-white/30 text-[20px] line-through">
-                  $99.99
-                </span>
+                {listPrice != null && (
+                  <span className="text-white/30 text-[20px] line-through">
+                    {formatPrice(listPrice)}
+                  </span>
+                )}
 
-                <span className="discountBadge">-70%</span>
+                {discount && (
+                  <span className="discountBadge">{discount}</span>
+                )}
               </div>
 
               {/* DESCRIPTION */}
               <p className="text-white/70 text-[15px] leading-[30px] mb-6 max-w-full xl:max-w-[88%]">
-                Genuine Windows 11 Pro license with lifetime activation. Instant
-                email delivery and official Microsoft update support.
+                {product.description ||
+                  `${displayName} — genuine digital license with instant email delivery.`}
               </p>
 
               {/* STOCK */}
               <div className="flex items-center gap-3 flex-wrap mb-7">
                 <span className="stockDot"></span>
 
-                <span className="text-green-400 font-bold">In Stock</span>
+                <span className="text-green-400 font-bold">
+                  {product.stock > 0 ? "In Stock" : "Out of Stock"}
+                </span>
 
                 <span className="text-white/50 text-sm">
                   Ready for instant delivery
@@ -156,13 +256,41 @@ const ProductDetail = () => {
 
               {/* BUTTONS */}
               <div className="flex flex-col sm:flex-row gap-4 mb-9">
-                <button className="addCartBtn">Add To Cart</button>
+                <button
+                  type="button"
+                  className="addCartBtn"
+                  onClick={() => context.addToCart(product)}
+                >
+                  Add To Cart
+                </button>
 
-                <button className="buyNowBtn">Buy Now</button>
+                <button
+                  type="button"
+                  className="buyNowBtn"
+                  onClick={() => {
+                    if (isLicenseKeyProduct(product)) {
+                      context.purchaseLicenseProduct(product, quantity);
+                      return;
+                    }
+
+                    context.addToCart(product, quantity);
+                    context.setOpenCartPanel(true);
+                  }}
+                >
+                  {isLicenseKeyProduct(product)
+                    ? "Buy & Get Key"
+                    : "Buy Now"}
+                </button>
               </div>
 
               {/* FEATURES */}
               <div className="productFeatures flex flex-wrap gap-4">
+                {isLicenseKeyProduct(product) && (
+                  <div className="featureItem flex items-center justify-center gap-2">
+                    🔑 Key format: {product.keyPrefix}-#####
+                  </div>
+                )}
+
                 <div className="featureItem flex items-center justify-center gap-2">
                   ⚡ Instant Delivery
                 </div>

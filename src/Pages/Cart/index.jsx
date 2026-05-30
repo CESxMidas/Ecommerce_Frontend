@@ -1,205 +1,197 @@
 import { Link } from "react-router-dom";
+import { useContext } from "react";
 import { FaTrashAlt, FaArrowLeft } from "react-icons/fa";
+import { MyContext } from "../../App";
+import {
+  computeDiscountLabel,
+  getListPrice,
+  getProductDisplayName,
+  getProductThumbnail,
+  getSalePrice,
+} from "../../utils/productSchema";
+import { formatPrice } from "../../utils/products";
 import "./index.css";
+
 const Cart = () => {
+  const context = useContext(MyContext);
+  const { cartItems, cartSummary } = context;
+  const isEmpty = cartItems.length === 0;
+
   return (
     <section className="cartPage">
       <div className="container">
-        {/* TOP */}
         <div className="cartTop">
           <div>
             <h2>Shopping Cart</h2>
-            <p>You have 2 items in your cart</p>
+            <p>
+              You have {cartSummary.count} item
+              {cartSummary.count !== 1 ? "s" : ""} in your cart
+            </p>
           </div>
           <Link to="/productListing" className="continueShopping">
             <FaArrowLeft />
             Continue Shopping
           </Link>
         </div>
-        {/* CONTENT */}
-        <div className="cartWrapper">
-          {/* LEFT */}
-          <div className="cartLeft">
-            {/* ITEM */}
-            {/* ITEM */}
-            <div className="cartItem">
-              <div className="cartItemImage">
-                <img
-                  src="https://images.unsplash.com/photo-1629654297299-c8506221ca97?q=80&w=1200&auto=format&fit=crop"
-                  alt=""
-                />
-              </div>
 
-              <div className="cartItemInfo">
-                <span className="cartCategory">SOFTWARE LICENSE</span>
+        {isEmpty ? (
+          <div className="cartLeft" style={{ padding: "48px 24px", textAlign: "center" }}>
+            <p style={{ marginBottom: 16, color: "rgba(255,255,255,0.7)" }}>
+              Your cart is empty.
+            </p>
+            <Link to="/productListing" className="continueShopping">
+              Start Shopping
+            </Link>
+          </div>
+        ) : (
+          <div className="cartWrapper">
+            <div className="cartLeft">
+              {cartItems.map((item) => (
+                <div className="cartItem" key={item.productId}>
+                  <div className="cartItemImage">
+                    <img
+                      src={getProductThumbnail(item.product)}
+                      alt={getProductDisplayName(item.product)}
+                    />
+                  </div>
 
-                <h4>Windows 11 Pro Retail License Key</h4>
+                  <div className="cartItemInfo">
+                    <span className="cartCategory">
+                      {(item.product.vendor || item.product.brand || "").toUpperCase()}
+                    </span>
 
-                {/* META */}
-                <div className="cartMeta">
-                  <span>Platform: PC</span>
+                    <h4>{getProductDisplayName(item.product)}</h4>
 
-                  <span>Edition: Pro</span>
+                    <div className="cartMeta">
+                      <span>Platform: PC</span>
+                      <span>Delivery: Instant</span>
+                    </div>
 
-                  <span>Delivery: Instant</span>
-                </div>
+                    <div className="cartPriceBox">
+                      {getListPrice(item.product) != null && (
+                        <span className="oldPrice">
+                          {formatPrice(getListPrice(item.product))}
+                        </span>
+                      )}
 
-                {/* OPTIONS */}
-                <div className="cartOptions">
-                  <div className="cartColor">
-                    <span>Color:</span>
+                      <span className="cartPrice">
+                        {formatPrice(getSalePrice(item.product))}
+                      </span>
 
-                    <div
-                      className="colorDot"
-                      style={{ background: "#2563eb" }}
-                    ></div>
+                      {computeDiscountLabel(item.product) && (
+                        <span className="discountBadge">
+                          {computeDiscountLabel(item.product)}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="cartActions">
+                    <div className="cartQuantity">
+                      <button
+                        type="button"
+                        onClick={() =>
+                          context.updateCartQuantity(
+                            item.productId,
+                            item.quantity - 1
+                          )
+                        }
+                      >
+                        -
+                      </button>
+
+                      <span>{item.quantity}</span>
+
+                      <button
+                        type="button"
+                        onClick={() =>
+                          context.updateCartQuantity(
+                            item.productId,
+                            item.quantity + 1
+                          )
+                        }
+                      >
+                        +
+                      </button>
+                    </div>
+
+                    <div className="cartTotal">
+                      {formatPrice(
+                        getSalePrice(item.product) * item.quantity
+                      )}
+                    </div>
+
+                    <button
+                      type="button"
+                      className="removeBtn"
+                      onClick={() =>
+                        context.removeFromCart(item.productId)
+                      }
+                    >
+                      <FaTrashAlt />
+                    </button>
                   </div>
                 </div>
-
-                {/* PRICE */}
-                <div className="cartPriceBox">
-                  <span className="oldPrice">$99.99</span>
-
-                  <span className="cartPrice">$29.99</span>
-
-                  <span className="discountBadge">-70%</span>
-                </div>
-              </div>
-
-              <div className="cartActions">
-                {/* QUANTITY */}
-                <div className="cartQuantity">
-                  <button>-</button>
-
-                  <span>1</span>
-
-                  <button>+</button>
-                </div>
-
-                {/* TOTAL */}
-                <div className="cartTotal">$29.99</div>
-
-                {/* REMOVE */}
-                <button className="removeBtn">
-                  <FaTrashAlt />
-                </button>
-              </div>
+              ))}
             </div>
 
-            {/* ITEM */}
-            <div className="cartItem">
-              <div className="cartItemImage">
-                <img
-                  src="https://images.unsplash.com/photo-1603481546238-487240415921?q=80&w=1200&auto=format&fit=crop"
-                  alt=""
-                />
-              </div>
+            <div className="cartRight">
+              <div className="summaryCard">
+                <h3>Order Summary</h3>
 
-              <div className="cartItemInfo">
-                <span className="cartCategory">GAME</span>
-
-                <h4>Minecraft Java & Bedrock Edition</h4>
-
-                {/* META */}
-                <div className="cartMeta">
-                  <span>Platform: PC</span>
-
-                  <span>Edition: Java + Bedrock</span>
-
-                  <span>Activation: Instant</span>
+                <div className="summaryRow">
+                  <span>Subtotal</span>
+                  <span>{formatPrice(cartSummary.subtotal)}</span>
                 </div>
 
-                {/* OPTIONS */}
-                <div className="cartOptions">
-                  <div className="cartColor">
-                    <span>Color:</span>
-
-                    <div
-                      className="colorDot"
-                      style={{ background: "#9333ea" }}
-                    ></div>
+                {cartSummary.savings > 0 && (
+                  <div className="summaryRow">
+                    <span>Discount</span>
+                    <span className="discount">
+                      -{formatPrice(cartSummary.savings)}
+                    </span>
                   </div>
+                )}
+
+                <div className="summaryRow">
+                  <span>Delivery</span>
+                  <span>Free</span>
                 </div>
 
-                {/* PRICE */}
-                <div className="cartPriceBox">
-                  <span className="oldPrice">$39.99</span>
+                {cartSummary.tax > 0 && (
+                  <div className="summaryRow">
+                    <span>Tax</span>
+                    <span>{formatPrice(cartSummary.tax)}</span>
+                  </div>
+                )}
 
-                  <span className="cartPrice">$18.99</span>
+                <div className="summaryDivider"></div>
 
-                  <span className="discountBadge">-52%</span>
-                </div>
-              </div>
-
-              <div className="cartActions">
-                {/* QUANTITY */}
-                <div className="cartQuantity">
-                  <button>-</button>
-
-                  <span>1</span>
-
-                  <button>+</button>
+                <div className="summaryTotal">
+                  <span>Total</span>
+                  <span>{formatPrice(cartSummary.total)}</span>
                 </div>
 
-                {/* TOTAL */}
-                <div className="cartTotal">$18.99</div>
+                <div className="couponBox">
+                  <input type="text" placeholder="Coupon code" />
+                  <button type="button">Apply</button>
+                </div>
 
-                {/* REMOVE */}
-                <button className="removeBtn">
-                  <FaTrashAlt />
+                <Link to="/checkout" className="checkoutBtn">
+                  Proceed To Checkout
+                </Link>
+
+                <button type="button" className="paypalBtn">
+                  Pay With PayPal
                 </button>
+
+                <div className="secureText">
+                  🔒 Secure Checkout Guaranteed
+                </div>
               </div>
             </div>
           </div>
-
-          {/* RIGHT */}
-          <div className="cartRight">
-            <div className="summaryCard">
-              <h3>Order Summary</h3>
-
-              <div className="summaryRow">
-                <span>Subtotal</span>
-
-                <span>$48.98</span>
-              </div>
-
-              <div className="summaryRow">
-                <span>Discount</span>
-
-                <span className="discount">-$5.00</span>
-              </div>
-
-              <div className="summaryRow">
-                <span>Delivery</span>
-
-                <span>Free</span>
-              </div>
-
-              <div className="summaryDivider"></div>
-
-              <div className="summaryTotal">
-                <span>Total</span>
-
-                <span>$43.98</span>
-              </div>
-
-              {/* COUPON */}
-              <div className="couponBox">
-                <input type="text" placeholder="Coupon code" />
-
-                <button>Apply</button>
-              </div>
-
-              {/* BUTTONS */}
-              <button className="checkoutBtn">Proceed To Checkout</button>
-
-              <button className="paypalBtn">Pay With PayPal</button>
-
-              {/* SAFE */}
-              <div className="secureText">🔒 Secure Checkout Guaranteed</div>
-            </div>
-          </div>
-        </div>
+        )}
       </div>
     </section>
   );

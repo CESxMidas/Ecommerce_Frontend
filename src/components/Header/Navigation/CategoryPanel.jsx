@@ -1,99 +1,115 @@
+import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+
 import CategoryCollapse from "../../CategoryCollapse";
+import { fetchCategories } from "../../../services/categoryService";
+import { getCategoryIcon } from "../../../utils/categoryUtils";
 
 import "./CategoryPanel.css";
 
-import {
-  FaGamepad,
-  FaWindows,
-  FaShieldAlt,
-  FaCode,
-} from "react-icons/fa";
+const CategoryPanel = ({ onNavigate }) => {
+  const [categories, setCategories] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
-const categoryData = [
-  {
-    title: "Games",
-    icon: <FaGamepad className="category-icon" />,
-    items: [
-      {
-        label: "Action Games",
-      },
+  useEffect(() => {
+    let cancelled = false;
 
-      {
-        label: "RPG Games",
-      },
+    const load = async () => {
+      try {
+        setLoading(true);
+        setError("");
 
-      {
-        label: "FPS Games",
-      },
-    ],
-  },
+        const data = await fetchCategories();
 
-  {
-    title: "Software",
+        if (!cancelled) {
+          setCategories(data);
+        }
+      } catch (loadError) {
+        if (!cancelled) {
+          setCategories([]);
+          setError(loadError.message || "Không tải được danh mục");
+        }
+      } finally {
+        if (!cancelled) {
+          setLoading(false);
+        }
+      }
+    };
 
-    icon: <FaWindows className="category-icon" />,
+    load();
 
-    items: [
-      {
-        label: "Windows Tools",
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
-        icon: (
-          <FaWindows className="category-icon-small" />
-        ),
-      },
+  const handleNavigate = () => {
+    onNavigate?.();
+  };
 
-      {
-        label: "Antivirus",
-
-        icon: (
-          <FaShieldAlt className="category-icon-small" />
-        ),
-      },
-    ],
-  },
-
-  {
-    title: "Developer Tools",
-
-    icon: <FaCode className="category-icon" />,
-
-    items: [
-      {
-        label: "VS Code Extensions",
-      },
-
-      {
-        label: "Git Clients",
-      },
-    ],
-  },
-];
-
-const CategoryPanel = () => {
   return (
     <div className="categoryPanel">
-
-      {/* HEADING */}
       <div className="categoryPanelHeading">
         <h3>All Categories</h3>
-
-        <span>
-          Browse all collections
-        </span>
+        <span>Browse collections by category</span>
       </div>
 
-      {/* BODY */}
+      <div className="categoryPanelQuick">
+        <Link
+          to="/productListing"
+          className="categoryPanelQuickLink"
+          onClick={handleNavigate}
+        >
+          View all products
+        </Link>
+      </div>
+
       <div className="categoryPanelWrapper">
-        {categoryData.map((item, index) => (
-          <CategoryCollapse
-            key={index}
-            title={item.title}
-            icon={item.icon}
-            items={item.items}
-          />
-        ))}
-      </div>
+        {loading && (
+          <p className="categoryPanelStatus">Loading categories...</p>
+        )}
 
+        {!loading && error && (
+          <p className="categoryPanelStatus categoryPanelStatus--error">
+            {error}
+          </p>
+        )}
+
+        {!loading &&
+          !error &&
+          categories.map((category) => (
+            <CategoryCollapse
+              key={category.id}
+              title={`${category.name}${
+                category.productCount > 0
+                  ? ` (${category.productCount})`
+                  : ""
+              }`}
+              icon={getCategoryIcon(category.icon)}
+              items={[
+                {
+                  ...category,
+                  label: `All ${category.name}`,
+                  name: `All ${category.name}`,
+                  icon: getCategoryIcon(
+                    category.icon,
+                    "category-icon-small"
+                  ),
+                },
+                ...(category.children || []).map((child) => ({
+                  ...child,
+                  label: child.name,
+                  icon: getCategoryIcon(
+                    child.icon,
+                    "category-icon-small"
+                  ),
+                })),
+              ]}
+              onNavigate={handleNavigate}
+            />
+          ))}
+      </div>
     </div>
   );
 };

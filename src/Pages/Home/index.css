@@ -33,7 +33,7 @@
 /* LEFT */
 
 .leftSec {
-  min-width: 420px;
+  min-width: 0;
 
   padding-right: 20px;
 }
@@ -286,9 +286,15 @@
 /* RESPONSIVE */
 /* ========================= */
 
+@media (min-width: 1200px) {
+  .leftSec {
+    min-width: 420px;
+  }
+}
+
 @media (max-width: 1200px) {
   .leftSec {
-    min-width: 260px;
+    min-width: 0;
   }
 
   .leftSec h2 {

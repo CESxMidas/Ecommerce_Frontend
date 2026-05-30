@@ -1,14 +1,20 @@
-// CartPanel/index.jsx
-
 import { useContext } from "react";
 import Drawer from "@mui/material/Drawer";
 import { IoClose } from "react-icons/io5";
 import { FaTrashAlt } from "react-icons/fa";
 import { MyContext } from "../../App";
+import {
+  getProductDisplayName,
+  getProductThumbnail,
+  getSalePrice,
+} from "../../utils/productSchema";
+import { formatPrice } from "../../utils/products";
 import "./index.css";
 import { Link } from "react-router-dom";
+
 const CartPanel = () => {
   const context = useContext(MyContext);
+  const { cartItems, cartSummary } = context;
 
   return (
     <Drawer
@@ -17,88 +23,132 @@ const CartPanel = () => {
       onClose={() => context.setOpenCartPanel(false)}
       PaperProps={{
         sx: {
-          width: 420,
+          width: "min(420px, 100vw)",
           background: "#020817",
         },
       }}
     >
       <div className="cartPanel">
-        {/* TOP */}
         <div className="cartPanelTop">
-          <h4>Shopping Cart (2)</h4>
+          <h4>Shopping Cart ({cartSummary.count})</h4>
 
-          <button onClick={() => context.setOpenCartPanel(false)}>
+          <button
+            type="button"
+            onClick={() => context.setOpenCartPanel(false)}
+          >
             <IoClose />
           </button>
         </div>
 
-        {/* BODY */}
         <div className="cartPanelBody">
-          {/* ITEM */}
-          {/* ITEM */}
-          <div className="cartItem">
-            {/* IMAGE */}
-            <div className="cartItemImage">
-              <img
-                src="https://images.unsplash.com/photo-1629654297299-c8506221ca97?q=80&w=1000&auto=format&fit=crop"
-                alt=""
-              />
-            </div>
-
-            {/* INFO */}
-            <div className="cartItemInfo">
-              <h5>Windows 11 Pro Retail Key</h5>
-
-              <span className="cartItemCategory">Software License</span>
-
-              {/* META */}
-              <div className="cartItemMeta">
-                <span>Platform: PC</span>
-
-                <span>Edition: Retail</span>
-              </div>
-
-              {/* BOTTOM */}
-              <div className="cartItemBottom">
-                {/* PRICE */}
-                <div className="cartItemPrice">$29.99</div>
-
-                {/* QUANTITY */}
-                <div className="cartQtyBox">
-                  <button>-</button>
-
-                  <span>1</span>
-
-                  <button>+</button>
+          {cartItems.length === 0 ? (
+            <p
+              style={{
+                color: "rgba(255,255,255,0.65)",
+                textAlign: "center",
+                padding: "24px 12px",
+              }}
+            >
+              Your cart is empty.
+            </p>
+          ) : (
+            cartItems.map((item) => (
+              <div className="cartItem" key={item.productId}>
+                <div className="cartItemImage">
+                  <img
+                    src={getProductThumbnail(item.product)}
+                    alt={getProductDisplayName(item.product)}
+                  />
                 </div>
+
+                <div className="cartItemInfo">
+                  <h5>{getProductDisplayName(item.product)}</h5>
+
+                  <span className="cartItemCategory">
+                    {item.product.vendor || item.product.brand}
+                  </span>
+
+                  <div className="cartItemMeta">
+                    <span>Qty: {item.quantity}</span>
+                  </div>
+
+                  <div className="cartItemBottom">
+                    <div className="cartItemPrice">
+                      {formatPrice(
+                        getSalePrice(item.product) * item.quantity
+                      )}
+                    </div>
+
+                    <div className="cartQtyBox">
+                      <button
+                        type="button"
+                        onClick={() =>
+                          context.updateCartQuantity(
+                            item.productId,
+                            item.quantity - 1
+                          )
+                        }
+                      >
+                        -
+                      </button>
+
+                      <span>{item.quantity}</span>
+
+                      <button
+                        type="button"
+                        onClick={() =>
+                          context.updateCartQuantity(
+                            item.productId,
+                            item.quantity + 1
+                          )
+                        }
+                      >
+                        +
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                <button
+                  type="button"
+                  className="removeCartItem"
+                  onClick={() =>
+                    context.removeFromCart(item.productId)
+                  }
+                >
+                  <FaTrashAlt />
+                </button>
               </div>
+            ))
+          )}
+        </div>
+
+        {cartItems.length > 0 && (
+          <div className="cartPanelFooter">
+            <div className="cartSubtotal">
+              <span>Subtotal</span>
+              <h3>{formatPrice(cartSummary.subtotal)}</h3>
             </div>
 
-            {/* REMOVE */}
-            <button className="removeCartItem">
-              <FaTrashAlt />
-            </button>
+            <div className="cartPanelActions">
+              <Link
+                to="/checkout"
+                className="checkoutBtn"
+                onClick={() => context.setOpenCartPanel(false)}
+              >
+                Proceed To Checkout
+              </Link>
+
+              <Link
+                to="/cart"
+                className="viewCartBtn"
+                onClick={() => context.setOpenCartPanel(false)}
+              >
+                View Full Cart
+              </Link>
+            </div>
           </div>
-        </div>
-
-        {/* FOOTER */}
-        <div className="cartPanelFooter">
-          <div className="cartSubtotal">
-            <span>Subtotal</span>
-
-            <h3>$129.99</h3>
-          </div>
-
-          <button className="checkoutBtn">Proceed To Checkout</button>
-
-          <Link
-            to="/cart"
-            className="viewCartBtn"
-            onClick={() => context.setOpenCartPanel(false)}
-          >
-            View Full Cart
-          </Link>
-        </div>
+        )}
       </div>
     </Drawer>
   );

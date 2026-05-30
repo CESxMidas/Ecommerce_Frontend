@@ -1,17 +1,19 @@
 import { useContext, useState } from "react";
 
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import { HiOutlineMail } from "react-icons/hi";
 
 import { MdOutlineLockReset } from "react-icons/md";
 
 import { MyContext } from "../../App";
+import { forgotPassword as forgotPasswordRequest } from "../../services/authService";
 
 import "./index.css";
 
 const ForgotPassword = () => {
   const context = useContext(MyContext);
+  const navigate = useNavigate();
 
   const [loading, setLoading] = useState(false);
 
@@ -39,16 +41,21 @@ const ForgotPassword = () => {
     try {
       setLoading(true);
 
-      // FAKE API
-      await new Promise((resolve) => setTimeout(resolve, 1200));
+      const result = await forgotPasswordRequest(email);
 
-      context.openAlertBox("success", "Password reset email sent");
+      context.openAlertBox(
+        "success",
+        result.message || "Password reset code sent"
+      );
 
-      console.log(email);
+      navigate(
+        `/reset-password?email=${encodeURIComponent(email)}`
+      );
     } catch (error) {
-      console.log(error);
-
-      context.openAlertBox("error", "Something went wrong");
+      context.openAlertBox(
+        "error",
+        error.message || "Something went wrong"
+      );
     } finally {
       setLoading(false);
     }

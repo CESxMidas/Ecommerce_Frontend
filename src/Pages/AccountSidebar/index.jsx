@@ -1,3 +1,4 @@
+import { useContext } from "react";
 import { NavLink } from "react-router-dom";
 
 import {
@@ -11,13 +12,18 @@ import {
   IoLogOutOutline,
 } from "react-icons/io5";
 
+import { MyContext } from "../../App";
+
 import "./index.css";
 
 const AccountSidebar = () => {
+  const context = useContext(MyContext);
+
+  const displayName = context?.user?.name || "Hoang Do";
+  const displayEmail = context?.user?.email || "hoangdo@gmail.com";
+
   return (
     <div className="accountSidebar">
-      {/* TOP */}
-
       <div className="accountSidebar__top">
         <div className="accountSidebar__avatar">
           <img
@@ -26,20 +32,14 @@ const AccountSidebar = () => {
           />
         </div>
 
-        <h3 className="accountSidebar__name">
-          Hoang Do
-        </h3>
+        <h3 className="accountSidebar__name">{displayName}</h3>
 
-        <p className="accountSidebar__email">
-          hoangdo@gmail.com
-        </p>
+        <p className="accountSidebar__email">{displayEmail}</p>
       </div>
-
-      {/* MENU */}
 
       <div className="accountSidebar__menu">
         <NavLink
-          to="/myaccount"
+          to="/myAccount"
           className={({ isActive }) =>
             isActive
               ? "accountSidebar__link active"
@@ -90,7 +90,11 @@ const AccountSidebar = () => {
           <span>My Orders</span>
         </NavLink>
 
-        <button className="accountSidebar__logout">
+        <button
+          type="button"
+          className="accountSidebar__logout"
+          onClick={() => context?.logout()}
+        >
           <IoLogOutOutline />
 
           <span>Logout</span>

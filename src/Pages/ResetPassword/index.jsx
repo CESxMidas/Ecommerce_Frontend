@@ -1,6 +1,6 @@
 import { useContext, useState } from "react";
 
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 
 import {
   HiOutlineLockClosed,
@@ -16,6 +16,7 @@ import {
 } from "react-icons/md";
 
 import { MyContext } from "../../App";
+import { resetPassword as resetPasswordRequest } from "../../services/authService";
 
 import "./index.css";
 
@@ -23,6 +24,8 @@ const ResetPassword = () => {
   const context = useContext(MyContext);
 
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const emailFromQuery = searchParams.get("email") || "";
 
   /* ========================= */
   /* STATES */
@@ -43,6 +46,8 @@ const ResetPassword = () => {
 
   const [formFields, setFormFields] =
     useState({
+      email: emailFromQuery,
+      otp: "",
       password: "",
       confirmPassword: "",
     });
@@ -110,13 +115,32 @@ const ResetPassword = () => {
       return;
     }
 
+    if (!context.isLogin) {
+      if (!formFields.email.trim()) {
+        context.openAlertBox("error", "Email is required");
+        return;
+      }
+
+      if (!formFields.otp.trim()) {
+        context.openAlertBox("error", "Reset code is required");
+        return;
+      }
+    }
+
     try {
       setLoading(true);
 
-      // FAKE API
-      await new Promise((resolve) =>
-        setTimeout(resolve, 1200)
-      );
+      const payload = {
+        password: formFields.password,
+        confirmPassword: formFields.confirmPassword,
+      };
+
+      if (!context.isLogin) {
+        payload.email = formFields.email;
+        payload.otp = formFields.otp;
+      }
+
+      await resetPasswordRequest(payload);
 
       context.openAlertBox(
         "success",
@@ -125,11 +149,9 @@ const ResetPassword = () => {
 
       navigate("/login");
     } catch (error) {
-        console.log(error);
-        
       context.openAlertBox(
         "error",
-        "Something went wrong"
+        error.message || "Something went wrong"
       );
     } finally {
       setLoading(false);
@@ -169,6 +191,38 @@ const ResetPassword = () => {
             className="resetForm"
             onSubmit={resetPassword}
           >
+            {!context.isLogin && (
+              <>
+                <div className="formGroup">
+                  <label>Email Address</label>
+
+                  <div className="inputBox">
+                    <input
+                      type="email"
+                      name="email"
+                      value={formFields.email}
+                      onChange={onChangeInput}
+                      placeholder="Enter your email"
+                    />
+                  </div>
+                </div>
+
+                <div className="formGroup">
+                  <label>Reset Code</label>
+
+                  <div className="inputBox">
+                    <input
+                      type="text"
+                      name="otp"
+                      value={formFields.otp}
+                      onChange={onChangeInput}
+                      placeholder="Enter 6-digit code"
+                    />
+                  </div>
+                </div>
+              </>
+            )}
+
             {/* PASSWORD */}
             <div className="formGroup">
               <label>

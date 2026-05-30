@@ -1,14 +1,11 @@
 import { useState, useContext } from "react";
 
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import { MyContext } from "../../App";
+import { login as loginRequest } from "../../services/authService";
 
-import {
-  FaGoogle,
-  FaGithub,
-  FaDiscord,
-} from "react-icons/fa";
+import SocialAuthButtons from "../../components/SocialAuthButtons";
 
 import {
   HiOutlineMail,
@@ -24,6 +21,7 @@ import "./index.css";
 
 const Login = () => {
   const context = useContext(MyContext);
+  const navigate = useNavigate();
 
   const [showPassword, setShowPassword] =
     useState(false);
@@ -108,20 +106,17 @@ const Login = () => {
     try {
       setLoading(true);
 
-      await new Promise((resolve) =>
-        setTimeout(resolve, 1200)
-      );
+      const user = await loginRequest({
+        email: formFields.email,
+        password: formFields.password,
+      });
 
-      context.openAlertBox(
-        "success",
-        "Login successful"
-      );
+      await context.login(user);
+      navigate("/", { replace: true });
     } catch (error) {
-      console.log(error);
-
       context.openAlertBox(
         "error",
-        "Something went wrong"
+        error.message || "Something went wrong"
       );
     } finally {
       setLoading(false);
@@ -269,20 +264,7 @@ const Login = () => {
             <span>OR CONTINUE WITH</span>
           </div>
 
-          {/* SOCIAL */}
-          <div className="loginPage__social">
-            <button type="button">
-              <FaGoogle />
-            </button>
-
-            <button type="button">
-              <FaGithub />
-            </button>
-
-            <button type="button">
-              <FaDiscord />
-            </button>
-          </div>
+          <SocialAuthButtons rowClassName="loginPage__social" redirectTo="/" />
 
           {/* BOTTOM */}
           <div className="loginPage__bottom">

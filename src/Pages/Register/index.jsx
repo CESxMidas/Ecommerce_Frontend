@@ -1,12 +1,8 @@
 import { useState, useContext } from "react";
 
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
-import {
-  FaGoogle,
-  FaGithub,
-  FaDiscord,
-} from "react-icons/fa";
+import SocialAuthButtons from "../../components/SocialAuthButtons";
 
 import {
   HiOutlineMail,
@@ -15,11 +11,13 @@ import {
 } from "react-icons/hi";
 
 import { MyContext } from "../../App";
+import { register as registerRequest } from "../../services/authService";
 
 import "./index.css";
 
 const Register = () => {
   const context = useContext(MyContext);
+  const navigate = useNavigate();
 
   const [loading, setLoading] =
     useState(false);
@@ -117,26 +115,27 @@ const Register = () => {
     try {
       setLoading(true);
 
-      await new Promise((resolve) =>
-        setTimeout(resolve, 1200)
-      );
+      const result = await registerRequest({
+        name: formFields.name,
+        email: formFields.email,
+        password: formFields.password,
+      });
 
       context.openAlertBox(
         "success",
-        "Register successful"
+        result.message || "Register successful"
       );
 
-      setFormFields({
-        name: "",
-        email: "",
-        password: "",
-      });
+      navigate(
+        `/verifyAccount?email=${encodeURIComponent(formFields.email)}`,
+        {
+          state: { email: formFields.email },
+        }
+      );
     } catch (error) {
-      console.log(error);
-
       context.openAlertBox(
         "error",
-        "Something went wrong"
+        error.message || "Something went wrong"
       );
     } finally {
       setLoading(false);
@@ -282,20 +281,7 @@ const Register = () => {
             </span>
           </div>
 
-          {/* SOCIAL */}
-          <div className="socialRegister">
-            <button type="button">
-              <FaGoogle />
-            </button>
-
-            <button type="button">
-              <FaGithub />
-            </button>
-
-            <button type="button">
-              <FaDiscord />
-            </button>
-          </div>
+          <SocialAuthButtons rowClassName="socialRegister" redirectTo="/" />
 
           {/* LOGIN */}
           <div className="bottomText">

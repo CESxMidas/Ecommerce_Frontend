@@ -52,6 +52,40 @@
 /* BODY */
 /* ====================== */
 
+.categoryPanelQuick {
+  padding: 0 14px 12px;
+}
+
+.categoryPanelQuickLink {
+  display: block;
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 12px;
+  text-align: center;
+  font-size: 13px;
+  font-weight: 700;
+  color: #93c5fd;
+  background: rgba(37, 99, 235, 0.12);
+  border: 1px solid rgba(59, 130, 246, 0.2);
+  transition: 0.25s ease;
+}
+
+.categoryPanelQuickLink:hover {
+  background: rgba(37, 99, 235, 0.2);
+  color: #fff;
+}
+
+.categoryPanelStatus {
+  padding: 16px 8px;
+  text-align: center;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.categoryPanelStatus--error {
+  color: #fca5a5;
+}
+
 .categoryPanelWrapper {
   flex: 1;
 

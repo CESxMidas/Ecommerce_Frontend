@@ -307,3 +307,56 @@
     font-size: 15px;
   }
 }
+
+.verifyDevCode {
+  margin: 20px 0;
+  padding: 16px 18px;
+  border-radius: 12px;
+  border: 1px dashed rgba(34, 197, 94, 0.5);
+  background: rgba(34, 197, 94, 0.08);
+  text-align: center;
+}
+
+.verifyDevCode span {
+  display: block;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.55);
+  margin-bottom: 8px;
+}
+
+.verifyDevCode strong {
+  display: block;
+  font-size: 32px;
+  letter-spacing: 0.35em;
+  color: #4ade80;
+  font-weight: 800;
+}
+
+.verifyDevFillBtn {
+  margin-top: 12px;
+  padding: 8px 14px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.06);
+  color: #fff;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.verifyDevFillBtn:hover {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.verifyDevHint {
+  margin: 16px 0 8px;
+  padding: 12px 14px;
+  border-radius: 10px;
+  background: rgba(251, 191, 36, 0.1);
+  border: 1px solid rgba(251, 191, 36, 0.25);
+  color: rgba(255, 255, 255, 0.75);
+  font-size: 13px;
+  line-height: 1.5;
+  text-align: center;
+}

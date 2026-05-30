@@ -1,0 +1,119 @@
+.licenseKeyOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: rgba(2, 6, 23, 0.82);
+  backdrop-filter: blur(8px);
+}
+
+.licenseKeyModal {
+  position: relative;
+  width: min(480px, 100%);
+  padding: 28px 24px 24px;
+  border-radius: 20px;
+  background: linear-gradient(180deg, #0f172a 0%, #071739 100%);
+  border: 1px solid rgba(59, 130, 246, 0.35);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.45);
+}
+
+.licenseKeyClose {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border: none;
+  border-radius: 10px;
+  color: #fff;
+  background: rgba(255, 255, 255, 0.08);
+  cursor: pointer;
+}
+
+.licenseKeyModal h2 {
+  margin: 0 0 8px;
+  font-size: 22px;
+  font-weight: 800;
+  color: #fff;
+}
+
+.licenseKeySubtitle {
+  margin: 0 0 20px;
+  font-size: 14px;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.65);
+}
+
+.licenseKeyList {
+  list-style: none;
+  margin: 0 0 20px;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.licenseKeyItem {
+  padding: 14px;
+  border-radius: 14px;
+  background: rgba(37, 99, 235, 0.12);
+  border: 1px solid rgba(59, 130, 246, 0.25);
+}
+
+.licenseKeyProduct {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #93c5fd;
+}
+
+.licenseKeyCode {
+  display: block;
+  margin-bottom: 10px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  font-size: 18px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  color: #fbbf24;
+  background: rgba(0, 0, 0, 0.35);
+  word-break: break-all;
+}
+
+.licenseKeyCopy {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  border: none;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #fff;
+  background: #2563eb;
+  cursor: pointer;
+}
+
+.licenseKeyDone {
+  width: 100%;
+  padding: 12px;
+  border: none;
+  border-radius: 12px;
+  font-size: 15px;
+  font-weight: 700;
+  color: #fff;
+  background: linear-gradient(135deg, #2563eb, #3b82f6);
+  cursor: pointer;
+}
+
+.licenseKeyEmpty {
+  margin: 0 0 16px;
+  color: rgba(255, 255, 255, 0.6);
+}
