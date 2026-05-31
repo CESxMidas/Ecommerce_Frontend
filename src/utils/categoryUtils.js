@@ -7,7 +7,7 @@ import {
   FaShieldAlt,
   FaWindows,
 } from "react-icons/fa";
-import { MdGames, MdSecurity, MdDesignServices } from "react-icons/md";
+import { MdDesignServices } from "react-icons/md";
 import { HiOutlineFolder } from "react-icons/hi";
 
 const ICON_MAP = {

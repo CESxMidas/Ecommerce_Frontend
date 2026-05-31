@@ -11,6 +11,7 @@ Base URL: `VITE_API_URL` (default `http://localhost:888/api`)
 - `POST /auth/forgot-password` — `{ email }`
 - `POST /auth/reset-password` — `{ password, confirmPassword, email?, otp? }`
 - `GET /auth/me` — requires Bearer token
+- Local login requires `verify_email: true` (Google accounts are auto-verified)
 
 ## Product (canonical API shape)
 
@@ -51,8 +52,10 @@ Base URL: `VITE_API_URL` (default `http://localhost:888/api`)
 
 ### Products
 
-- `GET /products` — query: `category` (slug), `categoryId`, `slug` (category slug alias), `q`, `minPrice`, `maxPrice`
+- `GET /products` — query: `category` (slug), `categoryId`, `slug` (category slug alias), `q`, `minPrice`, `maxPrice`, optional `page` + `limit` (returns `{ items, total, page, limit, totalPages }`)
 - `GET /products/:idOrSlug` — numeric id or product slug
+- `GET /products/:id/reviews` — list reviews
+- `POST /products/:id/reviews` — `{ rating, comment }` (auth)
 
 ## Category (canonical API shape)
 
@@ -85,17 +88,21 @@ Base URL: `VITE_API_URL` (default `http://localhost:888/api`)
 
 Guest cart uses `localStorage` until login; cart merges on login.
 
+## Wishlist (requires login)
+
+- `GET /wishlist`
+- `PUT /wishlist` — `{ productIds: number[] }`
+- `POST /wishlist` — `{ productId }`
+- `DELETE /wishlist/:productId`
+
 ## Orders (requires login)
 
 - `GET /orders`
-- `POST /orders` — checkout payload with `items`, `total`, shipping fields
+- `POST /orders` — checkout payload with `items`, `total`, shipping fields (server recalculates `total` and validates stock; clears cart after success)
 
 ## User (requires login)
 
 - `PATCH /user/profile` — `{ name, email, phone }`
 - `POST /user/profile/password` — `{ password, confirmPassword }`
 - `GET|POST /user/addresses`
-
-## Seed / migration
-
-Restart the backend to upsert `data/categories.json` and `data/products.json` into MongoDB with the normalized schema.
+- `PATCH|DELETE /user/addresses/:id`

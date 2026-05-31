@@ -5,7 +5,7 @@ import { useState } from "react";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 
-import { FaTruck } from "react-icons/fa";
+import { FaBolt } from "react-icons/fa";
 
 import HomeSlider from "../../components/HomeSlider";
 import HomeCatSlider from "../../components/HomeCatSlider";
@@ -67,7 +67,7 @@ const ProductSection = ({ title, subtitle, showTabs = false, ads = 0 }) => {
 /* =========================================
    SHIPPING BANNER
 ========================================= */
-const ShippingBanner = () => {
+const DigitalDeliveryBanner = () => {
   return (
     <section className="mt-16 lg:mt-20">
       <div className="container mx-auto px-4 lg:px-6">
@@ -75,18 +75,18 @@ const ShippingBanner = () => {
           {/* LEFT */}
           <div className="shipping-left">
             <div className="shipping-icon">
-              <FaTruck />
+              <FaBolt />
             </div>
             <div>
-              <h3>FREE SHIPPING</h3>
+              <h3>INSTANT DELIVERY</h3>
             </div>
           </div>
           {/* CENTER */}
           <div className="shipping-center">
-            Free Delivery Now On Your First Order and over $200
+            License keys are delivered digitally after payment confirmation.
           </div>
           {/* RIGHT */}
-          <div className="shipping-price">- Only $200*</div>
+          <div className="shipping-price">24/7 access</div>
         </div>
       </div>
     </section>
@@ -113,7 +113,7 @@ const Home = () => {
         ads={3}
       />
       {/* SHIPPING */}
-      <ShippingBanner />
+      <DigitalDeliveryBanner />
       {/* LATEST */}
       <ProductSection
         title="Latest Products"

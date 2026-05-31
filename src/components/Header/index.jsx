@@ -26,7 +26,7 @@ import {
 
 import { BiGitCompare } from "react-icons/bi";
 
-import { FiUser } from "react-icons/fi";
+import { FiUser, FiLogIn } from "react-icons/fi";
 
 import { FaRegUser } from "react-icons/fa";
 
@@ -71,33 +71,24 @@ const Header = () => {
     <header className="w-full headerWrapper">
       {/* ================= TOP STRIP ================= */}
 
-      <div className="top-strip py-2">
-        <div
-          className="
-            container
-            flex
-            items-center
-            justify-between
-            text-[12px]
-            text-[var(--text-muted)]
-          "
-        >
+      <div className="top-strip">
+        <div className="container topStripInner">
           {/* LEFT */}
 
-          <div>
-            🔥 Get up to 50% off new season styles
+          <div className="topStripMessage">
+            Verified software keys. Instant digital delivery.
           </div>
 
           {/* RIGHT */}
 
-          <div className="hidden md:flex items-center gap-5">
-            <span className="topLink">
+          <div className="topStripLinks">
+            <Link to="/help-center" className="topLink">
               Help Center
-            </span>
+            </Link>
 
-            <span className="topLink">
+            <Link to="/track-order" className="topLink">
               Order Tracking
-            </span>
+            </Link>
 
             <div className="topLink flex items-center gap-1">
               <MdOutlineLanguage />
@@ -110,23 +101,15 @@ const Header = () => {
 
       {/* ================= MIDDLE ================= */}
 
-      <div className="middleHeader py-4">
-        <div
-          className="
-            container
-            flex
-            items-center
-            justify-between
-            gap-4
-          "
-        >
+      <div className="middleHeader">
+        <div className="container headerMain">
           {/* ================= LEFT ================= */}
 
-          <div className="flex items-center gap-3">
+          <div className="headerBrand">
             {/* MOBILE MENU */}
 
             <button
-              className="mobileMenuBtn lg:hidden"
+              className="mobileMenuBtn"
               onClick={() =>
                 setOpenCategory(true)
               }
@@ -136,60 +119,35 @@ const Header = () => {
 
             {/* LOGO */}
 
-            <Link to="/">
-              <h1 className="logoText">
-                KEYSHOP
-              </h1>
+            <Link to="/" className="logoLink">
+              <span className="logoText">KEYSHOP</span>
+              <span className="logoSubText">Digital licenses</span>
             </Link>
           </div>
 
           {/* ================= SEARCH ================= */}
 
-          <div className="hidden md:block w-[50%]">
+          <div className="headerSearch">
             <SearchBox />
           </div>
 
           {/* ================= RIGHT ================= */}
 
-          <div
-            className="
-              flex
-              justify-end
-              items-center
-              gap-5
-              md:gap-8
-              text-[var(--text-muted)]
-            "
-          >
+          <div className="headerRight">
             {/* ================= LOGIN AREA ================= */}
 
-            <div
-              className="
-                hidden
-                lg:flex
-                items-center
-                gap-4
-                text-sm
-              "
-            >
+            <div className="headerAuth">
               {context?.isLogin ? (
                 <>
                   {/* USER BUTTON */}
 
                   <button
                     onClick={handleClick}
-                    className="
-                      flex
-                      items-center
-                      gap-2
-                      text-white
-                      hover:text-[var(--primary)]
-                      transition-all
-                    "
+                    className="userMenuBtn"
                   >
                     <FiUser />
 
-                    <span className="text-sm font-[500]">
+                    <span className="userMenuName">
                       Hello,{" "}
                       {context?.user?.name ||
                         "User"}
@@ -199,6 +157,7 @@ const Header = () => {
                   {/* USER MENU */}
 
                   <Menu
+                    className="headerMenu"
                     anchorEl={anchorEl}
                     open={open}
                     onClose={handleClose}
@@ -258,11 +217,7 @@ const Header = () => {
 
                         context.logout();
                       }}
-                      className="
-                        flex
-                        gap-2
-                        text-red-500
-                      "
+                      className="logoutMenuItem flex gap-2"
                     >
                       Logout
                     </MenuItem>
@@ -276,7 +231,7 @@ const Header = () => {
                     to="/login"
                     className="loginBtnHeader"
                   >
-                    <FiUser />
+                    <FiLogIn />
 
                     Login
                   </Link>
@@ -295,15 +250,7 @@ const Header = () => {
 
             {/* ================= ICONS ================= */}
 
-            <div
-              className="
-                flex
-                items-center
-                gap-5
-                md:gap-7
-                text-lg
-              "
-            >
+            <div className="headerActions">
               {/* WISHLIST */}
 
               <Link to="/my-list" className="headerIcon">
@@ -318,9 +265,9 @@ const Header = () => {
 
               {/* COMPARE */}
 
-              <div className="headerIcon">
+              <Link to="/compare" className="headerIcon">
                 <BiGitCompare />
-              </div>
+              </Link>
 
               {/* CART */}
 
@@ -329,6 +276,13 @@ const Header = () => {
                 onClick={() =>
                   context.setOpenCartPanel(true)
                 }
+                role="button"
+                tabIndex={0}
+                onKeyDown={(event) => {
+                  if (event.key === "Enter" || event.key === " ") {
+                    context.setOpenCartPanel(true);
+                  }
+                }}
               >
                 <FaShoppingCart />
 
@@ -344,7 +298,7 @@ const Header = () => {
 
         {/* ================= MOBILE SEARCH ================= */}
 
-        <div className="container mt-4 md:hidden">
+        <div className="container mobileSearch">
           <SearchBox />
         </div>
       </div>

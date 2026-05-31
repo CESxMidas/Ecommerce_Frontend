@@ -1,4 +1,4 @@
-import { getListPrice, getSalePrice } from "./productSchema";
+import { getCartItemListPrice, getCartItemSalePrice } from "./productSchema";
 
 const CART_KEY = "cart";
 
@@ -20,13 +20,13 @@ export function calcCartSummary(items) {
   const count = items.reduce((sum, item) => sum + item.quantity, 0);
 
   const subtotal = items.reduce(
-    (sum, item) => sum + getSalePrice(item.product) * item.quantity,
+    (sum, item) => sum + getCartItemSalePrice(item) * item.quantity,
     0,
   );
 
   const savings = items.reduce((sum, item) => {
-    const list = getListPrice(item.product);
-    const sale = getSalePrice(item.product);
+    const list = getCartItemListPrice(item);
+    const sale = getCartItemSalePrice(item);
 
     if (!list) {
       return sum;

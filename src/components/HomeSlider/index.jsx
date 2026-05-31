@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import {
   Swiper,
   SwiperSlide,
@@ -13,47 +14,66 @@ import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 
+import { fetchBanners } from "../../services/cmsService";
 import "./index.css";
 
-const slides = [
+const fallbackSlides = [
   {
     id: 1,
-
     title: "Premium Software Collection",
-
-    description:
+    subtitle:
       "Discover powerful applications, productivity tools and premium utilities for your PC.",
-
-    image:
-      "https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=1600&auto=format&fit=crop",
+    image: "/images/bypass/cerberus-banner.png",
   },
-
   {
     id: 2,
-
     title: "Next Generation Gaming",
-
-    description:
+    subtitle:
       "Explore trending games, ultra graphics experiences and gaming essentials.",
-
-    image:
-      "https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=1600&auto=format&fit=crop",
+    image: "/images/bypass/snake-app.png",
   },
-
   {
     id: 3,
-
     title: "Creative Digital Workspace",
-
-    description:
+    subtitle:
       "Everything you need for editing, design, development and creativity.",
-
-    image:
-      "https://images.unsplash.com/photo-1498050108023-c5249f4df085?q=80&w=1600&auto=format&fit=crop",
+    image: "/images/bypass/cerberus-banner.png",
   },
 ];
 
 const HomeSlider = () => {
+  const [slides, setSlides] = useState(fallbackSlides);
+  const canLoop = slides.length > 1;
+
+  useEffect(() => {
+    let cancelled = false;
+
+    const load = async () => {
+      try {
+        const data = await fetchBanners("home_slider");
+
+        if (!cancelled && data.length > 0) {
+          setSlides(
+            data.map((banner) => ({
+              id: banner._id,
+              title: banner.title,
+              subtitle: banner.subtitle,
+              image: banner.image,
+            })),
+          );
+        }
+      } catch {
+        // keep fallback slides
+      }
+    };
+
+    load();
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
   return (
     <div className="mt-6">
       <div className="home-slider">
@@ -72,7 +92,7 @@ const HomeSlider = () => {
 
             disableOnInteraction: false,
           }}
-          loop
+          loop={canLoop}
         >
           {slides.map((slide) => (
             <SwiperSlide key={slide.id}>
@@ -82,10 +102,8 @@ const HomeSlider = () => {
                   backgroundImage: `url(${slide.image})`,
                 }}
               >
-                {/* OVERLAY */}
                 <div className="slide-overlay"></div>
 
-                {/* CONTENT */}
                 <div className="slide-content">
                   <span className="slider-badge">
                     FEATURED
@@ -96,7 +114,7 @@ const HomeSlider = () => {
                   </h1>
 
                   <p className="slider-description">
-                    {slide.description}
+                    {slide.subtitle}
                   </p>
 
                   <div className="slider-buttons">

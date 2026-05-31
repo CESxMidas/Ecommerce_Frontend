@@ -2,7 +2,7 @@ import { IoClose, IoCopy } from "react-icons/io5";
 import "./index.css";
 
 function collectLicenseKeysFromOrder(order) {
-  if (!order?.items?.length) {
+  if (!order?.items?.length || order.paymentStatus !== "paid") {
     return [];
   }
 
@@ -78,4 +78,5 @@ const LicenseKeyModal = ({ open, order, onClose }) => {
 
 export default LicenseKeyModal;
 
+// eslint-disable-next-line react-refresh/only-export-components
 export { collectLicenseKeysFromOrder };

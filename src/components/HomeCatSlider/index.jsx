@@ -10,6 +10,29 @@ import { fetchCategories } from "../../services/categoryService";
 
 import "./index.css";
 
+const fallbackImages = {
+  "license-keys": "https://images.unsplash.com/photo-1633419461186-7d40a38105ec?q=80&w=1200&auto=format&fit=crop",
+  "redeem-codes": "https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=1200&auto=format&fit=crop",
+  accounts: "https://images.unsplash.com/photo-1498050108023-c5249f4df085?q=80&w=1200&auto=format&fit=crop",
+  "manual-services": "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?q=80&w=1200&auto=format&fit=crop",
+  computers: "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?q=80&w=1200&auto=format&fit=crop",
+  components: "https://images.unsplash.com/photo-1597872200969-2b65d56bd16b?q=80&w=1200&auto=format&fit=crop",
+  accessories: "https://images.unsplash.com/photo-1587829741301-dc798b83add3?q=80&w=1200&auto=format&fit=crop",
+};
+
+function flattenLeafCategories(nodes = []) {
+  return nodes.flatMap((category) => {
+    const children = category.children || [];
+    const childItems = flattenLeafCategories(children);
+
+    if (childItems.length > 0) {
+      return childItems;
+    }
+
+    return category.productCount > 0 ? [category] : [];
+  });
+}
+
 const HomeCatSlider = () => {
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -54,6 +77,8 @@ const HomeCatSlider = () => {
     return null;
   }
 
+  const displayCategories = flattenLeafCategories(categories);
+
   return (
     <div className="homeCatSlider w-full mt-8">
       <div className="container mx-auto">
@@ -76,7 +101,7 @@ const HomeCatSlider = () => {
             delay: 3500,
             disableOnInteraction: false,
           }}
-          loop={categories.length > 5}
+          loop={displayCategories.length > 5}
           spaceBetween={20}
           slidesPerView={5}
           breakpoints={{
@@ -97,11 +122,11 @@ const HomeCatSlider = () => {
             },
           }}
         >
-          {categories.map((item) => (
+          {displayCategories.map((item) => (
             <SwiperSlide key={item.id}>
               <div className="category-card">
                 <img
-                  src={item.image}
+                  src={item.image || fallbackImages[item.slug] || fallbackImages.accounts}
                   alt={item.name}
                   className="category-image"
                 />

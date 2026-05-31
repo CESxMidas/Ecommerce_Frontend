@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useCallback, useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { GoogleLogin } from "@react-oauth/google";
 import { FaGoogle, FaGithub, FaDiscord } from "react-icons/fa";
@@ -18,36 +18,43 @@ const SocialAuthButtons = ({
 
   const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
 
-  const handleGoogleSuccess = async (credentialResponse) => {
-    if (!credentialResponse?.credential) {
-      context.openAlertBox("error", "Không nhận được token Google");
-      return;
-    }
+  const handleGoogleSuccess = useCallback(
+    async (credentialResponse) => {
+      if (!credentialResponse?.credential) {
+        context.openAlertBox("error", "Google token was not received");
+        return;
+      }
 
-    try {
-      setLoading(true);
+      try {
+        setLoading(true);
 
-      const user = await googleLogin(
-        credentialResponse.credential,
-        clientId
-      );
-      await context.login(user);
-      navigate(redirectTo, { replace: true });
-    } catch (error) {
-      context.openAlertBox(
-        "error",
-        error.message || "Đăng nhập Google thất bại"
-      );
-    } finally {
-      setLoading(false);
-    }
-  };
+        const user = await googleLogin(
+          credentialResponse.credential,
+          clientId,
+        );
+        await context.login(user);
+        navigate(redirectTo, { replace: true });
+      } catch (error) {
+        context.openAlertBox(
+          "error",
+          error.message || "Google sign-in failed",
+        );
+      } finally {
+        setLoading(false);
+      }
+    },
+    [clientId, context, navigate, redirectTo],
+  );
+
+  const handleGoogleError = useCallback(() => {
+    context.openAlertBox(
+      "error",
+      "Google sign-in was cancelled or failed",
+    );
+  }, [context]);
 
   const handleComingSoon = () => {
-    context.openAlertBox(
-      "warning",
-      "Tính năng đang phát triển"
-    );
+    context.openAlertBox("warning", "This feature is coming soon");
   };
 
   return (
@@ -62,12 +69,7 @@ const SocialAuthButtons = ({
             theme="filled_black"
             size="large"
             onSuccess={handleGoogleSuccess}
-            onError={() =>
-              context.openAlertBox(
-                "error",
-                "Đăng nhập Google bị hủy hoặc lỗi"
-              )
-            }
+            onError={handleGoogleError}
           />
         ) : (
           <button
@@ -76,7 +78,7 @@ const SocialAuthButtons = ({
             onClick={() =>
               context.openAlertBox(
                 "error",
-                "Chưa cấu hình VITE_GOOGLE_CLIENT_ID"
+                "VITE_GOOGLE_CLIENT_ID is not configured",
               )
             }
             aria-label="Google"

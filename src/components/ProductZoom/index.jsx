@@ -14,10 +14,10 @@ import "react-inner-image-zoom/lib/InnerImageZoom/styles.css";
 import "./index.css";
 
 const DEFAULT_IMAGES = [
-  "https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=2000&auto=format&fit=crop",
-  "https://images.unsplash.com/photo-1511512578047-dfb367046420?q=80&w=2000&auto=format&fit=crop",
-  "https://images.unsplash.com/photo-1603481546579-65d935ba9cdd?q=80&w=2000&auto=format&fit=crop",
-  "https://images.unsplash.com/photo-1593305841991-05c297ba4575?q=80&w=2000&auto=format&fit=crop",
+  "/images/bypass/cerberus-banner.png",
+  "/images/bypass/snake-app.png",
+  "/images/bypass/cerberus-banner.png",
+  "/images/bypass/snake-app.png",
 ];
 
 const ProductZoom = ({ images: imagesProp }) => {

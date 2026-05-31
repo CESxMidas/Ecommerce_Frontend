@@ -1,11 +1,14 @@
+import { useEffect, useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 
 import { Navigation, Autoplay } from "swiper/modules";
 import BlogItem from "../BlogItem";
+import { fetchBlogs } from "../../services/cmsService";
 import "swiper/css";
 import "swiper/css/navigation";
 import "./index.css";
-const blogs = [
+
+const fallbackBlogs = [
   {
     id: 1,
     category: "Windows",
@@ -13,46 +16,50 @@ const blogs = [
     title: "How To Activate Windows 11 Pro",
     description:
       "Step-by-step guide for activating Windows securely and legally.",
-    image:
-      "https://images.unsplash.com/photo-1496171367470-9ed9a91ea931?q=80&w=1200&auto=format&fit=crop",
-  },
-
-  {
-    id: 2,
-    category: "Security",
-    date: "13 May 2026",
-    title: "Top Antivirus Software For PC",
-    description: "Best premium antivirus solutions for gamers and developers.",
-    image:
-      "https://images.unsplash.com/photo-1563986768609-322da13575f3?q=80&w=1200&auto=format&fit=crop",
-  },
-
-  {
-    id: 3,
-    category: "AI Tools",
-    date: "14 May 2026",
-    title: "Best AI Tools For Developers",
-    description: "Boost your coding workflow with the latest AI software.",
-    image:
-      "https://images.unsplash.com/photo-1677442136019-21780ecad995?q=80&w=1200&auto=format&fit=crop",
-  },
-
-  {
-    id: 4,
-    category: "Gaming",
-    date: "15 May 2026",
-    title: "Best Gaming Software In 2026",
-    description: "Ultimate software collection for gamers and streamers.",
-    image:
-      "https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=1200&auto=format&fit=crop",
+    image: "/images/bypass/cerberus-banner.png",
   },
 ];
 
 const BlogSlider = () => {
+  const [blogs, setBlogs] = useState(fallbackBlogs);
+  const canLoop = blogs.length > 3;
+
+  useEffect(() => {
+    let cancelled = false;
+
+    const load = async () => {
+      try {
+        const data = await fetchBlogs();
+
+        if (!cancelled && data.length > 0) {
+          setBlogs(
+            data.map((blog) => ({
+              id: blog._id,
+              category: blog.category,
+              date: blog.publishedAt
+                ? new Date(blog.publishedAt).toLocaleDateString()
+                : "",
+              title: blog.title,
+              description: blog.description,
+              image: blog.image,
+            })),
+          );
+        }
+      } catch {
+        // keep fallback
+      }
+    };
+
+    load();
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
   return (
     <section className="blogSliderSection mt-14">
       <div className="container mx-auto px-6">
-        {/* HEADER */}
         <div className="flex items-center justify-between mb-8">
           <div>
             <h2 className="text-[34px] font-extrabold text-white">
@@ -63,11 +70,10 @@ const BlogSlider = () => {
             </p>
           </div>
         </div>
-        {/* SWIPER */}
         <Swiper
           modules={[Navigation, Autoplay]}
           navigation
-          loop
+          loop={canLoop}
           spaceBetween={22}
           autoplay={{
             delay: 3500,
@@ -77,11 +83,9 @@ const BlogSlider = () => {
             0: {
               slidesPerView: 1.1,
             },
-
             768: {
               slidesPerView: 2,
             },
-
             1200: {
               slidesPerView: 3,
             },

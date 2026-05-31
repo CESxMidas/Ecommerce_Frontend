@@ -166,6 +166,26 @@
   font-size: 15px;
 }
 
+.modalProductMeta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.modalProductMeta span {
+  min-height: 30px;
+  display: inline-flex;
+  align-items: center;
+  padding: 0 10px;
+  border-radius: 999px;
+  background: rgba(37, 99, 235, 0.14);
+  border: 1px solid rgba(96, 165, 250, 0.18);
+  color: #bfdbfe;
+  font-size: 12px;
+  font-weight: 750;
+}
+
 /* ========================= */
 /* PRICE */
 /* ========================= */
@@ -251,6 +271,11 @@
 
   font-weight: 700;
 }
+
+.modalDeliveryText {
+  color: rgba(255, 255, 255, 0.55);
+  font-size: 13px;
+}
 /* ========================= */
 /* COLORS */
 /* ========================= */
@@ -295,6 +320,54 @@
   border-color: #fff;
 
   box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.08);
+}
+
+/* ========================= */
+/* VARIANTS */
+/* ========================= */
+
+.modalVariantWrapper {
+  margin-bottom: 20px;
+}
+
+.modalVariantWrapper h5 {
+  font-size: 12px;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+.modalVariantList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.modalVariantList button {
+  min-height: 52px;
+  padding: 8px 14px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.03);
+  color: rgba(255, 255, 255, 0.72);
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.modalVariantList button.active,
+.modalVariantList button:hover {
+  border-color: rgba(59, 130, 246, 0.75);
+  background: rgba(37, 99, 235, 0.18);
+  color: #ffffff;
+}
+
+.modalVariantList small {
+  color: #60a5fa;
+  font-size: 12px;
 }
 
 /* ========================= */

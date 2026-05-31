@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 
 import List from "@mui/material/List";
+import IconButton from "@mui/material/IconButton";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemText from "@mui/material/ListItemText";
 import Collapse from "@mui/material/Collapse";
@@ -16,6 +17,7 @@ import "./index.css";
 const CategoryCollapse = ({
   title,
   icon,
+  category,
   items = [],
   defaultOpen = true,
   onNavigate,
@@ -28,16 +30,29 @@ const CategoryCollapse = ({
 
   return (
     <div className="categoryCollapse">
-      <ListItemButton
-        className="category-item"
-        onClick={() => setOpen(!open)}
-      >
-        {icon}
+      <div className="category-item category-item--split">
+        <ListItemButton
+          className="category-item-link"
+          component={Link}
+          to={getCategoryListingUrl(category)}
+          onClick={handleNavigate}
+        >
+          {icon}
 
-        <ListItemText primary={title} />
+          <ListItemText primary={title} />
+        </ListItemButton>
 
-        {open ? <ExpandLess /> : <ExpandMore />}
-      </ListItemButton>
+        {items.length > 0 && (
+          <IconButton
+            type="button"
+            className="category-toggle-btn"
+            onClick={() => setOpen(!open)}
+            aria-label={open ? "Collapse category" : "Expand category"}
+          >
+            {open ? <ExpandLess /> : <ExpandMore />}
+          </IconButton>
+        )}
+      </div>
 
       <Collapse in={open} timeout="auto" unmountOnExit>
         <List disablePadding>

@@ -5,7 +5,7 @@
 
   height: 100vh;
 
-  background: #071739;
+  background: #071327;
 
   color: white;
 
@@ -64,14 +64,14 @@
   text-align: center;
   font-size: 13px;
   font-weight: 700;
-  color: #93c5fd;
-  background: rgba(37, 99, 235, 0.12);
-  border: 1px solid rgba(59, 130, 246, 0.2);
+  color: #dbeafe;
+  background: rgba(37, 99, 235, 0.2);
+  border: 1px solid rgba(96, 165, 250, 0.28);
   transition: 0.25s ease;
 }
 
 .categoryPanelQuickLink:hover {
-  background: rgba(37, 99, 235, 0.2);
+  background: rgba(37, 99, 235, 0.32);
   color: #fff;
 }
 

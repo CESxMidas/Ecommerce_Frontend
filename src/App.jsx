@@ -1,4 +1,4 @@
-import { createContext, useEffect, useState } from "react";
+import { createContext, useCallback, useEffect, useState } from "react";
 
 import {
   BrowserRouter,
@@ -26,7 +26,6 @@ import Cart from "./Pages/Cart";
 import LicenseKeyModal, {
   collectLicenseKeysFromOrder,
 } from "./components/LicenseKeyModal";
-import { placeOrder } from "./services/orderService";
 import Verify from "./components/Verify";
 
 import toast, { Toaster } from "react-hot-toast";
@@ -36,25 +35,49 @@ import ResetPassword from "./Pages/ResetPassword";
 
 import CheckOut from "./Pages/CheckOut";
 import MyAccount from "./Pages/MyAccount";
+import MyAddress from "./Pages/MyAddress";
 import MyOrders from "./Pages/Orders";
 import MyListItem from "./Pages/MyListItem";
+import AccountLicenses from "./Pages/AccountLicenses";
+import AccountNotifications from "./Pages/AccountNotifications";
+import AccountSecurity from "./Pages/AccountSecurity";
+import AccountTickets from "./Pages/AccountTickets";
+import BlogDetail from "./Pages/BlogDetail";
+import BlogList from "./Pages/BlogList";
+import Compare from "./Pages/Compare";
+import NotFound from "./Pages/NotFound";
+import OrderDetail from "./Pages/OrderDetail";
+import StaticPage from "./Pages/StaticPage";
+import TrackOrder from "./Pages/TrackOrder";
 import ProtectedRoute from "./components/ProtectedRoute";
+import "./styles/commerce-pages.css";
 import {
   calcCartSummary,
   loadCart,
   saveCart,
 } from "./utils/cartStorage";
 import {
-  getSalePrice,
+  getCartItemKey,
+  getDefaultPurchaseVariant,
   isLicenseKeyProduct,
   normalizeProduct,
+  resolvePurchaseVariant,
 } from "./utils/productSchema";
 import {
+  getUserWishlistKey,
   loadWishlist,
   saveWishlist,
 } from "./utils/wishlistStorage";
+import {
+  loadCompare,
+  MAX_COMPARE_ITEMS,
+  saveCompare,
+} from "./utils/compareStorage";
 import { getMe } from "./services/authService";
 import * as cartService from "./services/cartService";
+import * as wishlistService from "./services/wishlistService";
+import apiClient from "./services/apiClient";
+import { API_ENDPOINTS } from "./constants/apiEndpoints";
 
 const MyContext = createContext();
 
@@ -69,30 +92,6 @@ function AppContent() {
   const [openProductDetailModal, setOpenProductDetailModal] = useState(false);
 
   const [selectedProduct, setSelectedProduct] = useState(null);
-
-  const [cartItems, setCartItems] = useState(loadCart);
-
-  const [wishlist, setWishlist] = useState(loadWishlist);
-
-  const [licenseKeyOrder, setLicenseKeyOrder] = useState(null);
-
-  useEffect(() => {
-    saveCart(cartItems);
-  }, [cartItems]);
-
-  useEffect(() => {
-    saveWishlist(wishlist);
-  }, [wishlist]);
-
-  const getStoredToken = () => {
-    try {
-      const stored = localStorage.getItem("user");
-
-      return stored ? JSON.parse(stored).token : null;
-    } catch {
-      return null;
-    }
-  };
 
   // ================= AUTH STATE =================
 
@@ -112,6 +111,66 @@ function AppContent() {
     };
   });
 
+  const [cartItems, setCartItems] = useState(loadCart);
+
+  const [wishlist, setWishlist] = useState(() => loadWishlist(auth.user));
+
+  const [compareItems, setCompareItems] = useState(loadCompare);
+
+  const [licenseKeyOrder, setLicenseKeyOrder] = useState(null);
+
+  useEffect(() => {
+    saveCart(cartItems);
+  }, [cartItems]);
+
+  useEffect(() => {
+    saveWishlist(wishlist, auth.user);
+  }, [wishlist, auth.user]);
+
+  useEffect(() => {
+    saveCompare(compareItems);
+  }, [compareItems]);
+
+  const getStoredToken = () => {
+    try {
+      const stored = localStorage.getItem("user");
+
+      return stored ? JSON.parse(stored).token : null;
+    } catch {
+      return null;
+    }
+  };
+
+  const getStoredUser = useCallback(() => {
+    try {
+      const stored = localStorage.getItem("user");
+
+      return stored ? JSON.parse(stored) : null;
+    } catch {
+      return null;
+    }
+  }, []);
+
+  const loadWishlistFromServer = useCallback(async (fallbackUser = null) => {
+    const requestedUser = fallbackUser || getStoredUser();
+    const requestedKey = getUserWishlistKey(requestedUser);
+
+    try {
+      const serverItems = await wishlistService.fetchWishlist();
+      const currentKey = getUserWishlistKey(getStoredUser());
+
+      if (currentKey === requestedKey) {
+        setWishlist(serverItems);
+      }
+    } catch {
+      const currentKey = getUserWishlistKey(getStoredUser());
+
+      if (currentKey === requestedKey) {
+        setWishlist(loadWishlist(requestedUser));
+      }
+    }
+  }, [getStoredUser]);
+
   useEffect(() => {
     const restoreSession = async () => {
       const stored = localStorage.getItem("user");
@@ -124,9 +183,11 @@ function AppContent() {
         if (!parsed?.token) return;
 
         const profile = await getMe();
-        const user = { ...parsed, ...profile, token: parsed.token };
+        const user = { ...parsed, ...profile, token: parsed.token, refreshToken: parsed.refreshToken };
 
         localStorage.setItem("user", JSON.stringify(user));
+
+        setWishlist(loadWishlist(user));
 
         setAuth({
           isLogin: true,
@@ -135,6 +196,8 @@ function AppContent() {
 
         const serverCart = await cartService.fetchCart();
         setCartItems(serverCart);
+
+        await loadWishlistFromServer(user);
       } catch {
         localStorage.removeItem("user");
 
@@ -142,11 +205,13 @@ function AppContent() {
           isLogin: false,
           user: null,
         });
+
+        setWishlist(loadWishlist());
       }
     };
 
     restoreSession();
-  }, []);
+  }, [loadWishlistFromServer]);
 
   // ================= PRODUCT MODAL =================
 
@@ -177,7 +242,7 @@ function AppContent() {
 
       case "warning":
         toast(message, {
-          icon: "⚠️",
+          icon: "!",
         });
         break;
 
@@ -190,6 +255,8 @@ function AppContent() {
 
   const login = async (userData) => {
     localStorage.setItem("user", JSON.stringify(userData));
+
+    setWishlist(loadWishlist(userData));
 
     setAuth({
       isLogin: true,
@@ -209,6 +276,12 @@ function AppContent() {
         }
       } catch {
         // keep local cart when server cart is unavailable
+      }
+
+      try {
+        await loadWishlistFromServer(userData);
+      } catch {
+        setWishlist(loadWishlist(userData));
       }
     }
 
@@ -231,7 +304,18 @@ function AppContent() {
 
   // ================= LOGOUT =================
 
-  const logout = () => {
+  const logout = async () => {
+    try {
+      const stored = localStorage.getItem("user");
+      const user = stored ? JSON.parse(stored) : null;
+
+      await apiClient.post(API_ENDPOINTS.auth.logout, {
+        refreshToken: user?.refreshToken,
+      });
+    } catch {
+      // ignore logout API errors
+    }
+
     localStorage.removeItem("user");
 
     setAuth({
@@ -239,42 +323,53 @@ function AppContent() {
       user: null,
     });
 
+    setWishlist([]);
+
     openAlertBox("success", "Logout Success");
   };
 
   // ================= CART =================
 
-  const addToCart = async (product, quantity = 1) => {
+  const addToCart = async (product, quantity = 1, selectedVariant = undefined) => {
     if (!product) return;
 
     const normalizedProduct = normalizeProduct(product);
+    const variant =
+      selectedVariant === undefined
+        ? getDefaultPurchaseVariant(normalizedProduct)
+        : resolvePurchaseVariant(normalizedProduct, selectedVariant);
 
     if (getStoredToken()) {
       try {
         const items = await cartService.addToCart(
           normalizedProduct.id,
           quantity,
+          variant,
         );
         setCartItems(items);
         openAlertBox("success", "Added to cart");
+        return true;
       } catch (error) {
         openAlertBox("error", error.message || "Failed to add to cart");
+        return false;
       }
-
-      return;
     }
 
     setCartItems((prev) => {
       const existing = prev.find(
-        (item) => item.productId === normalizedProduct.id,
+        (item) =>
+          getCartItemKey(item) ===
+          getCartItemKey({ productId: normalizedProduct.id, variant }),
       );
 
       if (existing) {
         return prev.map((item) =>
-          item.productId === normalizedProduct.id
+          getCartItemKey(item) ===
+            getCartItemKey({ productId: normalizedProduct.id, variant })
             ? {
               ...item,
               quantity: item.quantity + quantity,
+              variant,
             }
             : item
         );
@@ -285,18 +380,20 @@ function AppContent() {
         {
           productId: normalizedProduct.id,
           quantity,
+          variant,
           product: normalizedProduct,
         },
       ];
     });
 
     openAlertBox("success", "Added to cart");
+    return true;
   };
 
-  const removeFromCart = async (productId) => {
+  const removeFromCart = async (productId, variant = null) => {
     if (getStoredToken()) {
       try {
-        const items = await cartService.removeFromCart(productId);
+        const items = await cartService.removeFromCart(productId, variant);
         setCartItems(items);
       } catch (error) {
         openAlertBox("error", error.message || "Failed to update cart");
@@ -306,13 +403,16 @@ function AppContent() {
     }
 
     setCartItems((prev) =>
-      prev.filter((item) => item.productId !== productId)
+      prev.filter(
+        (item) =>
+          getCartItemKey(item) !== getCartItemKey({ productId, variant }),
+      )
     );
   };
 
-  const updateCartQuantity = async (productId, quantity) => {
+  const updateCartQuantity = async (productId, quantity, variant = null) => {
     if (quantity < 1) {
-      await removeFromCart(productId);
+      await removeFromCart(productId, variant);
       return;
     }
 
@@ -320,7 +420,8 @@ function AppContent() {
       try {
         const items = await cartService.updateCartItem(
           productId,
-          quantity
+          quantity,
+          variant,
         );
         setCartItems(items);
       } catch (error) {
@@ -332,9 +433,25 @@ function AppContent() {
 
     setCartItems((prev) =>
       prev.map((item) =>
-        item.productId === productId ? { ...item, quantity } : item
+        getCartItemKey(item) === getCartItemKey({ productId, variant })
+          ? { ...item, quantity }
+          : item
       )
     );
+  };
+
+  const updateCartVariant = async (cartItem, nextVariant) => {
+    if (!cartItem?.product || !nextVariant) return;
+
+    const product = normalizeProduct(cartItem.product);
+    const variant = resolvePurchaseVariant(product, nextVariant);
+
+    if (!variant || variant.id === cartItem.variant?.id) {
+      return;
+    }
+
+    await removeFromCart(cartItem.productId, cartItem.variant);
+    await addToCart(product, cartItem.quantity, variant);
   };
 
   const clearCart = async () => {
@@ -363,60 +480,103 @@ function AppContent() {
     setLicenseKeyOrder(null);
   };
 
-  const purchaseLicenseProduct = async (product, quantity = 1) => {
+  const purchaseLicenseProduct = async (product, quantity = 1, variant = undefined) => {
     const normalized = normalizeProduct(product);
 
     if (!auth.isLogin || !auth.user?.email) {
-      openAlertBox("error", "Please login to purchase a license key");
+      openAlertBox("error", "Please login to purchase this digital code");
       navigate("/login");
       return;
     }
 
-    try {
-      const salePrice = getSalePrice(normalized);
-      const order = await placeOrder({
-        name: auth.user.name || "Customer",
-        phone: auth.user.phone || "0000000000",
-        address: "Digital delivery — license key",
-        pincode: "000000",
-        total: salePrice * quantity,
-        email: auth.user.email,
-        userId: auth.user.email,
-        items: [
-          {
-            productId: normalized.id,
-            quantity,
-            product: normalized,
-          },
-        ],
-        paymentMethod: "card",
-      });
+    const added = await addToCart(normalized, quantity, variant);
 
-      showLicenseKeysFromOrder(order);
-      openAlertBox("success", "License key generated");
-    } catch (error) {
-      openAlertBox(
-        "error",
-        error.message || "Could not complete purchase",
-      );
-    }
+    if (!added) return;
+
+    openAlertBox("success", "Checkout with VNPay to receive your code");
+    navigate("/checkout");
   };
+
+  // ================= COMPARE =================
+
+  const toggleCompare = (product) => {
+    if (!product) return;
+
+    const normalizedProduct = normalizeProduct(product);
+
+    setCompareItems((prev) => {
+      const exists = prev.some((item) => item.id === normalizedProduct.id);
+
+      if (exists) {
+        openAlertBox("success", "Removed from compare");
+        return prev.filter((item) => item.id !== normalizedProduct.id);
+      }
+
+      if (prev.length >= MAX_COMPARE_ITEMS) {
+        openAlertBox("warning", `Compare up to ${MAX_COMPARE_ITEMS} products`);
+        return prev;
+      }
+
+      openAlertBox("success", "Added to compare");
+      return [...prev, normalizedProduct];
+    });
+  };
+
+  const removeFromCompare = (productId) => {
+    setCompareItems((prev) =>
+      prev.filter((item) => String(item.id) !== String(productId))
+    );
+  };
+
+  const clearCompare = () => {
+    setCompareItems([]);
+  };
+
+  const isInCompare = (productId) =>
+    compareItems.some((item) => String(item.id) === String(productId));
 
   // ================= WISHLIST =================
 
-  const toggleWishlist = (product) => {
+  const toggleWishlist = async (product) => {
     if (!product) return;
 
+    const normalizedProduct = normalizeProduct(product);
+
+    if (getStoredToken()) {
+      try {
+        const exists = wishlist.some(
+          (item) => item.id === normalizedProduct.id,
+        );
+
+        const items = exists
+          ? await wishlistService.removeFromWishlist(normalizedProduct.id)
+          : await wishlistService.addToWishlist(normalizedProduct.id);
+
+        setWishlist(items);
+        openAlertBox(
+          "success",
+          exists ? "Removed from wishlist" : "Added to wishlist",
+        );
+      } catch (error) {
+        openAlertBox(
+          "error",
+          error.message || "Failed to update wishlist",
+        );
+      }
+
+      return;
+    }
+
     setWishlist((prev) => {
-      const exists = prev.some((item) => item.id === product.id);
+      const exists = prev.some((item) => item.id === normalizedProduct.id);
 
       if (exists) {
         openAlertBox("success", "Removed from wishlist");
-        return prev.filter((item) => item.id !== product.id);
+        return prev.filter((item) => item.id !== normalizedProduct.id);
       }
 
       openAlertBox("success", "Added to wishlist");
-      return [...prev, product];
+      return [...prev, normalizedProduct];
     });
   };
 
@@ -441,11 +601,18 @@ function AppContent() {
     addToCart,
     removeFromCart,
     updateCartQuantity,
+    updateCartVariant,
     clearCart,
 
     wishlist,
     toggleWishlist,
     isInWishlist,
+
+    compareItems,
+    toggleCompare,
+    removeFromCompare,
+    clearCompare,
+    isInCompare,
 
     isLogin: auth.isLogin,
     user: auth.user,
@@ -475,17 +642,24 @@ function AppContent() {
 
       {/* ROUTES */}
       <Routes>
-        {/* Home */}
         <Route path="/" element={<Home />} />
-        {/* ProductListing */}
         <Route path="/productListing" element={<ProductListing />} />
-        {/* Cart */}
+        <Route path="/deals" element={<ProductListing />} />
         <Route path="/cart" element={<Cart />} />
-        {/* ProductDetail */}
         <Route path="/product/:id" element={<ProductDetail />} />
-        {/* Verify */}
+        <Route path="/blog" element={<BlogList />} />
+        <Route path="/blog/:id" element={<BlogDetail />} />
+        <Route path="/compare" element={<Compare />} />
+        <Route path="/track-order" element={<TrackOrder />} />
+        <Route path="/about" element={<StaticPage />} />
+        <Route path="/contact" element={<StaticPage />} />
+        <Route path="/help-center" element={<StaticPage />} />
+        <Route path="/terms" element={<StaticPage />} />
+        <Route path="/privacy-policy" element={<StaticPage />} />
+        <Route path="/returns" element={<StaticPage />} />
+        <Route path="/shipping" element={<StaticPage />} />
+        <Route path="/payment-policy" element={<StaticPage />} />
         <Route path="/verifyAccount" element={<Verify />} />
-        {/* CheckOut */}
         <Route
           path="/checkout"
           element={
@@ -494,15 +668,10 @@ function AppContent() {
             </ProtectedRoute>
           }
         />
-        {/* LOGIN */}
         <Route path="/login" element={<Login />} />
-        {/* REGISTER */}
         <Route path="/register" element={<Register />} />
-        {/* FORGOT PASSWORD */}
         <Route path="/forgot-password" element={<ForgotPassword />} />
-        {/* RESET PASSWORD */}
         <Route path="/reset-password" element={<ResetPassword />} />
-        {/* MYACCOUNT */}
         <Route
           path="/myAccount"
           element={
@@ -515,11 +684,10 @@ function AppContent() {
           path="/address"
           element={
             <ProtectedRoute>
-              <MyAccount />
+              <MyAddress />
             </ProtectedRoute>
           }
         />
-        {/* MYORDERS */}
         <Route
           path="/orders"
           element={
@@ -528,7 +696,14 @@ function AppContent() {
             </ProtectedRoute>
           }
         />
-        {/* MYLISTPRODUCT */}
+        <Route
+          path="/orders/:id"
+          element={
+            <ProtectedRoute>
+              <OrderDetail />
+            </ProtectedRoute>
+          }
+        />
         <Route
           path="/my-list"
           element={
@@ -537,6 +712,39 @@ function AppContent() {
             </ProtectedRoute>
           }
         />
+        <Route
+          path="/licenses"
+          element={
+            <ProtectedRoute>
+              <AccountLicenses />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/notifications"
+          element={
+            <ProtectedRoute>
+              <AccountNotifications />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/tickets"
+          element={
+            <ProtectedRoute>
+              <AccountTickets />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/security"
+          element={
+            <ProtectedRoute>
+              <AccountSecurity />
+            </ProtectedRoute>
+          }
+        />
+        <Route path="*" element={<NotFound />} />
       </Routes>
       {/* FOOTER */}
       {!authPages && <Footer />}

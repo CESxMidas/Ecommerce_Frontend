@@ -6,7 +6,7 @@
   width: 100%;
   min-height: 100vh;
   padding: 40px 0;
-  background: #020817;
+  background: var(--bg);
 }
 
 .checkoutPage .container {
@@ -49,9 +49,9 @@
 .checkoutPage .summaryCard {
   width: 100%;
   padding: 28px;
-  border-radius: 28px;
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-card);
+  background: var(--surface);
+  border: 1px solid var(--border);
   backdrop-filter: blur(20px);
 }
 
@@ -101,11 +101,12 @@
 }
 
 .checkoutPage .formGroup input,
+.checkoutPage .formGroup select,
 .checkoutPage .formGroup textarea {
   width: 100%;
   border: 1px solid rgba(255, 255, 255, 0.08);
   background: rgba(255, 255, 255, 0.03);
-  border-radius: 18px;
+  border-radius: var(--radius-control);
   padding: 16px 18px;
   outline: none;
   color: white;
@@ -113,11 +114,16 @@
   font-size: 15px;
 }
 
+.checkoutPage .formGroup select option {
+  color: #0f172a;
+}
+
 .checkoutPage .formGroup textarea {
   resize: none;
 }
 
 .checkoutPage .formGroup input:focus,
+.checkoutPage .formGroup select:focus,
 .checkoutPage .formGroup textarea:focus {
   border-color: #3b82f6;
   box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.12);
@@ -141,9 +147,9 @@
 .checkoutPage .paymentBox {
   width: 100%;
   padding: 22px;
-  border-radius: 22px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  background: rgba(255, 255, 255, 0.03);
+  border-radius: var(--radius-card);
+  border: 1px solid var(--border);
+  background: var(--surface-soft);
   display: flex;
   align-items: flex-start;
   gap: 16px;
@@ -165,6 +171,13 @@
   color: rgba(255, 255, 255, 0.5);
   font-size: 14px;
   line-height: 24px;
+}
+
+.checkoutPage .checkoutPaymentNote {
+  margin-top: 12px;
+  color: #93c5fd;
+  font-size: 13px;
+  line-height: 22px;
 }
 
 /* ========================= */
@@ -245,7 +258,7 @@
   width: 100%;
   height: 58px;
   border: none;
-  border-radius: 18px;
+  border-radius: var(--radius-control);
   margin-top: 24px;
   background: linear-gradient(135deg, #2563eb, #3b82f6);
   color: white;

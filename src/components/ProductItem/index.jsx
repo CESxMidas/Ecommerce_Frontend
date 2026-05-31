@@ -47,7 +47,12 @@ const ProductItem = ({ item }) => {
             <FaHeart />
           </button>
 
-          <button type="button">
+          <button
+            type="button"
+            onClick={() => context.toggleCompare(item)}
+            className={context.isInCompare(item.id) ? "active" : ""}
+            aria-label="Compare product"
+          >
             <FaExchangeAlt />
           </button>
 

@@ -7,10 +7,28 @@ export const API_ENDPOINTS = {
     resetPassword: "/auth/reset-password",
     verify: "/auth/verify",
     resendVerify: "/auth/resend-verify",
+    me: "/auth/me",
+    refresh: "/auth/refresh",
+    logout: "/auth/logout",
+  },
+  coupons: {
+    validate: "/coupons/validate",
+  },
+  banners: {
+    list: "/banners",
+  },
+  blogs: {
+    list: "/blogs",
+    detail: (id) => `/blogs/${id}`,
   },
   products: {
     list: "/products",
     detail: (id) => `/products/${id}`,
+    reviews: (id) => `/products/${id}/reviews`,
+  },
+  wishlist: {
+    root: "/wishlist",
+    item: (id) => `/wishlist/${id}`,
   },
   categories: {
     list: "/categories",
@@ -23,10 +41,28 @@ export const API_ENDPOINTS = {
   orders: {
     list: "/orders",
     detail: (id) => `/orders/${id}`,
+    track: "/orders/track",
+  },
+  payments: {
+    recreateVnpay: "/payments/re-create-vnpay",
   },
   user: {
     profile: "/user/profile",
     password: "/user/profile/password",
+    emailRequest: "/user/profile/email/request",
+    emailVerify: "/user/profile/email/verify",
     addresses: "/user/addresses",
+    addressItem: (id) => `/user/addresses/${id}`,
+    addressDefault: (id) => `/user/addresses/${id}/default`,
+    sessions: "/user/sessions",
+    sessionItem: (id) => `/user/sessions/${id}`,
+    licenses: "/user/licenses",
+    licenseResend: (orderId) => `/user/licenses/${orderId}/resend`,
+    notifications: "/user/notifications",
+    notificationRead: (id) => `/user/notifications/${id}/read`,
+    notificationsReadAll: "/user/notifications/read-all",
+    tickets: "/user/tickets",
+    ticketDetail: (id) => `/user/tickets/${id}`,
+    ticketReplies: (id) => `/user/tickets/${id}/replies`,
   },
 };

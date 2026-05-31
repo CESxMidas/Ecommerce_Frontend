@@ -96,6 +96,15 @@ const Login = () => {
   /* LOGIN */
   /* ====================== */
 
+  const isUnverifiedAccountError = (error) => {
+    const message = `${error?.message || ""} ${error?.data?.message || ""}`;
+
+    return (
+      error?.data?.code === "EMAIL_NOT_VERIFIED" ||
+      /verify|verified|verification|xac minh|xác minh/i.test(message)
+    );
+  };
+
   const login = async (e) => {
     e.preventDefault();
 
@@ -114,6 +123,32 @@ const Login = () => {
       await context.login(user);
       navigate("/", { replace: true });
     } catch (error) {
+      if (isUnverifiedAccountError(error)) {
+        const verificationEmail = error?.data?.email || formFields.email.trim();
+        const emailSent = Boolean(error?.data?.emailSent);
+        const verificationMessage = emailSent
+          ? "Mã xác minh mới đã được gửi tới Gmail của bạn"
+          : error.message || "Please verify your account";
+
+        context.openAlertBox(
+          emailSent ? "success" : "warning",
+          verificationMessage
+        );
+
+        navigate(
+          `/verifyAccount?email=${encodeURIComponent(verificationEmail)}`,
+          {
+            state: {
+              email: verificationEmail,
+              emailSent,
+              verificationMessage,
+            },
+          }
+        );
+
+        return;
+      }
+
       context.openAlertBox(
         "error",
         error.message || "Something went wrong"
@@ -128,7 +163,7 @@ const Login = () => {
       {/* LEFT */}
       <div className="loginPage__left">
         <img
-          src="https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=2070&auto=format&fit=crop"
+          src="/images/bypass/cerberus-banner.png"
           alt="gaming"
         />
 

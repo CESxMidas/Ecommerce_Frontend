@@ -7,6 +7,10 @@ export async function fetchProducts(params = {}) {
     params,
   });
 
+  if (data && Array.isArray(data.items)) {
+    return normalizeProducts(data.items);
+  }
+
   return normalizeProducts(data);
 }
 

@@ -6,7 +6,8 @@ import { MyContext } from "../../App";
 import {
   getProductDisplayName,
   getProductThumbnail,
-  getSalePrice,
+  getCartItemSalePrice,
+  getPurchaseVariants,
 } from "../../utils/productSchema";
 import { formatPrice } from "../../utils/products";
 import "./index.css";
@@ -52,8 +53,11 @@ const CartPanel = () => {
               Your cart is empty.
             </p>
           ) : (
-            cartItems.map((item) => (
-              <div className="cartItem" key={item.productId}>
+            cartItems.map((item) => {
+              const variants = getPurchaseVariants(item.product);
+
+              return (
+              <div className="cartItem" key={`${item.productId}-${item.variant?.id || "default"}`}>
                 <div className="cartItemImage">
                   <img
                     src={getProductThumbnail(item.product)}
@@ -68,6 +72,29 @@ const CartPanel = () => {
                     {item.product.vendor || item.product.brand}
                   </span>
 
+                  {variants.length > 0 && (
+                    <label className="cartVariantSelect">
+                      <span>Key type</span>
+                      <select
+                        value={item.variant?.id || variants[0]?.id || ""}
+                        onChange={(event) =>
+                          context.updateCartVariant(
+                            item,
+                            variants.find(
+                              (variant) => variant.id === event.target.value,
+                            ),
+                          )
+                        }
+                      >
+                        {variants.map((variant) => (
+                          <option key={variant.id} value={variant.id}>
+                            {variant.name} - {formatPrice(variant.price)}
+                          </option>
+                        ))}
+                      </select>
+                    </label>
+                  )}
+
                   <div className="cartItemMeta">
                     <span>Qty: {item.quantity}</span>
                   </div>
@@ -75,7 +102,7 @@ const CartPanel = () => {
                   <div className="cartItemBottom">
                     <div className="cartItemPrice">
                       {formatPrice(
-                        getSalePrice(item.product) * item.quantity
+                        getCartItemSalePrice(item) * item.quantity
                       )}
                     </div>
 
@@ -85,7 +112,8 @@ const CartPanel = () => {
                         onClick={() =>
                           context.updateCartQuantity(
                             item.productId,
-                            item.quantity - 1
+                            item.quantity - 1,
+                            item.variant,
                           )
                         }
                       >
@@ -99,7 +127,8 @@ const CartPanel = () => {
                         onClick={() =>
                           context.updateCartQuantity(
                             item.productId,
-                            item.quantity + 1
+                            item.quantity + 1,
+                            item.variant,
                           )
                         }
                       >
@@ -113,13 +142,14 @@ const CartPanel = () => {
                   type="button"
                   className="removeCartItem"
                   onClick={() =>
-                    context.removeFromCart(item.productId)
+                    context.removeFromCart(item.productId, item.variant)
                   }
                 >
                   <FaTrashAlt />
                 </button>
               </div>
-            ))
+            );
+            })
           )}
         </div>
 

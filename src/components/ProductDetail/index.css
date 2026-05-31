@@ -138,6 +138,43 @@
   box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.2);
 }
 
+.productVariantList {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.productVariantList button {
+  min-height: 54px;
+  padding: 8px 14px;
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  color: var(--text-muted);
+  background: var(--bg-card);
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.productVariantList button.active,
+.productVariantList button:hover {
+  border-color: rgba(59, 130, 246, 0.75);
+  color: #ffffff;
+  background: rgba(37, 99, 235, 0.18);
+}
+
+.productVariantList button small {
+  color: #60a5fa;
+  font-size: 12px;
+}
+
 /* ========================= */
 /* QUANTITY */
 /* ========================= */
@@ -365,7 +402,8 @@
   margin-bottom: 10px;
 }
 
-.reviewRatingLarge {
+.reviewRatingLarge,
+.reviewStarsLarge {
   font-size: 24px;
   color: var(--yellow);
   margin-bottom: 10px;
@@ -492,6 +530,14 @@
   resize: none;
 }
 
+.reviewMeta {
+  margin-top: -10px;
+  margin-bottom: 18px;
+  color: var(--text-fade);
+  font-size: 13px;
+  text-align: right;
+}
+
 .submitReviewBtn {
   height: 56px;
   padding: 0 30px;
@@ -506,6 +552,12 @@
 
 .submitReviewBtn:hover {
   background: var(--primary-hover);
+}
+
+.submitReviewBtn:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+  transform: none;
 }
 
 /* ========================= */
@@ -537,7 +589,8 @@
   margin-bottom: 8px;
 }
 
-.reviewRating {
+.reviewRating,
+.reviewStars {
   color: var(--yellow);
   font-size: 15px;
   margin-top: 4px;

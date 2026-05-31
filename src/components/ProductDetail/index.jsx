@@ -1,21 +1,32 @@
 import { Breadcrumbs, Link as MuiLink } from "@mui/material";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import "./index.css";
 import ProductZoom from "../ProductZoom";
 import { useContext, useEffect, useState } from "react";
 import { MyContext } from "../../App";
 import { fetchProductById } from "../../services/productService";
 import {
+  fetchProductReviews,
+  submitProductReview,
+} from "../../services/reviewService";
+import {
   computeDiscountLabel,
+  getDeliveryLabel,
+  getPurchaseVariants,
   getListPrice,
   getProductDisplayName,
+  getProductTypeLabel,
   getSalePrice,
+  isInstantCodeProduct,
   isLicenseKeyProduct,
+  isPhysicalProduct,
+  resolvePurchaseVariant,
 } from "../../utils/productSchema";
 import { formatPrice, getProductImages } from "../../utils/products";
 
 const ProductDetail = () => {
   const context = useContext(MyContext);
+  const navigate = useNavigate();
   const { id } = useParams();
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -24,6 +35,12 @@ const ProductDetail = () => {
   const [quantity, setQuantity] = useState(1);
   const [activeTab, setActiveTab] = useState("description");
   const [rating, setRating] = useState(0);
+  const [reviewComment, setReviewComment] = useState("");
+  const [reviews, setReviews] = useState([]);
+  const [selectedVariantId, setSelectedVariantId] = useState("");
+  const [reviewsLoading, setReviewsLoading] = useState(false);
+  const [submittingReview, setSubmittingReview] = useState(false);
+  const maxReviewLength = 500;
 
   useEffect(() => {
     let cancelled = false;
@@ -37,6 +54,8 @@ const ProductDetail = () => {
 
         if (!cancelled) {
           setProduct(data);
+          const variants = getPurchaseVariants(data);
+          setSelectedVariantId(variants[0]?.id || "");
         }
       } catch (error) {
         if (!cancelled) {
@@ -56,6 +75,150 @@ const ProductDetail = () => {
       cancelled = true;
     };
   }, [id]);
+
+  useEffect(() => {
+    if (!product?.id) {
+      return;
+    }
+
+    let cancelled = false;
+
+    const loadReviews = async () => {
+      setReviewsLoading(true);
+
+      try {
+        const data = await fetchProductReviews(product.id);
+
+        if (!cancelled) {
+          setReviews(data);
+        }
+      } catch {
+        if (!cancelled) {
+          setReviews([]);
+        }
+      } finally {
+        if (!cancelled) {
+          setReviewsLoading(false);
+        }
+      }
+    };
+
+    loadReviews();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [product?.id]);
+
+  const handleSubmitReview = async () => {
+    if (!context.isLogin) {
+      context.openAlertBox("error", "Please login to write a review");
+      navigate("/login");
+      return;
+    }
+
+    if (rating < 1) {
+      context.openAlertBox("error", "Please select a rating");
+      return;
+    }
+
+    if (!reviewComment.trim()) {
+      context.openAlertBox("error", "Please write your review");
+      return;
+    }
+
+    if (reviewComment.trim().length > maxReviewLength) {
+      context.openAlertBox(
+        "error",
+        `Review must be ${maxReviewLength} characters or less`,
+      );
+      return;
+    }
+
+    try {
+      setSubmittingReview(true);
+
+      await submitProductReview(product.id, {
+        rating,
+        comment: reviewComment.trim(),
+      });
+
+      const [reviewData, updatedProduct] = await Promise.all([
+        fetchProductReviews(product.id),
+        fetchProductById(product.id),
+      ]);
+
+      setReviews(reviewData);
+      setProduct(updatedProduct);
+      setReviewComment("");
+      setRating(0);
+      context.openAlertBox("success", "Review submitted");
+    } catch (error) {
+      context.openAlertBox(
+        "error",
+        error.message || "Failed to submit review",
+      );
+    } finally {
+      setSubmittingReview(false);
+    }
+  };
+
+  const formatReviewDate = (value) => {
+    if (!value) {
+      return "";
+    }
+
+    return new Date(value).toLocaleDateString();
+  };
+
+  const renderStars = (value) => {
+    const fullStars = Math.max(0, Math.min(5, Math.round(Number(value) || 0)));
+
+    return "\u2605".repeat(fullStars).padEnd(5, "\u2606");
+  };
+
+  const buildSpecifications = (item) => {
+    const specs = [
+      ["Product type", getProductTypeLabel(item)],
+      ["Delivery", getDeliveryLabel(item)],
+      ["Payment", isPhysicalProduct(item) ? "VNPay or COD" : "VNPay required"],
+      ["Vendor", item.vendor || item.brand || "-"],
+      ["Category", item.categoryName || "-"],
+      ["SKU", item.sku || "-"],
+    ];
+
+    if (item.productType === "license_key" && item.keyPrefix) {
+      specs.push(["Key format", `${item.keyPrefix}-#####`]);
+    }
+
+    Object.entries(item.attributes || {}).forEach(([key, value]) => {
+      if (value === null || value === undefined || value === "") return;
+
+      specs.push([
+        key
+          .replace(/([A-Z])/g, " $1")
+          .replace(/^./, (char) => char.toUpperCase()),
+        String(value),
+      ]);
+    });
+
+    return specs;
+  };
+
+  const handleBuyNow = async () => {
+    const variant = resolvePurchaseVariant(product, selectedVariantId);
+
+    if (isInstantCodeProduct(product)) {
+      context.purchaseLicenseProduct(product, quantity, variant);
+      return;
+    }
+
+    const added = await context.addToCart(product, quantity, variant);
+
+    if (added) {
+      navigate("/checkout");
+    }
+  };
 
   if (loading) {
     return (
@@ -88,10 +251,15 @@ const ProductDetail = () => {
 
   const images = getProductImages(product);
   const displayName = getProductDisplayName(product);
-  const salePrice = getSalePrice(product);
-  const listPrice = getListPrice(product);
-  const discount = computeDiscountLabel(product);
+  const purchaseVariants = getPurchaseVariants(product);
+  const selectedVariant = resolvePurchaseVariant(product, selectedVariantId);
+  const salePrice = selectedVariant?.price ?? getSalePrice(product);
+  const listPrice = selectedVariant?.listPrice ?? getListPrice(product);
+  const discount = selectedVariant
+    ? undefined
+    : computeDiscountLabel(product);
   const vendor = product.vendor || product.brand || product.categoryName;
+  const specifications = buildSpecifications(product);
   const increaseQuantity = () => {
     setQuantity((prev) => prev + 1);
   };
@@ -112,7 +280,7 @@ const ProductDetail = () => {
         <div className="container">
           <div className="breadcrumbWrapper">
             <div className="container mx-auto px-4 lg:px-6">
-              <Breadcrumbs separator="›">
+              <Breadcrumbs separator=">">
                 <MuiLink
                   component={Link}
                   to="/"
@@ -164,7 +332,7 @@ const ProductDetail = () => {
 
               {/* META */}
               <div className="flex items-center gap-4 flex-wrap mb-5">
-                <div className="productStars">★★★★★</div>
+                <div className="productStars">{renderStars(product.rating)}</div>
 
                 <span className="text-white/55 text-sm">
                   {product.reviewsCount || 0} Reviews
@@ -195,7 +363,7 @@ const ProductDetail = () => {
               {/* DESCRIPTION */}
               <p className="text-white/70 text-[15px] leading-[30px] mb-6 max-w-full xl:max-w-[88%]">
                 {product.description ||
-                  `${displayName} — genuine digital license with instant email delivery.`}
+                  `${displayName} - ${getDeliveryLabel(product).toLowerCase()}.`}
               </p>
 
               {/* STOCK */}
@@ -207,31 +375,29 @@ const ProductDetail = () => {
                 </span>
 
                 <span className="text-white/50 text-sm">
-                  Ready for instant delivery
+                  {getDeliveryLabel(product)}
                 </span>
               </div>
 
-              {/* VERSION */}
-              <div className="mb-7">
-                <h4 className="sectionTitle">Available Versions</h4>
+              {purchaseVariants.length > 0 && (
+                <div className="mb-7">
+                  <h4 className="sectionTitle">Loại key</h4>
 
-                <div className="flex items-center gap-4">
-                  <button
-                    className="colorItem active"
-                    style={{ background: "#2563eb" }}
-                  ></button>
-
-                  <button
-                    className="colorItem"
-                    style={{ background: "#111827" }}
-                  ></button>
-
-                  <button
-                    className="colorItem"
-                    style={{ background: "#dc2626" }}
-                  ></button>
+                  <div className="productVariantList">
+                    {purchaseVariants.map((variant) => (
+                      <button
+                        type="button"
+                        key={variant.id}
+                        className={selectedVariant?.id === variant.id ? "active" : ""}
+                        onClick={() => setSelectedVariantId(variant.id)}
+                      >
+                        <strong>{variant.name}</strong>
+                        <small>{formatPrice(variant.price)}</small>
+                      </button>
+                    ))}
+                  </div>
                 </div>
-              </div>
+              )}
 
               {/* QUANTITY */}
               <div className="mb-6">
@@ -259,7 +425,9 @@ const ProductDetail = () => {
                 <button
                   type="button"
                   className="addCartBtn"
-                  onClick={() => context.addToCart(product)}
+                  onClick={() =>
+                    context.addToCart(product, quantity, selectedVariant)
+                  }
                 >
                   Add To Cart
                 </button>
@@ -267,19 +435,21 @@ const ProductDetail = () => {
                 <button
                   type="button"
                   className="buyNowBtn"
-                  onClick={() => {
-                    if (isLicenseKeyProduct(product)) {
-                      context.purchaseLicenseProduct(product, quantity);
-                      return;
-                    }
-
-                    context.addToCart(product, quantity);
-                    context.setOpenCartPanel(true);
-                  }}
+                  onClick={handleBuyNow}
                 >
-                  {isLicenseKeyProduct(product)
-                    ? "Buy & Get Key"
+                  {isInstantCodeProduct(product)
+                    ? "Buy & Get Code"
                     : "Buy Now"}
+                </button>
+
+                <button
+                  type="button"
+                  className="buyNowBtn"
+                  onClick={() => context.toggleCompare(product)}
+                >
+                  {context.isInCompare(product.id)
+                    ? "Remove Compare"
+                    : "Compare"}
                 </button>
               </div>
 
@@ -287,20 +457,22 @@ const ProductDetail = () => {
               <div className="productFeatures flex flex-wrap gap-4">
                 {isLicenseKeyProduct(product) && (
                   <div className="featureItem flex items-center justify-center gap-2">
-                    🔑 Key format: {product.keyPrefix}-#####
+                    Key format: {product.keyPrefix}-#####
                   </div>
                 )}
 
                 <div className="featureItem flex items-center justify-center gap-2">
-                  ⚡ Instant Delivery
+                  {getDeliveryLabel(product)}
                 </div>
 
                 <div className="featureItem flex items-center justify-center gap-2">
-                  🔒 Genuine License
+                  {isPhysicalProduct(product) ? "COD available" : "VNPay required"}
                 </div>
 
                 <div className="featureItem flex items-center justify-center gap-2">
-                  ♾ Lifetime Activation
+                  {product.productType === "manual_service"
+                    ? "Support processed"
+                    : "Order support"}
                 </div>
               </div>
             </div>
@@ -318,18 +490,16 @@ const ProductDetail = () => {
             {/* TAB NAV */}
             <div className="productTabsNav flex items-center gap-8 border-b border-white/10 pb-5 flex-wrap">
               <button
-                className={`tabBtn ${
-                  activeTab === "description" ? "active" : ""
-                }`}
+                className={`tabBtn ${activeTab === "description" ? "active" : ""
+                  }`}
                 onClick={() => setActiveTab("description")}
               >
                 Description
               </button>
 
               <button
-                className={`tabBtn ${
-                  activeTab === "specifications" ? "active" : ""
-                }`}
+                className={`tabBtn ${activeTab === "specifications" ? "active" : ""
+                  }`}
                 onClick={() => setActiveTab("specifications")}
               >
                 Specifications
@@ -339,7 +509,7 @@ const ProductDetail = () => {
                 className={`tabBtn ${activeTab === "reviews" ? "active" : ""}`}
                 onClick={() => setActiveTab("reviews")}
               >
-                Reviews (128)
+                Reviews ({product.reviewsCount || 0})
               </button>
             </div>
 
@@ -348,53 +518,24 @@ const ProductDetail = () => {
               {/* DESCRIPTION */}
               {activeTab === "description" && (
                 <div className="descriptionContent">
-                  <p className="mb-5">
-                    Windows 11 Pro offers advanced security, business tools, and
-                    optimized performance for professional users.
-                  </p>
-
-                  <p className="mb-5">
-                    This license includes lifetime activation and supports
-                    official Microsoft updates without subscription fees.
-                  </p>
-
-                  <p>
-                    Instant delivery is available immediately after payment
-                    confirmation.
-                  </p>
+                  {product.description ? (
+                    <p className="mb-5">{product.description}</p>
+                  ) : (
+                    <p className="mb-5">No description available.</p>
+                  )}
                 </div>
               )}
 
               {/* SPECIFICATIONS */}
               {activeTab === "specifications" && (
                 <div className="space-y-4">
-                  <div className="specItem">
-                    <span className="specItemLeft">License Type</span>
+                  {specifications.map(([label, value]) => (
+                    <div className="specItem" key={label}>
+                      <span className="specItemLeft">{label}</span>
 
-                    <span className="specItemRight">Retail Key</span>
-                  </div>
-
-                  <div className="specItem">
-                    <span className="specItemLeft">Activation</span>
-
-                    <span className="specItemRight">Lifetime</span>
-                  </div>
-
-                  <div className="specItem">
-                    <span className="specItemLeft">Delivery</span>
-
-                    <span className="specItemRight">
-                      Instant Email Delivery
-                    </span>
-                  </div>
-
-                  <div className="specItem">
-                    <span className="specItemLeft">Updates</span>
-
-                    <span className="specItemRight">
-                      Official Microsoft Updates
-                    </span>
-                  </div>
+                      <span className="specItemRight">{value}</span>
+                    </div>
+                  ))}
                 </div>
               )}
 
@@ -404,118 +545,107 @@ const ProductDetail = () => {
                   {/* REVIEW SUMMARY */}
                   <div className="reviewSummary">
                     <div className="reviewSummaryLeft">
-                      <h2 className="reviewAverage">4.9</h2>
+                      <h2 className="reviewAverage">
+                        {product.rating?.toFixed(1) || "0.0"}
+                      </h2>
 
-                      <div className="reviewStarsLarge">★★★★★</div>
-
-                      <p className="reviewCount">Based on 128 reviews</p>
-                    </div>
-
-                    <div className="reviewSummaryRight">
-                      <div className="ratingRow">
-                        <span>5 Stars</span>
-
-                        <div className="ratingBar">
-                          <div
-                            className="ratingFill"
-                            style={{ width: "92%" }}
-                          ></div>
-                        </div>
-
-                        <span>92%</span>
+                      <div className="reviewStarsLarge">
+                        {renderStars(product.rating || 0)}
                       </div>
 
-                      <div className="ratingRow">
-                        <span>4 Stars</span>
-
-                        <div className="ratingBar">
-                          <div
-                            className="ratingFill"
-                            style={{ width: "6%" }}
-                          ></div>
-                        </div>
-
-                        <span>6%</span>
-                      </div>
-
-                      <div className="ratingRow">
-                        <span>3 Stars</span>
-
-                        <div className="ratingBar">
-                          <div
-                            className="ratingFill"
-                            style={{ width: "2%" }}
-                          ></div>
-                        </div>
-
-                        <span>2%</span>
-                      </div>
+                      <p className="reviewCount">
+                        Based on {product.reviewsCount || 0} reviews
+                      </p>
                     </div>
                   </div>
 
                   {/* WRITE REVIEW */}
-                  <div className="writeReviewBox">
-                    <h3 className="writeReviewTitle">Write a Review</h3>
+                  {context.isLogin ? (
+                    <div className="writeReviewBox">
+                      <h3 className="writeReviewTitle">Write a Review</h3>
 
-                    <div className="reviewStarsSelect">
-                      {[1, 2, 3, 4, 5].map((star) => (
-                        <span
-                          key={star}
-                          className={rating >= star ? "active" : ""}
-                          onClick={() => setRating(star)}
-                        >
-                          ★
-                        </span>
-                      ))}
+                      <div className="reviewStarsSelect">
+                        {[1, 2, 3, 4, 5].map((star) => (
+                          <span
+                            key={star}
+                            className={rating >= star ? "active" : ""}
+                            onClick={() => setRating(star)}
+                          >
+                            {"\u2605"}
+                          </span>
+                        ))}
+                      </div>
+
+                      <textarea
+                        placeholder="Write your review..."
+                        className="reviewTextarea"
+                        maxLength={maxReviewLength}
+                        value={reviewComment}
+                        onChange={(event) =>
+                          setReviewComment(event.target.value)
+                        }
+                      ></textarea>
+
+                      <div className="reviewMeta">
+                        {reviewComment.trim().length}/{maxReviewLength}
+                      </div>
+
+                      <button
+                        type="button"
+                        className="submitReviewBtn"
+                        onClick={handleSubmitReview}
+                        disabled={
+                          submittingReview || rating < 1 || !reviewComment.trim()
+                        }
+                      >
+                        {submittingReview ? "Submitting..." : "Submit Review"}
+                      </button>
                     </div>
+                  ) : (
+                    <div className="writeReviewBox">
+                      <h3 className="writeReviewTitle">Want to write a review?</h3>
 
-                    <input
-                      type="text"
-                      placeholder="Your Name"
-                      className="reviewInput"
-                    />
-
-                    <textarea
-                      placeholder="Write your review..."
-                      className="reviewTextarea"
-                    ></textarea>
-
-                    <button className="submitReviewBtn">Submit Review</button>
-                  </div>
+                      <button
+                        type="button"
+                        className="submitReviewBtn"
+                        onClick={() => navigate("/login")}
+                      >
+                        Login to Review
+                      </button>
+                    </div>
+                  )}
 
                   {/* REVIEW LIST */}
                   <div className="reviewList">
-                    <div className="reviewItem">
-                      <div className="reviewTop">
-                        <div>
-                          <h4 className="reviewUser">John Carter</h4>
+                    {reviewsLoading ? (
+                      <p>Loading reviews...</p>
+                    ) : reviews.length === 0 ? (
+                      <p>No reviews yet. Be the first to review.</p>
+                    ) : (
+                      reviews.map((review) => (
+                        <div className="reviewItem" key={review.id}>
+                          <div className="reviewTop">
+                            <div>
+                              <h4 className="reviewUser">
+                                {review.userName}
+                              </h4>
 
-                          <div className="reviewStars">★★★★★</div>
+                              <div className="reviewStars">
+                                {renderStars(review.rating)}
+                              </div>
+                            </div>
+
+                            <span className="reviewDate">
+                              {formatReviewDate(review.createdAt)}
+                            </span>
+                          </div>
+
+                          <p className="reviewText">
+                            {review.comment || "No comment."}
+                          </p>
                         </div>
-
-                        <span className="reviewDate">2 days ago</span>
-                      </div>
-
-                      <p className="reviewText">
-                        Fast delivery and activation worked perfectly.
-                      </p>
-                    </div>
-
-                    <div className="reviewItem">
-                      <div className="reviewTop">
-                        <div>
-                          <h4 className="reviewUser">Alex Morgan</h4>
-
-                          <div className="reviewStars">★★★★★</div>
-                        </div>
-
-                        <span className="reviewDate">5 days ago</span>
-                      </div>
-
-                      <p className="reviewText">
-                        Genuine key and easy installation process.
-                      </p>
-                    </div>
+                      ))
+                    )}
                   </div>
                 </div>
               )}

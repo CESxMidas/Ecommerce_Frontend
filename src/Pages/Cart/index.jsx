@@ -1,13 +1,17 @@
 import { Link } from "react-router-dom";
-import { useContext } from "react";
-import { FaTrashAlt, FaArrowLeft } from "react-icons/fa";
+import { useContext, useState } from "react";
+import { FaTrashAlt, FaArrowLeft, FaLock } from "react-icons/fa";
 import { MyContext } from "../../App";
+import { validateCoupon } from "../../services/cmsService";
 import {
   computeDiscountLabel,
-  getListPrice,
+  getDeliveryLabel,
+  getCartItemListPrice,
+  getCartItemSalePrice,
   getProductDisplayName,
   getProductThumbnail,
-  getSalePrice,
+  getPurchaseVariants,
+  isPhysicalProduct,
 } from "../../utils/productSchema";
 import { formatPrice } from "../../utils/products";
 import "./index.css";
@@ -16,6 +20,46 @@ const Cart = () => {
   const context = useContext(MyContext);
   const { cartItems, cartSummary } = context;
   const isEmpty = cartItems.length === 0;
+  const hasDigitalItems = cartItems.some(
+    (item) => !isPhysicalProduct(item.product),
+  );
+  const [couponCode, setCouponCode] = useState("");
+  const [appliedCoupon, setAppliedCoupon] = useState(() => {
+    try {
+      return JSON.parse(localStorage.getItem("appliedCoupon") || "null");
+    } catch {
+      return null;
+    }
+  });
+
+  const applyCoupon = async () => {
+    if (!couponCode.trim()) {
+      context.openAlertBox("error", "Enter a coupon code");
+      return;
+    }
+
+    if (!context.isLogin) {
+      context.openAlertBox("error", "Please login to apply a coupon");
+      return;
+    }
+
+    try {
+      const result = await validateCoupon(
+        couponCode.trim(),
+        cartSummary.subtotal,
+      );
+
+      localStorage.setItem("appliedCoupon", JSON.stringify(result));
+      setAppliedCoupon(result);
+      context.openAlertBox("success", "Coupon applied");
+    } catch (error) {
+      context.openAlertBox("error", error.message || "Invalid coupon");
+    }
+  };
+
+  const displayTotal = appliedCoupon
+    ? appliedCoupon.total + (cartSummary.subtotal > 0 ? 2 : 0)
+    : cartSummary.total;
 
   return (
     <section className="cartPage">
@@ -46,8 +90,13 @@ const Cart = () => {
         ) : (
           <div className="cartWrapper">
             <div className="cartLeft">
-              {cartItems.map((item) => (
-                <div className="cartItem" key={item.productId}>
+              {cartItems.map((item) => {
+                const variants = getPurchaseVariants(item.product);
+                const itemSalePrice = getCartItemSalePrice(item);
+                const itemListPrice = getCartItemListPrice(item);
+
+                return (
+                <div className="cartItem" key={`${item.productId}-${item.variant?.id || "default"}`}>
                   <div className="cartItemImage">
                     <img
                       src={getProductThumbnail(item.product)}
@@ -63,22 +112,49 @@ const Cart = () => {
                     <h4>{getProductDisplayName(item.product)}</h4>
 
                     <div className="cartMeta">
-                      <span>Platform: PC</span>
-                      <span>Delivery: Instant</span>
+                      <span>{getDeliveryLabel(item.product)}</span>
+                      <span>
+                        {isPhysicalProduct(item.product)
+                          ? "COD eligible"
+                          : "VNPay required"}
+                      </span>
                     </div>
 
+                    {variants.length > 0 && (
+                      <label className="cartVariantSelect">
+                        <span>Key type</span>
+                        <select
+                          value={item.variant?.id || variants[0]?.id || ""}
+                          onChange={(event) =>
+                            context.updateCartVariant(
+                              item,
+                              variants.find(
+                                (variant) => variant.id === event.target.value,
+                              ),
+                            )
+                          }
+                        >
+                          {variants.map((variant) => (
+                            <option key={variant.id} value={variant.id}>
+                              {variant.name} - {formatPrice(variant.price)}
+                            </option>
+                          ))}
+                        </select>
+                      </label>
+                    )}
+
                     <div className="cartPriceBox">
-                      {getListPrice(item.product) != null && (
+                      {itemListPrice != null && (
                         <span className="oldPrice">
-                          {formatPrice(getListPrice(item.product))}
+                          {formatPrice(itemListPrice)}
                         </span>
                       )}
 
                       <span className="cartPrice">
-                        {formatPrice(getSalePrice(item.product))}
+                        {formatPrice(itemSalePrice)}
                       </span>
 
-                      {computeDiscountLabel(item.product) && (
+                      {!item.variant && computeDiscountLabel(item.product) && (
                         <span className="discountBadge">
                           {computeDiscountLabel(item.product)}
                         </span>
@@ -93,7 +169,8 @@ const Cart = () => {
                         onClick={() =>
                           context.updateCartQuantity(
                             item.productId,
-                            item.quantity - 1
+                            item.quantity - 1,
+                            item.variant,
                           )
                         }
                       >
@@ -107,7 +184,8 @@ const Cart = () => {
                         onClick={() =>
                           context.updateCartQuantity(
                             item.productId,
-                            item.quantity + 1
+                            item.quantity + 1,
+                            item.variant,
                           )
                         }
                       >
@@ -117,7 +195,7 @@ const Cart = () => {
 
                     <div className="cartTotal">
                       {formatPrice(
-                        getSalePrice(item.product) * item.quantity
+                        itemSalePrice * item.quantity
                       )}
                     </div>
 
@@ -125,14 +203,15 @@ const Cart = () => {
                       type="button"
                       className="removeBtn"
                       onClick={() =>
-                        context.removeFromCart(item.productId)
+                        context.removeFromCart(item.productId, item.variant)
                       }
                     >
                       <FaTrashAlt />
                     </button>
                   </div>
                 </div>
-              ))}
+              );
+              })}
             </div>
 
             <div className="cartRight">
@@ -155,7 +234,7 @@ const Cart = () => {
 
                 <div className="summaryRow">
                   <span>Delivery</span>
-                  <span>Free</span>
+                  <span>Included</span>
                 </div>
 
                 {cartSummary.tax > 0 && (
@@ -167,26 +246,45 @@ const Cart = () => {
 
                 <div className="summaryDivider"></div>
 
+                {appliedCoupon?.discount > 0 && (
+                  <div className="summaryRow">
+                    <span>Coupon ({appliedCoupon.code})</span>
+                    <span className="discount">
+                      -{formatPrice(appliedCoupon.discount)}
+                    </span>
+                  </div>
+                )}
+
+                <div className="summaryDivider"></div>
+
                 <div className="summaryTotal">
                   <span>Total</span>
-                  <span>{formatPrice(cartSummary.total)}</span>
+                  <span>{formatPrice(displayTotal)}</span>
                 </div>
 
                 <div className="couponBox">
-                  <input type="text" placeholder="Coupon code" />
-                  <button type="button">Apply</button>
+                  <input
+                    type="text"
+                    placeholder="Coupon code"
+                    value={couponCode}
+                    onChange={(event) => setCouponCode(event.target.value)}
+                  />
+                  <button type="button" onClick={applyCoupon}>
+                    Apply
+                  </button>
                 </div>
 
                 <Link to="/checkout" className="checkoutBtn">
-                  Proceed To Checkout
+                  Proceed to secure checkout
                 </Link>
 
-                <button type="button" className="paypalBtn">
-                  Pay With PayPal
-                </button>
-
                 <div className="secureText">
-                  🔒 Secure Checkout Guaranteed
+                  <FaLock />
+                  <span>
+                    {hasDigitalItems
+                      ? "Digital products require online payment before delivery"
+                      : "VNPay or COD available for physical products"}
+                  </span>
                 </div>
               </div>
             </div>

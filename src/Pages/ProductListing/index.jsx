@@ -96,9 +96,17 @@ const ProductListing = () => {
       setLoadError("");
 
       try {
-        const data = await fetchProducts(
-          categorySlug ? { category: categorySlug } : {}
-        );
+        const params = {};
+
+        if (categorySlug) {
+          params.category = categorySlug;
+        }
+
+        if (query.trim()) {
+          params.q = query.trim();
+        }
+
+        const data = await fetchProducts(params);
 
         if (!cancelled) {
           setProducts(data);
@@ -120,7 +128,7 @@ const ProductListing = () => {
     return () => {
       cancelled = true;
     };
-  }, [categorySlug]);
+  }, [categorySlug, query]);
 
   const priceBounds = useMemo(
     () => getProductPriceBounds(products),
@@ -133,6 +141,7 @@ const ProductListing = () => {
   );
 
   useEffect(() => {
+    const timer = setTimeout(() => {
     if (!categorySlug || categories.length === 0) {
       setSelectedCategoryIds([]);
       return;
@@ -143,12 +152,19 @@ const ProductListing = () => {
     if (matched) {
       setSelectedCategoryIds(collectCategoryIds(matched));
     }
+    }, 0);
+
+    return () => clearTimeout(timer);
   }, [categorySlug, categories]);
 
   useEffect(() => {
+    const timer = setTimeout(() => {
     if (products.length > 0) {
       setPriceRange(getProductPriceBounds(products));
     }
+    }, 0);
+
+    return () => clearTimeout(timer);
   }, [products]);
 
   const brands = useMemo(() => getUniqueBrands(products), [products]);

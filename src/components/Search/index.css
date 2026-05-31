@@ -14,13 +14,13 @@
 
 .searchBox__input {
   flex: 1;
-  border-top-left-radius: 12px;
-  border-bottom-left-radius: 12px;
+  border-top-left-radius: var(--radius-control);
+  border-bottom-left-radius: var(--radius-control);
   height: 48px;
 
   padding: 0 16px;
 
-  background: var(--card);
+  background: var(--surface-soft);
 
   border: 1px solid var(--border);
 
@@ -44,8 +44,8 @@
 .searchBox__btn {
   padding: 0 20px;
   display: flex;
-  border-top-right-radius: 12px;
-  border-bottom-right-radius: 12px;
+  border-top-right-radius: var(--radius-control);
+  border-bottom-right-radius: var(--radius-control);
   align-items: center;
   justify-content: center;
   gap: 8px;

@@ -1,10 +1,45 @@
+import { useEffect, useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Autoplay } from "swiper/modules";
 import BannerBox from "../BannerBox";
+import { fetchBanners } from "../../services/cmsService";
 import "swiper/css";
 import "swiper/css/navigation";
 import "./index.css";
+
+const fallbackAds = [
+  "/images/bypass/cerberus-banner.png",
+  "/images/bypass/snake-app.png",
+  "/images/bypass/cerberus-banner.png",
+];
+
 const AdsBannerSlider = ({ items = 4 }) => {
+  const [ads, setAds] = useState(fallbackAds);
+  const maxSlidesPerView = Math.max(Number(items) || 1, 3);
+  const canLoop = ads.length > maxSlidesPerView;
+
+  useEffect(() => {
+    let cancelled = false;
+
+    const load = async () => {
+      try {
+        const data = await fetchBanners("ads");
+
+        if (!cancelled && data.length > 0) {
+          setAds(data.map((banner) => banner.image));
+        }
+      } catch {
+        // keep fallback
+      }
+    };
+
+    load();
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
   return (
     <section className="adsBannerSlider mt-10">
       <div className="w-full">
@@ -15,7 +50,7 @@ const AdsBannerSlider = ({ items = 4 }) => {
             delay: 3000,
             disableOnInteraction: false,
           }}
-          loop={true}
+          loop={canLoop}
           spaceBetween={18}
           slidesPerView={items}
           breakpoints={{
@@ -34,39 +69,15 @@ const AdsBannerSlider = ({ items = 4 }) => {
           }}
           className="ads-swiper"
         >
-          <SwiperSlide>
-            <BannerBox
-              img="https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?q=80&w=1200&auto=format&fit=crop"
-              link="/"
-            />
-          </SwiperSlide>
-          <SwiperSlide>
-            <BannerBox
-              img="https://images.unsplash.com/photo-1498050108023-c5249f4df085?q=80&w=1200&auto=format&fit=crop"
-              link="/"
-            />
-          </SwiperSlide>
-          <SwiperSlide>
-            <BannerBox
-              img="https://images.unsplash.com/photo-1541807084-5c52b6b3adef?q=80&w=1200&auto=format&fit=crop"
-              link="/"
-            />
-          </SwiperSlide>
-          <SwiperSlide>
-            <BannerBox
-              img="https://images.unsplash.com/photo-1523275335684-37898b6baf30?q=80&w=1200&auto=format&fit=crop"
-              link="/"
-            />
-          </SwiperSlide>
-          <SwiperSlide>
-            <BannerBox
-              img="https://images.unsplash.com/photo-1598327105666-5b89351aff97?q=80&w=1200&auto=format&fit=crop"
-              link="/"
-            />
-          </SwiperSlide>
+          {ads.map((img, index) => (
+            <SwiperSlide key={`${img}-${index}`}>
+              <BannerBox img={img} link="/" />
+            </SwiperSlide>
+          ))}
         </Swiper>
       </div>
     </section>
   );
 };
+
 export default AdsBannerSlider;

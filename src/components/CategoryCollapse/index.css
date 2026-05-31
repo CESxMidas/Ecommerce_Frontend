@@ -19,7 +19,7 @@
 
   border-radius: 14px !important;
 
-  padding: 12px 14px !important;
+  padding: 0 !important;
 
   transition:
     background 0.25s ease,
@@ -27,7 +27,7 @@
 }
 
 .category-item:hover {
-  background: rgba(255, 255, 255, 0.05);
+  background: rgba(96, 165, 250, 0.1);
 
   transform: translateX(2px);
 }
@@ -38,6 +38,32 @@
   background: rgba(59, 130, 246, 0.12) !important;
 }
 
+.category-item--split {
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+}
+
+.category-item-link {
+  min-height: 50px !important;
+  flex: 1;
+  padding: 12px 8px 12px 14px !important;
+  border-radius: 14px 0 0 14px !important;
+  color: #f8fafc !important;
+}
+
+.category-toggle-btn {
+  width: 42px !important;
+  height: 42px !important;
+  margin-right: 4px !important;
+  color: #bfdbfe !important;
+  border-radius: 12px !important;
+}
+
+.category-toggle-btn:hover {
+  background: rgba(255, 255, 255, 0.07) !important;
+}
+
 /* =========================
    SUB ITEM
 ========================= */
@@ -45,11 +71,14 @@
 .subcategory-item {
   min-height: 44px !important;
 
-  padding-left: 52px !important;
+  margin-left: 36px !important;
+  padding-left: 14px !important;
 
   border-radius: 10px !important;
 
-  opacity: 0.92;
+  opacity: 1;
+
+  color: #cbd5e1 !important;
 
   transition:
     background 0.25s ease,
@@ -57,7 +86,7 @@
 }
 
 .subcategory-item:hover {
-  background: rgba(255, 255, 255, 0.04);
+  background: rgba(37, 99, 235, 0.16);
 
   transform: translateX(2px);
 }
@@ -66,7 +95,8 @@
    TEXT
 ========================= */
 
-.category-item .MuiListItemText-primary {
+.category-item .MuiListItemText-primary,
+.category-item-link .MuiListItemText-primary {
   font-size: 15px;
 
   color: #f3f4f6;
@@ -77,9 +107,15 @@
 .subcategory-item .MuiListItemText-primary {
   font-size: 14px;
 
-  color: rgba(255, 255, 255, 0.72);
+  color: #cbd5e1;
 
-  font-weight: 500;
+  font-weight: 650;
+}
+
+.subcategory-item .MuiListItemText-secondary {
+  color: #7dd3fc !important;
+  font-size: 12px !important;
+  font-weight: 650 !important;
 }
 
 /* =========================
@@ -101,7 +137,7 @@
 
   font-size: 16px !important;
 
-  color: #93c5fd;
+  color: #9ca3af;
 
   flex-shrink: 0;
 }
@@ -110,12 +146,6 @@
    EXPAND ICON
 ========================= */
 
-.category-item svg:last-child {
-  font-size: 20px !important;
-
-  color: rgba(255, 255, 255, 0.65);
-}
-
 /* =========================
    MOBILE
 ========================= */
@@ -123,14 +153,18 @@
 @media (max-width: 768px) {
   .category-item {
     min-height: 48px !important;
+  }
 
-    padding: 10px 12px !important;
+  .category-item-link {
+    min-height: 48px !important;
+    padding: 10px 8px 10px 12px !important;
   }
 
   .subcategory-item {
     min-height: 42px !important;
 
-    padding-left: 46px !important;
+    margin-left: 32px !important;
+    padding-left: 12px !important;
   }
 
   .category-item .MuiListItemText-primary {

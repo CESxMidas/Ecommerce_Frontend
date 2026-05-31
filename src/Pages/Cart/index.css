@@ -8,7 +8,7 @@
 
   padding: 50px 0;
 
-  background: #020817;
+  background: var(--bg);
 }
 
 /* ========================= */
@@ -49,7 +49,7 @@
   align-items: center;
   gap: 10px;
 
-  border-radius: 16px;
+  border-radius: var(--radius-control);
 
   background: rgba(255, 255, 255, 0.04);
 
@@ -103,11 +103,11 @@
 
   padding: 22px;
 
-  border-radius: 26px;
+  border-radius: var(--radius-card);
 
   margin-bottom: 22px;
 
-  background: rgba(255, 255, 255, 0.03);
+  background: var(--surface);
 
   border: 1px solid rgba(255, 255, 255, 0.06);
 
@@ -352,9 +352,9 @@
 .cartPage .summaryCard {
   padding: 28px;
 
-  border-radius: 28px;
+  border-radius: var(--radius-card);
 
-  background: rgba(255, 255, 255, 0.03);
+  background: var(--surface);
 
   border: 1px solid rgba(255, 255, 255, 0.06);
 
@@ -478,10 +478,13 @@
 /* BUTTONS */
 /* ========================= */
 
-.cartPage .checkoutBtn,
-.cartPage .paypalBtn {
+.cartPage .checkoutBtn {
   width: 100%;
   height: 58px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
   border-radius: 18px;
 
@@ -494,6 +497,34 @@
   cursor: pointer;
 
   transition: all 0.3s ease;
+
+  text-decoration: none;
+}
+
+.cartPage .cartVariantSelect {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  max-width: 280px;
+  margin: 14px 0 4px;
+}
+
+.cartPage .cartVariantSelect span {
+  color: rgba(255, 255, 255, 0.55);
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.cartPage .cartVariantSelect select {
+  min-height: 40px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.04);
+  color: #ffffff;
+  padding: 0 12px;
+  font-size: 13px;
+  font-weight: 700;
 }
 
 /* CHECKOUT */
@@ -503,7 +534,7 @@
 
   color: white;
 
-  margin-bottom: 14px;
+  margin-bottom: 12px;
 }
 
 .cartPage .checkoutBtn:hover {
@@ -512,28 +543,28 @@
   box-shadow: 0 15px 35px rgba(37, 99, 235, 0.3);
 }
 
-/* PAYPAL */
-
-.cartPage .paypalBtn {
-  background: rgba(255, 255, 255, 0.04);
-
-  border: 1px solid rgba(255, 255, 255, 0.08);
-
-  color: white;
-}
-
-.cartPage .paypalBtn:hover {
-  background: rgba(255, 255, 255, 0.08);
-}
-
 .cartPage .secureText {
-  text-align: center;
+  min-height: 42px;
+  padding: 10px 12px;
 
-  margin-top: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
 
+  border-radius: 14px;
+  background: rgba(37, 99, 235, 0.1);
+  border: 1px solid rgba(96, 165, 250, 0.16);
   color: rgba(255, 255, 255, 0.5);
 
   font-size: 13px;
+  line-height: 18px;
+  text-align: center;
+}
+
+.cartPage .secureText svg {
+  flex-shrink: 0;
+  color: #60a5fa;
 }
 
 /* ========================= */
@@ -716,8 +747,7 @@
 
   /* BUTTON */
 
-  .cartPage .checkoutBtn,
-  .cartPage .paypalBtn {
+  .cartPage .checkoutBtn {
     height: 54px;
     border-radius: 16px;
   }

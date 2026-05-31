@@ -139,6 +139,31 @@
   transition: 0.3s ease;
 }
 
+.category-content a {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border: none;
+  background: rgba(255, 255, 255, 0.12);
+  color: white;
+  padding: 11px 18px;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 700;
+  backdrop-filter: blur(10px);
+  transition: 0.3s ease;
+}
+
+.category-content a:hover {
+  background: #2563eb;
+}
+
+.category-content a small {
+  color: #bfdbfe;
+  font-size: 12px;
+  font-weight: 750;
+}
+
 .category-content button:hover {
   background: #2563eb;
 }
@@ -270,8 +295,10 @@
     margin-bottom: 12px;
   }
 
-  .category-content button {
+  .category-content button,
+  .category-content a {
     width: 100%;
+    justify-content: center;
 
     padding: 12px 18px;
   }

@@ -4,12 +4,13 @@ import {
   FaPinterestP,
   FaYoutube,
   FaHeadset,
-  FaTruck,
-  FaGift,
+  FaBolt,
+  FaKey,
 } from "react-icons/fa";
 
 import { MdOutlinePayments } from "react-icons/md";
 import { TbTruckReturn } from "react-icons/tb";
+import { Link } from "react-router-dom";
 
 import "./index.css";
 
@@ -21,11 +22,11 @@ const Footer = () => {
         <div className="container mx-auto px-6">
           <div className="footerFeatures">
             <div className="featureItem">
-              <FaTruck className="featureIcon" />
+              <FaBolt className="featureIcon" />
 
               <div>
-                <h4>Free Shipping</h4>
-                <p>For all Orders Over $100</p>
+                <h4>Instant Delivery</h4>
+                <p>Digital keys after checkout</p>
               </div>
             </div>
 
@@ -33,8 +34,8 @@ const Footer = () => {
               <TbTruckReturn className="featureIcon" />
 
               <div>
-                <h4>30 Days Returns</h4>
-                <p>For an Exchange Product</p>
+                <h4>Refund Review</h4>
+                <p>Support for key issues</p>
               </div>
             </div>
 
@@ -42,17 +43,17 @@ const Footer = () => {
               <MdOutlinePayments className="featureIcon" />
 
               <div>
-                <h4>Secured Payment</h4>
-                <p>Payment Cards Accepted</p>
+                <h4>Secure Payment</h4>
+                <p>Protected checkout flow</p>
               </div>
             </div>
 
             <div className="featureItem">
-              <FaGift className="featureIcon" />
+              <FaKey className="featureIcon" />
 
               <div>
-                <h4>Special Gifts</h4>
-                <p>Our First Product Order</p>
+                <h4>Genuine Keys</h4>
+                <p>Verified digital licenses</p>
               </div>
             </div>
 
@@ -60,8 +61,8 @@ const Footer = () => {
               <FaHeadset className="featureIcon" />
 
               <div>
-                <h4>Support 24/7</h4>
-                <p>Contact us Anytime</p>
+                <h4>Activation Support</h4>
+                <p>Help when setup fails</p>
               </div>
             </div>
           </div>
@@ -75,9 +76,9 @@ const Footer = () => {
           <div>
             <h3 className="footerTitle">Contact us</h3>
 
-            <p className="footerText">Classyshop - Mega Super Store</p>
+            <p className="footerText">KEYSHOP - Digital License Store</p>
 
-            <p className="footerText">507-Union Trade Centre France</p>
+            <p className="footerText">Software keys, gaming products and activation support</p>
 
             <p className="footerText mt-6">hoangdohuy0907@gmail.com</p>
 
@@ -100,12 +101,12 @@ const Footer = () => {
             <h3 className="footerTitle">Products</h3>
 
             <ul className="footerLinks">
-              <li>Prices drop</li>
-              <li>New products</li>
-              <li>Best sales</li>
-              <li>Contact us</li>
-              <li>Sitemap</li>
-              <li>Stores</li>
+              <li><Link to="/deals?sort=popular">Prices drop</Link></li>
+              <li><Link to="/productListing?sort=new">New products</Link></li>
+              <li><Link to="/deals?sort=popular">Best sales</Link></li>
+              <li><Link to="/contact">Contact us</Link></li>
+              <li><Link to="/blog">Articles</Link></li>
+              <li><Link to="/track-order">Order tracking</Link></li>
             </ul>
           </div>
 
@@ -114,12 +115,12 @@ const Footer = () => {
             <h3 className="footerTitle">Our company</h3>
 
             <ul className="footerLinks">
-              <li>Delivery</li>
-              <li>Legal Notice</li>
-              <li>Terms and conditions</li>
-              <li>About us</li>
-              <li>Secure payment</li>
-              <li>Login</li>
+              <li><Link to="/shipping">Delivery</Link></li>
+              <li><Link to="/privacy-policy">Legal Notice</Link></li>
+              <li><Link to="/terms">Terms and conditions</Link></li>
+              <li><Link to="/about">About us</Link></li>
+              <li><Link to="/payment-policy">Secure payment</Link></li>
+              <li><Link to="/login">Login</Link></li>
             </ul>
           </div>
 
@@ -129,7 +130,7 @@ const Footer = () => {
 
             <p className="footerText mb-6">
               Subscribe to our latest newsletter to get news about special
-              discounts.
+              discounts and software updates.
             </p>
 
             <div className="newsletterBox">
@@ -171,7 +172,7 @@ const Footer = () => {
             </div>
 
             {/* COPYRIGHT */}
-            <p className="copyright">© 2026 - Ecommerce Template</p>
+            <p className="copyright">Copyright 2026 - KEYSHOP</p>
 
             {/* PAYMENT */}
             <img

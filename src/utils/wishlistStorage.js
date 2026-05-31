@@ -1,8 +1,14 @@
-const WISHLIST_KEY = "wishlist";
+const GUEST_WISHLIST_KEY = "wishlist:guest";
 
-export function loadWishlist() {
+export function getUserWishlistKey(user) {
+  const userId = user?._id || user?.id || user?.email;
+
+  return userId ? `wishlist:${String(userId)}` : GUEST_WISHLIST_KEY;
+}
+
+export function loadWishlist(user = null) {
   try {
-    const raw = localStorage.getItem(WISHLIST_KEY);
+    const raw = localStorage.getItem(getUserWishlistKey(user));
 
     return raw ? JSON.parse(raw) : [];
   } catch {
@@ -10,6 +16,6 @@ export function loadWishlist() {
   }
 }
 
-export function saveWishlist(items) {
-  localStorage.setItem(WISHLIST_KEY, JSON.stringify(items));
+export function saveWishlist(items, user = null) {
+  localStorage.setItem(getUserWishlistKey(user), JSON.stringify(items));
 }

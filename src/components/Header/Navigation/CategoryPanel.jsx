@@ -87,25 +87,15 @@ const CategoryPanel = ({ onNavigate }) => {
                   : ""
               }`}
               icon={getCategoryIcon(category.icon)}
-              items={[
-                {
-                  ...category,
-                  label: `All ${category.name}`,
-                  name: `All ${category.name}`,
-                  icon: getCategoryIcon(
-                    category.icon,
-                    "category-icon-small"
-                  ),
-                },
-                ...(category.children || []).map((child) => ({
+              category={category}
+              items={(category.children || []).map((child) => ({
                   ...child,
                   label: child.name,
                   icon: getCategoryIcon(
                     child.icon,
                     "category-icon-small"
                   ),
-                })),
-              ]}
+                }))}
               onNavigate={handleNavigate}
             />
           ))}

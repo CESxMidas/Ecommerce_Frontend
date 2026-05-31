@@ -1,12 +1,17 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { MyContext } from "../../App";
 import ProductZoom from "../ProductZoom";
 import {
   computeDiscountLabel,
   getListPrice,
   getProductDisplayName,
+  getProductTypeLabel,
+  getPurchaseVariants,
   getSalePrice,
-  isLicenseKeyProduct,
+  getDeliveryLabel,
+  isInstantCodeProduct,
+  isPhysicalProduct,
+  resolvePurchaseVariant,
 } from "../../utils/productSchema";
 import { formatPrice, getProductImages } from "../../utils/products";
 import "./index.css";
@@ -15,6 +20,13 @@ const ProductDetailModal = () => {
   const context = useContext(MyContext);
   const product = context.selectedProduct;
   const [quantity, setQuantity] = useState(1);
+  const [selectedVariantId, setSelectedVariantId] = useState("");
+
+  useEffect(() => {
+    const variants = getPurchaseVariants(product);
+    setSelectedVariantId(variants[0]?.id || "");
+    setQuantity(1);
+  }, [product]);
 
   if (!product) {
     return null;
@@ -22,10 +34,17 @@ const ProductDetailModal = () => {
 
   const images = getProductImages(product);
   const displayName = getProductDisplayName(product);
-  const salePrice = getSalePrice(product);
-  const listPrice = getListPrice(product);
-  const discount = computeDiscountLabel(product);
+  const purchaseVariants = getPurchaseVariants(product);
+  const selectedVariant = resolvePurchaseVariant(product, selectedVariantId);
+  const salePrice = selectedVariant?.price ?? getSalePrice(product);
+  const listPrice = selectedVariant?.listPrice ?? getListPrice(product);
+  const discount = selectedVariant ? undefined : computeDiscountLabel(product);
   const vendor = product.vendor || product.brand || product.categoryName;
+  const renderStars = (value) => {
+    const fullStars = Math.max(0, Math.min(5, Math.round(Number(value) || 0)));
+
+    return "\u2605".repeat(fullStars).padEnd(5, "\u2606");
+  };
 
   return (
     <div className="productDetailModalWrapper">
@@ -47,8 +66,14 @@ const ProductDetailModal = () => {
 
           <h2 className="modalProductTitle">{displayName}</h2>
 
+          <div className="modalProductMeta">
+            <span>{getProductTypeLabel(product)}</span>
+            <span>{getDeliveryLabel(product)}</span>
+            <span>{isPhysicalProduct(product) ? "COD available" : "VNPay required"}</span>
+          </div>
+
           <div className="modalRating">
-            <div className="stars">★★★★★</div>
+            <div className="stars">{renderStars(product.rating)}</div>
             <span>{product.reviewsCount || 0} Reviews</span>
           </div>
 
@@ -64,7 +89,7 @@ const ProductDetailModal = () => {
 
           <p className="modalDescription">
             {product.description ||
-              `${displayName} with lifetime validity and instant delivery.`}
+              `${displayName} with ${getDeliveryLabel(product).toLowerCase()}.`}
           </p>
 
           <div className="modalStock">
@@ -72,7 +97,27 @@ const ProductDetailModal = () => {
             <span className="stockText">
               {product.stock > 0 ? "In Stock" : "Out of Stock"}
             </span>
+            <span className="modalDeliveryText">{getDeliveryLabel(product)}</span>
           </div>
+
+          {purchaseVariants.length > 0 && (
+            <div className="modalVariantWrapper">
+              <h5>Loại key</h5>
+              <div className="modalVariantList">
+                {purchaseVariants.map((variant) => (
+                  <button
+                    type="button"
+                    key={variant.id}
+                    className={selectedVariant?.id === variant.id ? "active" : ""}
+                    onClick={() => setSelectedVariantId(variant.id)}
+                  >
+                    <strong>{variant.name}</strong>
+                    <small>{formatPrice(variant.price)}</small>
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
 
           <div className="modalQuantityWrapper">
             <h5>Quantity</h5>
@@ -102,7 +147,7 @@ const ProductDetailModal = () => {
             <button
               type="button"
               className="addCartBtn"
-              onClick={() => context.addToCart(product, quantity)}
+              onClick={() => context.addToCart(product, quantity, selectedVariant)}
             >
               Add To Cart
             </button>
@@ -111,18 +156,18 @@ const ProductDetailModal = () => {
               type="button"
               className="buyNowBtn"
               onClick={() => {
-                if (isLicenseKeyProduct(product)) {
-                  context.purchaseLicenseProduct(product, quantity);
+                if (isInstantCodeProduct(product)) {
+                  context.purchaseLicenseProduct(product, quantity, selectedVariant);
                   context.handleCloseProductDetailModal();
                   return;
                 }
 
-                context.addToCart(product, quantity);
+                context.addToCart(product, quantity, selectedVariant);
                 context.handleCloseProductDetailModal();
                 context.setOpenCartPanel(true);
               }}
             >
-              {isLicenseKeyProduct(product) ? "Buy & Get Key" : "Buy Now"}
+              {isInstantCodeProduct(product) ? "Buy & Get Code" : "Buy Now"}
             </button>
           </div>
         </div>

@@ -149,7 +149,7 @@ const Register = () => {
         <div className="registerOverlay"></div>
 
         <img
-          src="https://images.unsplash.com/photo-1511512578047-dfb367046420?q=80&w=2071&auto=format&fit=crop"
+          src="/images/bypass/snake-app.png"
           alt=""
         />
 
