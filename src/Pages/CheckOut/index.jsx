@@ -261,8 +261,7 @@ const CheckOut = () => {
         return;
       }
 
-      await context.clearCart();
-      localStorage.removeItem("appliedCoupon");
+      await context.completeCheckout();
 
       context.showLicenseKeysFromOrder(order);
 

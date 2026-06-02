@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import { MyContext } from "../../App";
 import ProductZoom from "../ProductZoom";
 import {
@@ -19,18 +19,24 @@ import "./index.css";
 const ProductDetailModal = () => {
   const context = useContext(MyContext);
   const product = context.selectedProduct;
-  const [quantity, setQuantity] = useState(1);
-  const [selectedVariantId, setSelectedVariantId] = useState("");
-
-  useEffect(() => {
-    const variants = getPurchaseVariants(product);
-    setSelectedVariantId(variants[0]?.id || "");
-    setQuantity(1);
-  }, [product]);
 
   if (!product) {
     return null;
   }
+
+  return (
+    <ProductDetailModalContent
+      key={product.id || product.productId || product._id}
+      context={context}
+      product={product}
+    />
+  );
+};
+
+const ProductDetailModalContent = ({ context, product }) => {
+  const initialVariantId = getPurchaseVariants(product)[0]?.id || "";
+  const [quantity, setQuantity] = useState(1);
+  const [selectedVariantId, setSelectedVariantId] = useState(initialVariantId);
 
   const images = getProductImages(product);
   const displayName = getProductDisplayName(product);
@@ -111,7 +117,15 @@ const ProductDetailModal = () => {
                     className={selectedVariant?.id === variant.id ? "active" : ""}
                     onClick={() => setSelectedVariantId(variant.id)}
                   >
-                    <strong>{variant.name}</strong>
+                    <span className="variantName">
+                      {variant.color && (
+                        <i
+                          className="variantColorDot"
+                          style={{ background: variant.color }}
+                        />
+                      )}
+                      <strong>{variant.name}</strong>
+                    </span>
                     <small>{formatPrice(variant.price)}</small>
                   </button>
                 ))}

@@ -370,6 +370,20 @@
   font-size: 12px;
 }
 
+.modalVariantList .variantName {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.modalVariantList .variantColorDot {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.72);
+  flex: 0 0 14px;
+}
+
 /* ========================= */
 /* QUANTITY */
 /* ========================= */

@@ -53,7 +53,10 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import "./styles/commerce-pages.css";
 import {
   calcCartSummary,
+  clearStoredCart,
+  consumeCheckoutCompleted,
   loadCart,
+  markCheckoutCompleted,
   saveCart,
 } from "./utils/cartStorage";
 import {
@@ -76,7 +79,11 @@ import {
 import { getMe } from "./services/authService";
 import * as cartService from "./services/cartService";
 import * as wishlistService from "./services/wishlistService";
-import apiClient from "./services/apiClient";
+import apiClient, {
+  clearAccessToken,
+  getAccessToken,
+  setAccessToken,
+} from "./services/apiClient";
 import { API_ENDPOINTS } from "./constants/apiEndpoints";
 
 const MyContext = createContext();
@@ -132,13 +139,7 @@ function AppContent() {
   }, [compareItems]);
 
   const getStoredToken = () => {
-    try {
-      const stored = localStorage.getItem("user");
-
-      return stored ? JSON.parse(stored).token : null;
-    } catch {
-      return null;
-    }
+    return getAccessToken();
   };
 
   const getStoredUser = useCallback(() => {
@@ -180,10 +181,8 @@ function AppContent() {
       try {
         const parsed = JSON.parse(stored);
 
-        if (!parsed?.token) return;
-
         const profile = await getMe();
-        const user = { ...parsed, ...profile, token: parsed.token, refreshToken: parsed.refreshToken };
+        const user = { ...parsed, ...profile };
 
         localStorage.setItem("user", JSON.stringify(user));
 
@@ -200,6 +199,7 @@ function AppContent() {
         await loadWishlistFromServer(user);
       } catch {
         localStorage.removeItem("user");
+        clearAccessToken();
 
         setAuth({
           isLogin: false,
@@ -254,16 +254,21 @@ function AppContent() {
   // ================= LOGIN =================
 
   const login = async (userData) => {
-    localStorage.setItem("user", JSON.stringify(userData));
+    const safeUserData = { ...(userData || {}) };
+    setAccessToken(safeUserData.token);
+    delete safeUserData.token;
+    delete safeUserData.refreshToken;
 
-    setWishlist(loadWishlist(userData));
+    localStorage.setItem("user", JSON.stringify(safeUserData));
+
+    setWishlist(loadWishlist(safeUserData));
 
     setAuth({
       isLogin: true,
-      user: userData,
+      user: safeUserData,
     });
 
-    if (userData?.token) {
+    if (getAccessToken()) {
       try {
         const localCart = loadCart();
 
@@ -279,7 +284,7 @@ function AppContent() {
       }
 
       try {
-        await loadWishlistFromServer(userData);
+        await loadWishlistFromServer(safeUserData);
       } catch {
         setWishlist(loadWishlist(userData));
       }
@@ -306,17 +311,13 @@ function AppContent() {
 
   const logout = async () => {
     try {
-      const stored = localStorage.getItem("user");
-      const user = stored ? JSON.parse(stored) : null;
-
-      await apiClient.post(API_ENDPOINTS.auth.logout, {
-        refreshToken: user?.refreshToken,
-      });
+      await apiClient.post(API_ENDPOINTS.auth.logout, {});
     } catch {
       // ignore logout API errors
     }
 
     localStorage.removeItem("user");
+    clearAccessToken();
 
     setAuth({
       isLogin: false,
@@ -466,6 +467,41 @@ function AppContent() {
     setCartItems([]);
   };
 
+  const completeCheckout = async () => {
+    markCheckoutCompleted();
+    localStorage.removeItem("appliedCoupon");
+    clearStoredCart();
+    await clearCart();
+  };
+
+  useEffect(() => {
+    const clearCompletedCheckoutCart = () => {
+      if (!consumeCheckoutCompleted()) {
+        return;
+      }
+
+      localStorage.removeItem("appliedCoupon");
+      clearStoredCart();
+      setCartItems([]);
+
+      if (getStoredToken()) {
+        cartService.replaceCart([]).catch(() => {});
+      }
+    };
+
+    clearCompletedCheckoutCart();
+
+    window.addEventListener("pageshow", clearCompletedCheckoutCart);
+    window.addEventListener("focus", clearCompletedCheckoutCart);
+    document.addEventListener("visibilitychange", clearCompletedCheckoutCart);
+
+    return () => {
+      window.removeEventListener("pageshow", clearCompletedCheckoutCart);
+      window.removeEventListener("focus", clearCompletedCheckoutCart);
+      document.removeEventListener("visibilitychange", clearCompletedCheckoutCart);
+    };
+  }, []);
+
   const cartSummary = calcCartSummary(cartItems);
 
   const showLicenseKeysFromOrder = (order) => {
@@ -603,6 +639,7 @@ function AppContent() {
     updateCartQuantity,
     updateCartVariant,
     clearCart,
+    completeCheckout,
 
     wishlist,
     toggleWishlist,

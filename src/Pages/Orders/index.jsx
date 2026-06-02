@@ -3,7 +3,9 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import AccountSidebar from "../AccountSidebar";
 import { MyContext } from "../../App";
 import {
+  cancelOrder,
   fetchOrders,
+  hideOrder,
   recreateVnpayPayment,
 } from "../../services/orderService";
 import { formatPrice } from "../../utils/products";
@@ -58,8 +60,7 @@ const MyOrders = () => {
     }
 
     if (paymentResult === "success") {
-      context.clearCart();
-      localStorage.removeItem("appliedCoupon");
+      context.completeCheckout();
       context.openAlertBox("success", "Payment completed");
     } else if (paymentResult === "failed") {
       context.openAlertBox("error", "Payment was not completed");
@@ -91,6 +92,42 @@ const MyOrders = () => {
       setCurrentPage(1);
     } finally {
       setPayingId(null);
+    }
+  };
+
+  const handleCancel = async (orderId) => {
+    try {
+      await cancelOrder(orderId);
+      context.openAlertBox("success", "Order cancelled");
+      const data = await fetchOrders().catch(() => []);
+      setOrders(data);
+      setCurrentPage(1);
+    } catch (error) {
+      context.openAlertBox(
+        "error",
+        error.message || "This order cannot be cancelled.",
+      );
+    }
+  };
+
+  const handleHideOrder = async (orderId) => {
+    const ok = window.confirm(
+      "Remove this order from your order history? Admin records will remain unchanged.",
+    );
+
+    if (!ok) return;
+
+    try {
+      await hideOrder(orderId);
+      setOrders((prev) =>
+        prev.filter((order) => String(order.id || order.orderId) !== String(orderId)),
+      );
+      context.openAlertBox("success", "Order removed from your history");
+    } catch (error) {
+      context.openAlertBox(
+        "error",
+        error.message || "Could not remove this order from history.",
+      );
     }
   };
 
@@ -148,9 +185,16 @@ const MyOrders = () => {
                         const canPayOnline =
                           order.paymentMethod === "vnpay" &&
                           ["failed", "pending"].includes(order.paymentStatus);
+                        const canCancel =
+                          ["PendingPayment", "Processing", "Pending"].includes(
+                            order.status,
+                          ) &&
+                          !order.items?.some((item) => item.licenseKeys?.length);
                         const statusLabel =
                           order.paymentStatus === "failed"
                             ? "Payment Failed"
+                            : order.status === "PendingPayment"
+                              ? "Pending Payment"
                             : order.paymentStatus === "pending" &&
                                 order.paymentMethod === "vnpay"
                               ? "Awaiting Payment"
@@ -208,6 +252,22 @@ const MyOrders = () => {
                                         : "Continue Payment"}
                                   </button>
                                 )}
+
+                                {canCancel && (
+                                  <button
+                                    className="orders__repayBtn"
+                                    onClick={() => handleCancel(currentOrderId)}
+                                  >
+                                    Cancel
+                                  </button>
+                                )}
+
+                                <button
+                                  className="orders__hideBtn"
+                                  onClick={() => handleHideOrder(currentOrderId)}
+                                >
+                                  Remove
+                                </button>
                               </div>
                             </td>
                           </tr>

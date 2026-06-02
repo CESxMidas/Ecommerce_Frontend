@@ -305,6 +305,23 @@
   transform: none;
 }
 
+.orders .orders__hideBtn {
+  background: rgba(148, 163, 184, 0.12);
+  color: #cbd5e1;
+  border: 1px solid rgba(148, 163, 184, 0.24);
+  padding: 8px 16px;
+  font-size: 13px;
+  font-weight: 700;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.orders .orders__hideBtn:hover {
+  background: rgba(148, 163, 184, 0.2);
+  color: #ffffff;
+}
+
 .orders__actions {
   display: inline-flex;
   align-items: center;

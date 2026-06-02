@@ -401,7 +401,15 @@ const ProductDetail = () => {
                         className={selectedVariant?.id === variant.id ? "active" : ""}
                         onClick={() => setSelectedVariantId(variant.id)}
                       >
-                        <strong>{variant.name}</strong>
+                        <span className="variantName">
+                          {variant.color && (
+                            <i
+                              className="variantColorDot"
+                              style={{ background: variant.color }}
+                            />
+                          )}
+                          <strong>{variant.name}</strong>
+                        </span>
                         <small>{formatPrice(variant.price)}</small>
                       </button>
                     ))}
@@ -646,6 +654,11 @@ const ProductDetail = () => {
                               <h4 className="reviewUser">
                                 {review.userName}
                               </h4>
+                              {review.verifiedPurchase && (
+                                <span className="reviewVerified">
+                                  Verified purchase
+                                </span>
+                              )}
 
                               <div className="reviewStars">
                                 {renderStars(review.rating)}
