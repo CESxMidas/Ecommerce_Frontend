@@ -144,6 +144,36 @@
   gap: 16px;
 }
 
+.checkoutPage .checkoutPaymentBanner {
+  display: grid;
+  gap: 6px;
+  margin-bottom: 18px;
+  padding: 14px 16px;
+  border-radius: 14px;
+  border: 1px solid rgba(96, 165, 250, 0.2);
+  background: rgba(37, 99, 235, 0.1);
+}
+
+.checkoutPage .checkoutPaymentBanner.physical {
+  border-color: rgba(74, 222, 128, 0.22);
+  background: rgba(34, 197, 94, 0.09);
+}
+
+.checkoutPage .checkoutPaymentBanner strong {
+  color: #ffffff;
+  font-size: 14px;
+}
+
+.checkoutPage .checkoutPaymentBanner span {
+  color: #bfdbfe;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.checkoutPage .checkoutPaymentBanner.physical span {
+  color: #bbf7d0;
+}
+
 .checkoutPage .paymentBox {
   width: 100%;
   padding: 22px;
@@ -215,9 +245,37 @@
   margin-bottom: 8px;
 }
 
-.checkoutPage .summaryInfo span {
+.checkoutPage .summaryMeta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+
+.checkoutPage .summaryMeta span {
+  min-height: 28px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 9px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.05);
   color: rgba(255, 255, 255, 0.5);
-  font-size: 14px;
+  font-size: 12px;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.checkoutPage .summaryVariant {
+  color: #bfdbfe !important;
+  background: rgba(37, 99, 235, 0.16) !important;
+}
+
+.checkoutPage .summaryVariant i {
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.75);
+  flex: 0 0 13px;
 }
 
 .checkoutPage .price {

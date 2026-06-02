@@ -193,6 +193,51 @@
   gap: 12px;
 }
 
+.licenseToolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  margin-bottom: 16px;
+  padding: 14px;
+  border: 1px solid rgba(96, 165, 250, 0.16);
+  border-radius: 14px;
+  background: rgba(37, 99, 235, 0.08);
+}
+
+.licenseToolbar div {
+  display: grid;
+  gap: 2px;
+}
+
+.licenseToolbar strong {
+  color: #ffffff;
+  font-size: 20px;
+  line-height: 1;
+}
+
+.licenseToolbar span {
+  color: #94a3b8;
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.licenseToolbar select {
+  min-height: 40px;
+  min-width: min(320px, 100%);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  background: rgba(2, 6, 23, 0.65);
+  color: #ffffff;
+  padding: 0 12px;
+  font-weight: 800;
+}
+
+.licenseToolbar select option {
+  color: #0f172a;
+}
+
 .accountList__item {
   display: flex;
   justify-content: space-between;
@@ -216,6 +261,29 @@
   font-weight: 850;
 }
 
+.licenseTitleRow {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.licenseTitleRow h3 {
+  margin-bottom: 0;
+}
+
+.licenseTitleRow span {
+  min-height: 28px;
+  display: inline-flex;
+  align-items: center;
+  padding: 0 10px;
+  border-radius: 999px;
+  background: rgba(37, 99, 235, 0.16);
+  color: #bfdbfe;
+  font-size: 12px;
+  font-weight: 850;
+}
+
 .accountList__item p {
   margin: 0 0 6px;
   color: #94a3b8;
@@ -228,8 +296,15 @@
   flex-wrap: wrap;
   gap: 8px;
   margin-top: 10px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: rgba(2, 6, 23, 0.64);
   color: #fbbf24;
   font-size: 14px;
+}
+
+.accountCode span {
+  overflow-wrap: anywhere;
 }
 
 .accountCode button,
@@ -518,8 +593,10 @@
   }
 
   .accountList__item,
-  .accountInlineForm {
+  .accountInlineForm,
+  .licenseToolbar {
     flex-direction: column;
+    align-items: stretch;
   }
 
   .addressGrid {

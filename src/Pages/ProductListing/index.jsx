@@ -194,6 +194,15 @@ const ProductListing = () => {
     selectedBrands.length > 0 ||
     priceRange[0] > priceBounds[0] ||
     priceRange[1] < priceBounds[1];
+  const hasPriceFilter =
+    priceRange[0] > priceBounds[0] || priceRange[1] < priceBounds[1];
+  const activeCategoryChildren = activeCategory?.children || [];
+  const activeCategoryNote =
+    activeCategoryChildren.length > 0
+      ? `${activeCategory.name} includes ${activeCategoryChildren
+          .map((child) => child.name)
+          .join(", ")}.`
+      : "";
 
   const open = Boolean(anchorEl);
 
@@ -394,6 +403,16 @@ const ProductListing = () => {
 
             {(activeCategory || hasActiveFilters || query) && (
               <div className="listingActiveFilters">
+                {query && (
+                  <button
+                    type="button"
+                    className="listingFilterChip"
+                    onClick={() => updateParams({ q: null, page: 1 })}
+                  >
+                    Search: {query}
+                    <IoClose />
+                  </button>
+                )}
                 {activeCategory && (
                   <Link
                     to="/productListing"
@@ -418,7 +437,20 @@ const ProductListing = () => {
                     <IoClose />
                   </button>
                 ))}
-                {hasActiveFilters && (
+                {hasPriceFilter && (
+                  <button
+                    type="button"
+                    className="listingFilterChip"
+                    onClick={() => {
+                      setPriceRange(priceBounds);
+                      updateParams({ page: 1 });
+                    }}
+                  >
+                    Price {priceRange[0]}-{priceRange[1]}
+                    <IoClose />
+                  </button>
+                )}
+                {(hasActiveFilters || query) && (
                   <button
                     type="button"
                     className="listingClearFilters"
@@ -428,6 +460,10 @@ const ProductListing = () => {
                   </button>
                 )}
               </div>
+            )}
+
+            {activeCategoryNote && (
+              <div className="listingCategoryNote">{activeCategoryNote}</div>
             )}
 
             {loading ? (
@@ -481,7 +517,11 @@ const ProductListing = () => {
         open={filterOpen}
         onClose={() => setFilterOpen(false)}
         className="listingFilterDrawer"
-        PaperProps={{ className: "listingFilterDrawerPaper" }}
+        slotProps={{
+          paper: {
+            className: "listingFilterDrawerPaper",
+          },
+        }}
       >
         <div className="listingFilterDrawerHead">
           <h3>Filters</h3>

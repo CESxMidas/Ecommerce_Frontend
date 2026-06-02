@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 import AccountSidebar from "../AccountSidebar";
 import { MyContext } from "../../App";
 import {
@@ -12,6 +12,7 @@ const AccountLicenses = () => {
   const [licenses, setLicenses] = useState([]);
   const [loading, setLoading] = useState(true);
   const [visible, setVisible] = useState({});
+  const [productFilter, setProductFilter] = useState("all");
 
   useEffect(() => {
     const load = async () => {
@@ -26,6 +27,21 @@ const AccountLicenses = () => {
 
     load();
   }, []);
+
+  const productOptions = useMemo(
+    () => [
+      ...new Set(licenses.map((item) => item.productName).filter(Boolean)),
+    ].sort(),
+    [licenses],
+  );
+
+  const filteredLicenses = useMemo(
+    () =>
+      productFilter === "all"
+        ? licenses
+        : licenses.filter((item) => item.productName === productFilter),
+    [licenses, productFilter],
+  );
 
   const copyKey = async (key) => {
     await navigator.clipboard.writeText(key);
@@ -52,20 +68,45 @@ const AccountLicenses = () => {
                 <h2>License Keys</h2>
               </div>
 
+              {licenses.length > 0 && (
+                <div className="licenseToolbar">
+                  <div>
+                    <strong>{filteredLicenses.length}</strong>
+                    <span>license entries</span>
+                  </div>
+                  <select
+                    value={productFilter}
+                    onChange={(event) => setProductFilter(event.target.value)}
+                  >
+                    <option value="all">All products</option>
+                    {productOptions.map((productName) => (
+                      <option key={productName} value={productName}>
+                        {productName}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              )}
+
               {loading ? (
                 <p style={{ color: "#64748b" }}>Loading licenses...</p>
-              ) : licenses.length === 0 ? (
+              ) : filteredLicenses.length === 0 ? (
                 <p style={{ color: "#64748b" }}>No license keys yet.</p>
               ) : (
                 <div className="accountList">
-                  {licenses.map((item) => (
+                  {filteredLicenses.map((item) => (
                     <article className="accountList__item" key={item.id}>
                       <div>
-                        <h3>{item.productName}</h3>
+                        <div className="licenseTitleRow">
+                          <h3>{item.productName}</h3>
+                          {item.variant?.name && (
+                            <span>{item.variant.name}</span>
+                          )}
+                        </div>
                         <p>Order #{item.orderId}</p>
                         {(item.keys || []).map((key) => (
                           <code className="accountCode" key={key}>
-                            {visible[key] ? key : "••••-•••••"}
+                            <span>{visible[key] ? key : "****-*****"}</span>
                             <button
                               type="button"
                               onClick={() =>

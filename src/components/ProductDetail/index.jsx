@@ -260,6 +260,14 @@ const ProductDetail = () => {
     : computeDiscountLabel(product);
   const vendor = product.vendor || product.brand || product.categoryName;
   const specifications = buildSpecifications(product);
+  const writtenReviewCount = reviews.length;
+  const writtenReviewRating =
+    writtenReviewCount > 0
+      ? reviews.reduce((sum, review) => sum + Number(review.rating || 0), 0) /
+        writtenReviewCount
+      : 0;
+  const reviewSummaryRating =
+    writtenReviewCount > 0 ? writtenReviewRating : Number(product.rating || 0);
   const increaseQuantity = () => {
     setQuantity((prev) => prev + 1);
   };
@@ -335,7 +343,7 @@ const ProductDetail = () => {
                 <div className="productStars">{renderStars(product.rating)}</div>
 
                 <span className="text-white/55 text-sm">
-                  {product.reviewsCount || 0} Reviews
+                  {writtenReviewCount} written Reviews
                 </span>
 
                 <span className="text-green-400 font-bold text-sm">
@@ -381,7 +389,9 @@ const ProductDetail = () => {
 
               {purchaseVariants.length > 0 && (
                 <div className="mb-7">
-                  <h4 className="sectionTitle">Loại key</h4>
+                  <h4 className="sectionTitle">
+                    {isPhysicalProduct(product) ? "Options" : "Loai key"}
+                  </h4>
 
                   <div className="productVariantList">
                     {purchaseVariants.map((variant) => (
@@ -509,7 +519,7 @@ const ProductDetail = () => {
                 className={`tabBtn ${activeTab === "reviews" ? "active" : ""}`}
                 onClick={() => setActiveTab("reviews")}
               >
-                Reviews ({product.reviewsCount || 0})
+                Reviews ({writtenReviewCount})
               </button>
             </div>
 
@@ -529,8 +539,8 @@ const ProductDetail = () => {
               {/* SPECIFICATIONS */}
               {activeTab === "specifications" && (
                 <div className="space-y-4">
-                  {specifications.map(([label, value]) => (
-                    <div className="specItem" key={label}>
+                  {specifications.map(([label, value], index) => (
+                    <div className="specItem" key={`${label}-${index}`}>
                       <span className="specItemLeft">{label}</span>
 
                       <span className="specItemRight">{value}</span>
@@ -546,16 +556,23 @@ const ProductDetail = () => {
                   <div className="reviewSummary">
                     <div className="reviewSummaryLeft">
                       <h2 className="reviewAverage">
-                        {product.rating?.toFixed(1) || "0.0"}
+                        {reviewSummaryRating.toFixed(1)}
                       </h2>
 
                       <div className="reviewStarsLarge">
-                        {renderStars(product.rating || 0)}
+                        {renderStars(reviewSummaryRating)}
                       </div>
 
                       <p className="reviewCount">
-                        Based on {product.reviewsCount || 0} reviews
+                        Based on {writtenReviewCount} written reviews
                       </p>
+
+                      {writtenReviewCount === 0 && product.reviewsCount > 0 && (
+                        <p className="reviewCount reviewCount--note">
+                          Catalog summary shows {product.reviewsCount} ratings,
+                          but no written reviews have been submitted yet.
+                        </p>
+                      )}
                     </div>
                   </div>
 

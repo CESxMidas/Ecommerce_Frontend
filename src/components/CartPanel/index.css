@@ -1,5 +1,20 @@
 /* CartPanel/index.css */
 
+.cartPanelPaper {
+  width: min(580px, 100vw) !important;
+  max-width: 100vw !important;
+  min-width: min(580px, 100vw) !important;
+  box-sizing: border-box !important;
+  overflow-x: hidden !important;
+  background: #020817 !important;
+}
+
+.MuiDrawer-paper.cartPanelPaper {
+  width: min(580px, 100vw) !important;
+  max-width: 100vw !important;
+  min-width: min(580px, 100vw) !important;
+}
+
 .cartPanel {
   width: 100%;
   height: 100%;
@@ -216,16 +231,41 @@
   text-transform: uppercase;
 }
 
-.cartPanel .cartVariantSelect select {
-  width: 100%;
-  min-height: 36px;
+.cartPanel .cartVariantPills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+
+.cartPanel .cartVariantPills button {
+  min-height: 32px;
+  max-width: 100%;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 9px;
   border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 10px;
-  background: #07111f;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.04);
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 11px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.cartPanel .cartVariantPills button.active,
+.cartPanel .cartVariantPills button:hover {
+  border-color: rgba(96, 165, 250, 0.62);
+  background: rgba(37, 99, 235, 0.18);
   color: #ffffff;
-  padding: 0 10px;
-  font-size: 12px;
-  font-weight: 700;
+}
+
+.cartPanel .cartVariantPills i {
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.72);
+  flex: 0 0 13px;
 }
 
 .cartPanel .cartItemBottom {
@@ -490,6 +530,18 @@
 /* ========================= */
 
 @media (max-width: 768px) {
+  .cartPanelPaper {
+    width: min(580px, 100vw) !important;
+    max-width: 100vw !important;
+    min-width: min(580px, 100vw) !important;
+  }
+
+  .MuiDrawer-paper.cartPanelPaper {
+    width: min(580px, 100vw) !important;
+    max-width: 100vw !important;
+    min-width: min(580px, 100vw) !important;
+  }
+
   .cartPanel .cartPanelTop {
     padding: 0 18px;
   }

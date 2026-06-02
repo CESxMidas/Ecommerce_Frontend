@@ -142,8 +142,8 @@
   flex: 1;
   min-width: 0;
   min-height: 480px;
-  padding: 24px;
-  border-radius: 24px;
+  padding: 20px;
+  border-radius: 18px;
   background: rgba(11, 23, 57, 0.95);
   border: 1px solid rgba(255, 255, 255, 0.06);
   backdrop-filter: blur(14px);
@@ -295,6 +295,17 @@
   color: #fff;
 }
 
+.listingCategoryNote {
+  margin: -6px 0 20px;
+  padding: 12px 14px;
+  border: 1px solid rgba(96, 165, 250, 0.18);
+  border-radius: 14px;
+  background: rgba(37, 99, 235, 0.1);
+  color: #bfdbfe;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
 /* ====================== */
 /* PRODUCT GRID */
 /* ====================== */
@@ -313,7 +324,7 @@
 }
 
 .productGrid.grid4 {
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
 }
 
 /* ====================== */
@@ -504,7 +515,7 @@
 
 @media (max-width: 1400px) {
   .productGrid.grid4 {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
   }
 }
 

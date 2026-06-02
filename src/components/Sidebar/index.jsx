@@ -20,15 +20,23 @@ const Sidebar = ({
   onBrandChange,
   onPriceChange,
 }) => {
-  const toggleCategory = (categoryId) => {
+  const getCategoryIds = (category) => [
+    String(category.id),
+    ...(category.children || []).flatMap(getCategoryIds),
+  ];
+
+  const toggleCategory = (category) => {
     if (!onCategoryChange) return;
 
-    const id = String(categoryId);
+    const ids = getCategoryIds(category);
+    const allSelected = ids.every((id) => selectedCategoryIds.includes(id));
 
-    if (selectedCategoryIds.includes(id)) {
-      onCategoryChange(selectedCategoryIds.filter((item) => item !== id));
+    if (allSelected) {
+      onCategoryChange(
+        selectedCategoryIds.filter((item) => !ids.includes(item)),
+      );
     } else {
-      onCategoryChange([...selectedCategoryIds, id]);
+      onCategoryChange([...new Set([...selectedCategoryIds, ...ids])]);
     }
   };
 
@@ -50,8 +58,18 @@ const Sidebar = ({
         style={{ marginLeft: depth * 12 }}
         control={
           <Checkbox
-            checked={selectedCategoryIds.includes(String(category.id))}
-            onChange={() => toggleCategory(String(category.id))}
+            checked={getCategoryIds(category).every((id) =>
+              selectedCategoryIds.includes(id),
+            )}
+            indeterminate={
+              getCategoryIds(category).some((id) =>
+                selectedCategoryIds.includes(id),
+              ) &&
+              !getCategoryIds(category).every((id) =>
+                selectedCategoryIds.includes(id),
+              )
+            }
+            onChange={() => toggleCategory(category)}
           />
         }
         label={

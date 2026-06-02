@@ -4,11 +4,11 @@ import Drawer from "@mui/material/Drawer";
 import {
   FaBars,
   FaChevronDown,
+  FaDesktop,
   FaHeadset,
   FaHome,
-  FaNewspaper,
+  FaKey,
   FaShoppingBag,
-  FaTag,
 } from "react-icons/fa";
 
 import CategoryPanel from "./CategoryPanel";
@@ -51,16 +51,22 @@ const Navigation = () => {
             </li>
 
             <li className="nav-item">
-              <Link to="/deals?sort=popular" className="nav-link nav-link--deal">
-                <FaTag />
-                Deals
+              <Link
+                to="/productListing?category=digital-products"
+                className="nav-link"
+              >
+                <FaKey />
+                Digital Products
               </Link>
             </li>
 
             <li className="nav-item">
-              <Link to="/blog" className="nav-link">
-                <FaNewspaper />
-                Blog
+              <Link
+                to="/productListing?category=hardware"
+                className="nav-link"
+              >
+                <FaDesktop />
+                Hardware
               </Link>
             </li>
 
@@ -101,10 +107,12 @@ const Navigation = () => {
         anchor="left"
         open={open}
         onClose={closeDrawer}
-        PaperProps={{
-          sx: {
-            background: "#071739",
-            width: 320,
+        slotProps={{
+          paper: {
+            sx: {
+              background: "#071739",
+              width: 320,
+            },
           },
         }}
       >

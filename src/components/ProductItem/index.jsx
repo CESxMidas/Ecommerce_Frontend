@@ -13,7 +13,9 @@ import {
   getListPrice,
   getProductDisplayName,
   getProductThumbnail,
+  getPurchaseVariants,
   getSalePrice,
+  isPhysicalProduct,
 } from "../../utils/productSchema";
 import { formatPrice } from "../../utils/products";
 import "./index.css";
@@ -26,6 +28,12 @@ const ProductItem = ({ item }) => {
   const displayName = getProductDisplayName(item);
   const thumbnail = getProductThumbnail(item);
   const vendor = item.vendor || item.brand || item.categoryName;
+  const variants = getPurchaseVariants(item);
+  const minVariantPrice =
+    variants.length > 0
+      ? Math.min(...variants.map((variant) => Number(variant.price) || salePrice))
+      : salePrice;
+  const colorVariants = variants.filter((variant) => variant.color);
 
   return (
     <div className="productItem flex">
@@ -36,6 +44,7 @@ const ProductItem = ({ item }) => {
           {(item.badge || item.tag) && (
             <span className="typeBadge">{item.badge || item.tag}</span>
           )}
+
         </div>
 
         <div className="productActions">
@@ -96,12 +105,37 @@ const ProductItem = ({ item }) => {
           ))}
         </div>
 
+        {variants.length > 0 && (
+          <div className="productVariantPreview">
+            <span>
+              {isPhysicalProduct(item)
+                ? `${variants.length} color options`
+                : `${variants.length} plans, monthly default`}
+            </span>
+            {colorVariants.length > 0 && (
+              <div className="productSwatches" aria-label="Available colors">
+                {colorVariants.slice(0, 4).map((variant) => (
+                  <i
+                    key={variant.id}
+                    title={variant.name}
+                    style={{ background: variant.color }}
+                  />
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+
         <div className="priceWrapper">
           {listPrice != null && (
             <span className="oldPrice">{formatPrice(listPrice)}</span>
           )}
 
-          <span className="newPrice">{formatPrice(salePrice)}</span>
+          <span className="newPrice">
+            {variants.length > 0
+              ? ` ${formatPrice(minVariantPrice)}`
+              : formatPrice(salePrice)}
+          </span>
         </div>
       </div>
     </div>

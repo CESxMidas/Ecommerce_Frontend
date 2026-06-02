@@ -315,11 +315,13 @@ const Header = () => {
         onClose={() =>
           setOpenCategory(false)
         }
-        PaperProps={{
-          sx: {
-            background: "#071739",
+        slotProps={{
+          paper: {
+            sx: {
+              background: "#071739",
 
-            width: "min(320px, 100vw)",
+              width: "min(320px, 100vw)",
+            },
           },
         }}
       >

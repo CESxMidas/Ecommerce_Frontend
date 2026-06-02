@@ -102,7 +102,7 @@ const ProductDetailModal = () => {
 
           {purchaseVariants.length > 0 && (
             <div className="modalVariantWrapper">
-              <h5>Loại key</h5>
+              <h5>{isPhysicalProduct(product) ? "Options" : "Loai key"}</h5>
               <div className="modalVariantList">
                 {purchaseVariants.map((variant) => (
                   <button

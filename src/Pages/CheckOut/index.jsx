@@ -424,6 +424,19 @@ const CheckOut = () => {
             <div className="checkoutCard">
               <div className="cardTitle">Payment Method</div>
 
+              <div className={`checkoutPaymentBanner ${hasDigitalItems ? "digital" : "physical"}`}>
+                <strong>
+                  {hasDigitalItems
+                    ? "VNPay required for this cart"
+                    : "COD and VNPay are available"}
+                </strong>
+                <span>
+                  {hasDigitalItems
+                    ? "Keys, accounts and service products are delivered only after successful online payment."
+                    : "This cart contains only physical hardware, so the customer can choose COD or VNPay."}
+                </span>
+              </div>
+
               <div className="paymentMethods">
                 {allItemsAllowCod && (
                   <label className="paymentBox">
@@ -477,9 +490,18 @@ const CheckOut = () => {
                   />
                   <div className="summaryInfo">
                     <h4>{getProductDisplayName(item.product)}</h4>
-                    <span>Qty: {item.quantity}</span>
-                    {item.variant && <span>{item.variant.name}</span>}
-                    <span>{getDeliveryLabel(item.product)}</span>
+                    <div className="summaryMeta">
+                      <span>Qty: {item.quantity}</span>
+                      {item.variant && (
+                        <span className="summaryVariant">
+                          {item.variant.color && (
+                            <i style={{ background: item.variant.color }} />
+                          )}
+                          {item.variant.name}
+                        </span>
+                      )}
+                      <span>{getDeliveryLabel(item.product)}</span>
+                    </div>
                     <div className="price">
                       {formatPrice(
                         getCartItemSalePrice(item) * item.quantity

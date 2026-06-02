@@ -121,26 +121,25 @@ const Cart = () => {
                     </div>
 
                     {variants.length > 0 && (
-                      <label className="cartVariantSelect">
-                        <span>Key type</span>
-                        <select
-                          value={item.variant?.id || variants[0]?.id || ""}
-                          onChange={(event) =>
-                            context.updateCartVariant(
-                              item,
-                              variants.find(
-                                (variant) => variant.id === event.target.value,
-                              ),
-                            )
-                          }
-                        >
+                      <div className="cartVariantSelect">
+                        <span>{isPhysicalProduct(item.product) ? "Option" : "Key type"}</span>
+                        <div className="cartVariantPills">
                           {variants.map((variant) => (
-                            <option key={variant.id} value={variant.id}>
-                              {variant.name} - {formatPrice(variant.price)}
-                            </option>
+                            <button
+                              type="button"
+                              key={variant.id}
+                              className={item.variant?.id === variant.id ? "active" : ""}
+                              onClick={() => context.updateCartVariant(item, variant)}
+                            >
+                              {variant.color && (
+                                <i style={{ background: variant.color }} />
+                              )}
+                              <b>{variant.name}</b>
+                              <small>{formatPrice(variant.price)}</small>
+                            </button>
                           ))}
-                        </select>
-                      </label>
+                        </div>
+                      </div>
                     )}
 
                     <div className="cartPriceBox">

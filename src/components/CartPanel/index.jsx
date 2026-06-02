@@ -8,6 +8,7 @@ import {
   getProductThumbnail,
   getCartItemSalePrice,
   getPurchaseVariants,
+  isPhysicalProduct,
 } from "../../utils/productSchema";
 import { formatPrice } from "../../utils/products";
 import "./index.css";
@@ -22,10 +23,17 @@ const CartPanel = () => {
       anchor="right"
       open={context.openCartPanel}
       onClose={() => context.setOpenCartPanel(false)}
-      PaperProps={{
-        sx: {
-          width: "min(420px, 100vw)",
-          background: "#020817",
+      slotProps={{
+        paper: {
+          className: "cartPanelPaper",
+          sx: {
+            width: "min(580px, 100vw)",
+            maxWidth: "100vw",
+            minWidth: "min(580px, 100vw)",
+            boxSizing: "border-box",
+            overflowX: "hidden",
+            background: "#020817",
+          },
         },
       }}
     >
@@ -73,26 +81,25 @@ const CartPanel = () => {
                   </span>
 
                   {variants.length > 0 && (
-                    <label className="cartVariantSelect">
-                      <span>Key type</span>
-                      <select
-                        value={item.variant?.id || variants[0]?.id || ""}
-                        onChange={(event) =>
-                          context.updateCartVariant(
-                            item,
-                            variants.find(
-                              (variant) => variant.id === event.target.value,
-                            ),
-                          )
-                        }
-                      >
+                    <div className="cartVariantSelect">
+                      <span>{isPhysicalProduct(item.product) ? "Option" : "Key type"}</span>
+                      <div className="cartVariantPills">
                         {variants.map((variant) => (
-                          <option key={variant.id} value={variant.id}>
-                            {variant.name} - {formatPrice(variant.price)}
-                          </option>
+                          <button
+                            type="button"
+                            key={variant.id}
+                            className={item.variant?.id === variant.id ? "active" : ""}
+                            onClick={() => context.updateCartVariant(item, variant)}
+                            title={`${variant.name} - ${formatPrice(variant.price)}`}
+                          >
+                            {variant.color && (
+                              <i style={{ background: variant.color }} />
+                            )}
+                            <b>{variant.name}</b>
+                          </button>
                         ))}
-                      </select>
-                    </label>
+                      </div>
+                    </div>
                   )}
 
                   <div className="cartItemMeta">
