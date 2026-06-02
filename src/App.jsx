@@ -88,6 +88,33 @@ import { API_ENDPOINTS } from "./constants/apiEndpoints";
 
 const MyContext = createContext();
 
+function mergeCartItems(baseItems = [], incomingItems = []) {
+  const merged = new Map();
+
+  [...baseItems, ...incomingItems].forEach((item) => {
+    const key = getCartItemKey(item);
+    const existing = merged.get(key);
+
+    if (existing) {
+      merged.set(key, {
+        ...existing,
+        quantity: Number(existing.quantity || 0) + Number(item.quantity || 0),
+        product: existing.product || item.product,
+        variant: existing.variant || item.variant || null,
+      });
+      return;
+    }
+
+    merged.set(key, {
+      ...item,
+      quantity: Number(item.quantity) || 1,
+      variant: item.variant || null,
+    });
+  });
+
+  return Array.from(merged.values());
+}
+
 function AppContent() {
   const location = useLocation();
   const navigate = useNavigate();
@@ -103,13 +130,17 @@ function AppContent() {
   // ================= AUTH STATE =================
 
   const [auth, setAuth] = useState(() => {
-    const userData = localStorage.getItem("user");
+    try {
+      const userData = localStorage.getItem("user");
 
-    if (userData) {
-      return {
-        isLogin: true,
-        user: JSON.parse(userData),
-      };
+      if (userData) {
+        return {
+          isLogin: true,
+          user: JSON.parse(userData),
+        };
+      }
+    } catch {
+      localStorage.removeItem("user");
     }
 
     return {
@@ -118,7 +149,7 @@ function AppContent() {
     };
   });
 
-  const [cartItems, setCartItems] = useState(loadCart);
+  const [cartItems, setCartItems] = useState(() => loadCart(auth.user));
 
   const [wishlist, setWishlist] = useState(() => loadWishlist(auth.user));
 
@@ -127,8 +158,8 @@ function AppContent() {
   const [licenseKeyOrder, setLicenseKeyOrder] = useState(null);
 
   useEffect(() => {
-    saveCart(cartItems);
-  }, [cartItems]);
+    saveCart(cartItems, auth.user);
+  }, [cartItems, auth.user]);
 
   useEffect(() => {
     saveWishlist(wishlist, auth.user);
@@ -206,6 +237,7 @@ function AppContent() {
           user: null,
         });
 
+        setCartItems(loadCart());
         setWishlist(loadWishlist());
       }
     };
@@ -271,12 +303,14 @@ function AppContent() {
     if (getAccessToken()) {
       try {
         const localCart = loadCart();
+        const serverCart = await cartService.fetchCart();
 
         if (localCart.length > 0) {
-          const serverCart = await cartService.replaceCart(localCart);
-          setCartItems(serverCart);
+          const mergedCart = mergeCartItems(serverCart, localCart);
+          const syncedCart = await cartService.replaceCart(mergedCart);
+          clearStoredCart();
+          setCartItems(syncedCart);
         } else {
-          const serverCart = await cartService.fetchCart();
           setCartItems(serverCart);
         }
       } catch {
@@ -310,12 +344,17 @@ function AppContent() {
   // ================= LOGOUT =================
 
   const logout = async () => {
+    const loggedOutUser = auth.user;
+
     try {
       await apiClient.post(API_ENDPOINTS.auth.logout, {});
     } catch {
       // ignore logout API errors
     }
 
+    clearStoredCart(loggedOutUser);
+    clearStoredCart();
+    localStorage.removeItem("appliedCoupon");
     localStorage.removeItem("user");
     clearAccessToken();
 
@@ -324,6 +363,7 @@ function AppContent() {
       user: null,
     });
 
+    setCartItems([]);
     setWishlist([]);
 
     openAlertBox("success", "Logout Success");
@@ -470,7 +510,7 @@ function AppContent() {
   const completeCheckout = async () => {
     markCheckoutCompleted();
     localStorage.removeItem("appliedCoupon");
-    clearStoredCart();
+    clearStoredCart(auth.user);
     await clearCart();
   };
 
@@ -481,7 +521,7 @@ function AppContent() {
       }
 
       localStorage.removeItem("appliedCoupon");
-      clearStoredCart();
+      clearStoredCart(getStoredUser());
       setCartItems([]);
 
       if (getStoredToken()) {
@@ -500,7 +540,7 @@ function AppContent() {
       window.removeEventListener("focus", clearCompletedCheckoutCart);
       document.removeEventListener("visibilitychange", clearCompletedCheckoutCart);
     };
-  }, []);
+  }, [getStoredUser]);
 
   const cartSummary = calcCartSummary(cartItems);
 

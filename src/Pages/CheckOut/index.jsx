@@ -238,6 +238,14 @@ const CheckOut = () => {
         appliedCoupon = null;
       }
 
+      if (
+        appliedCoupon &&
+        Number(appliedCoupon.subtotal) !== Number(cartSummary.subtotal)
+      ) {
+        localStorage.removeItem("appliedCoupon");
+        appliedCoupon = null;
+      }
+
       const order = await placeOrder({
         name: `${formFields.firstName} ${formFields.lastName}`.trim(),
         phone: formFields.phone,
@@ -257,6 +265,8 @@ const CheckOut = () => {
       });
 
       if (order?.paymentUrl) {
+        localStorage.removeItem("appliedCoupon");
+        await context.clearCart();
         window.location.href = order.paymentUrl;
         return;
       }

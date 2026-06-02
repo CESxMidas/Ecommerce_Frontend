@@ -1,11 +1,34 @@
 import { getCartItemListPrice, getCartItemSalePrice } from "./productSchema";
 
-const CART_KEY = "cart";
+const LEGACY_CART_KEY = "cart";
+const GUEST_CART_KEY = "cart:guest";
 const COMPLETED_CHECKOUT_KEY = "completedCheckoutAt";
 
-export function loadCart() {
+export function getUserCartKey(user = null) {
+  const userId = user?._id || user?.id || user?.email;
+
+  return userId ? `cart:${String(userId)}` : GUEST_CART_KEY;
+}
+
+function migrateLegacyGuestCart() {
+  const legacyCart = localStorage.getItem(LEGACY_CART_KEY);
+
+  if (legacyCart && !localStorage.getItem(GUEST_CART_KEY)) {
+    localStorage.setItem(GUEST_CART_KEY, legacyCart);
+  }
+
+  if (legacyCart) {
+    localStorage.removeItem(LEGACY_CART_KEY);
+  }
+}
+
+export function loadCart(user = null) {
   try {
-    const raw = localStorage.getItem(CART_KEY);
+    if (!user) {
+      migrateLegacyGuestCart();
+    }
+
+    const raw = localStorage.getItem(getUserCartKey(user));
 
     return raw ? JSON.parse(raw) : [];
   } catch {
@@ -13,12 +36,12 @@ export function loadCart() {
   }
 }
 
-export function saveCart(items) {
-  localStorage.setItem(CART_KEY, JSON.stringify(items));
+export function saveCart(items, user = null) {
+  localStorage.setItem(getUserCartKey(user), JSON.stringify(items));
 }
 
-export function clearStoredCart() {
-  localStorage.setItem(CART_KEY, JSON.stringify([]));
+export function clearStoredCart(user = null) {
+  localStorage.setItem(getUserCartKey(user), JSON.stringify([]));
 }
 
 export function markCheckoutCompleted() {

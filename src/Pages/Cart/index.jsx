@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { FaTrashAlt, FaArrowLeft, FaLock } from "react-icons/fa";
 import { MyContext } from "../../App";
 import { validateCoupon } from "../../services/cmsService";
@@ -32,6 +32,18 @@ const Cart = () => {
     }
   });
 
+  const hasValidCoupon =
+    appliedCoupon &&
+    cartSummary.subtotal > 0 &&
+    Number(appliedCoupon.subtotal) === Number(cartSummary.subtotal);
+  const effectiveCoupon = hasValidCoupon ? appliedCoupon : null;
+
+  useEffect(() => {
+    if (appliedCoupon && !hasValidCoupon) {
+      localStorage.removeItem("appliedCoupon");
+    }
+  }, [appliedCoupon, hasValidCoupon]);
+
   const applyCoupon = async () => {
     if (!couponCode.trim()) {
       context.openAlertBox("error", "Enter a coupon code");
@@ -57,8 +69,8 @@ const Cart = () => {
     }
   };
 
-  const displayTotal = appliedCoupon
-    ? appliedCoupon.total + (cartSummary.subtotal > 0 ? 2 : 0)
+  const displayTotal = effectiveCoupon
+    ? effectiveCoupon.total + (cartSummary.subtotal > 0 ? 2 : 0)
     : cartSummary.total;
 
   return (
@@ -245,11 +257,11 @@ const Cart = () => {
 
                 <div className="summaryDivider"></div>
 
-                {appliedCoupon?.discount > 0 && (
+                {effectiveCoupon?.discount > 0 && (
                   <div className="summaryRow">
-                    <span>Coupon ({appliedCoupon.code})</span>
+                    <span>Coupon ({effectiveCoupon.code})</span>
                     <span className="discount">
-                      -{formatPrice(appliedCoupon.discount)}
+                      -{formatPrice(effectiveCoupon.discount)}
                     </span>
                   </div>
                 )}
