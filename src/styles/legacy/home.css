@@ -1,0 +1,413 @@
+.home-page {
+  width: 100%;
+
+  min-height: 100vh;
+
+  overflow-x: hidden;
+
+  background: linear-gradient(to bottom, #081225, #0b1730);
+}
+
+.home-page section {
+  position: relative;
+}
+
+/* ========================= */
+/* POPULAR PRODUCTS */
+/* ========================= */
+
+.popularProducts {
+  width: 100%;
+}
+
+.popularHeader {
+  width: 100%;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 40px;
+}
+
+/* LEFT */
+
+.leftSec {
+  min-width: 0;
+
+  padding-right: 20px;
+}
+
+.leftSec h2 {
+  font-size: 46px;
+  font-weight: 800;
+
+  line-height: 1.05;
+
+  color: white;
+
+  margin-bottom: 14px;
+}
+
+.leftSec p {
+  font-size: 15px;
+
+  color: rgba(255, 255, 255, 0.62);
+
+  line-height: 1.9;
+
+  max-width: 380px;
+}
+
+/* RIGHT */
+
+.rightSection {
+  flex: 1;
+
+  min-width: 0;
+}
+
+/* ========================= */
+/* CUSTOM MUI TABS */
+/* ========================= */
+
+.customTabs {
+  width: 100%;
+
+  min-height: auto !important;
+
+  padding: 8px;
+
+  border-radius: 20px;
+
+  background: rgba(255, 255, 255, 0.04);
+
+  border: 1px solid rgba(255, 255, 255, 0.06);
+
+  backdrop-filter: blur(12px);
+}
+
+/* SCROLLER */
+
+.customTabs .MuiTabs-scroller {
+  overflow-x: auto !important;
+
+  scrollbar-width: none;
+}
+
+.customTabs .MuiTabs-scroller::-webkit-scrollbar {
+  display: none;
+}
+
+/* FLEX */
+
+.customTabs .MuiTabs-flexContainer {
+  gap: 10px;
+}
+
+/* INDICATOR */
+
+.customTabs .MuiTabs-indicator {
+  display: none;
+}
+
+/* TAB */
+
+.customTabs .MuiTab-root {
+  min-height: auto !important;
+
+  padding: 13px 24px !important;
+
+  border-radius: 14px;
+
+  color: rgba(255, 255, 255, 0.72) !important;
+
+  font-size: 14px !important;
+  font-weight: 700 !important;
+
+  text-transform: none !important;
+
+  white-space: nowrap;
+
+  transition: all 0.3s ease !important;
+}
+
+/* ACTIVE */
+
+.customTabs .Mui-selected {
+  background: #2563eb !important;
+
+  color: white !important;
+
+  box-shadow: 0 8px 24px rgba(37, 99, 235, 0.35);
+}
+
+/* HOVER */
+
+.customTabs .MuiTab-root:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+/* ========================= */
+/* SCROLL BUTTON */
+/* ========================= */
+
+.customTabs .MuiTabs-scrollButtons {
+  width: 42px;
+  height: 42px;
+
+  border-radius: 12px;
+
+  background: rgba(255, 255, 255, 0.05);
+
+  color: white;
+
+  margin: 0 4px;
+
+  transition: all 0.3s ease;
+}
+
+/* HOVER */
+
+.customTabs .MuiTabs-scrollButtons:hover {
+  background: #2563eb;
+}
+
+/* DISABLED */
+
+.customTabs .Mui-disabled {
+  opacity: 0.28 !important;
+}
+
+/* SVG */
+
+.customTabs .MuiTabs-scrollButtons svg {
+  font-size: 22px;
+}
+
+/* ======================== */
+/* FREE SHIPPING */
+/* ======================== */
+
+.freeShipping {
+  width: 100%;
+
+  min-height: 110px;
+
+  padding: 0 28px;
+
+  border-radius: 24px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 30px;
+
+  overflow: hidden;
+
+  background: linear-gradient(
+    135deg,
+    rgba(15, 23, 42, 0.98),
+    rgba(30, 41, 59, 0.95)
+  );
+
+  border: 1px solid rgba(255, 255, 255, 0.08);
+
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.25);
+}
+
+/* LEFT */
+
+.shipping-left {
+  display: flex;
+  align-items: center;
+
+  gap: 16px;
+
+  min-width: 260px;
+}
+
+.shipping-icon {
+  width: 58px;
+  height: 58px;
+
+  border-radius: 14px;
+
+  background: rgba(37, 99, 235, 0.12);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  color: #60a5fa;
+
+  font-size: 28px;
+}
+
+.shipping-left h3 {
+  font-size: 34px;
+  font-weight: 800;
+
+  letter-spacing: 0.5px;
+
+  color: white;
+}
+
+/* CENTER */
+
+.shipping-center {
+  flex: 1;
+
+  text-align: center;
+
+  padding: 0 20px;
+
+  font-size: 18px;
+  font-weight: 500;
+
+  line-height: 1.7;
+
+  color: rgba(255, 255, 255, 0.72);
+}
+
+/* RIGHT */
+
+.shipping-price {
+  white-space: nowrap;
+
+  font-size: 28px;
+  font-weight: 800;
+
+  color: #60a5fa;
+}
+
+/* ========================= */
+/* RESPONSIVE */
+/* ========================= */
+
+@media (min-width: 1200px) {
+  .leftSec {
+    min-width: 420px;
+  }
+}
+
+@media (max-width: 1200px) {
+  .leftSec {
+    min-width: 0;
+  }
+
+  .leftSec h2 {
+    font-size: 40px !important;
+  }
+}
+
+@media (max-width: 992px) {
+  .popularHeader {
+    flex-direction: column;
+
+    align-items: flex-start;
+  }
+
+  .leftSec {
+    min-width: 100%;
+  }
+
+  .leftSec p {
+    max-width: 100%;
+  }
+
+  .rightSection {
+    width: 100%;
+  }
+
+  .freeShipping {
+    flex-direction: column;
+
+    padding: 30px 20px;
+
+    text-align: center;
+  }
+
+  .shipping-left {
+    justify-content: center;
+
+    min-width: auto;
+  }
+
+  .shipping-center {
+    padding: 0;
+  }
+}
+
+@media (max-width: 768px) {
+  .leftSec h2 {
+    font-size: 34px !important;
+  }
+
+  .leftSec p {
+    font-size: 14px;
+  }
+
+  .customTabs {
+    padding: 6px;
+  }
+
+  .customTabs .MuiTab-root {
+    padding: 11px 18px !important;
+
+    font-size: 13px !important;
+  }
+
+  .shipping-left h3 {
+    font-size: 24px;
+  }
+
+  .shipping-center {
+    font-size: 15px;
+  }
+
+  .shipping-price {
+    font-size: 22px;
+  }
+
+  .shipping-icon {
+    width: 50px;
+    height: 50px;
+
+    font-size: 22px;
+  }
+}
+
+.customTabs {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.customTabs::-webkit-scrollbar {
+  display: none;
+}
+
+.customTabs button {
+  min-height: auto;
+  padding: 13px 24px;
+  border-radius: 14px;
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 14px;
+  font-weight: 700;
+  white-space: nowrap;
+  transition: all 0.3s ease;
+}
+
+.customTabs button.active,
+.customTabs button:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.customTabs button.active {
+  background: #2563eb;
+  color: white;
+  box-shadow: 0 8px 24px rgba(37, 99, 235, 0.35);
+}

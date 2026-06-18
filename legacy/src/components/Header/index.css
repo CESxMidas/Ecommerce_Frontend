@@ -1,0 +1,533 @@
+/* ========================= */
+/* HEADER WRAPPER */
+/* ========================= */
+
+.headerWrapper {
+  width: 100%;
+
+  position: sticky;
+
+  top: 0;
+
+  left: 0;
+
+  z-index: 999;
+
+  background: rgba(2, 8, 23, 0.94);
+
+  backdrop-filter: blur(14px);
+}
+
+/* ========================= */
+/* TOP STRIP */
+/* ========================= */
+
+.top-strip {
+  background: rgba(255, 255, 255, 0.02);
+
+  border-bottom: 1px solid
+    rgba(255, 255, 255, 0.05);
+
+  transition: all 0.3s ease;
+}
+
+.topStripInner {
+  min-height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  color: var(--text-muted);
+  font-size: 12px;
+}
+
+.topStripMessage {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.topStripLinks {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex-shrink: 0;
+}
+
+.topLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+
+  transition: all 0.3s ease;
+}
+
+.topLink:hover {
+  color: white;
+}
+
+/* ========================= */
+/* MIDDLE HEADER */
+/* ========================= */
+
+.middleHeader {
+  padding: 14px 0;
+
+  border-bottom: 1px solid
+    rgba(255, 255, 255, 0.05);
+
+  transition: all 0.3s ease;
+}
+
+.headerMain {
+  display: grid;
+  grid-template-columns: minmax(190px, 250px) minmax(280px, 1fr) auto;
+  align-items: center;
+  gap: 24px;
+}
+
+.headerBrand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.logoLink {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+/* ========================= */
+/* LOGO */
+/* ========================= */
+
+.logoText {
+  font-size: 32px;
+
+  font-weight: 800;
+
+  color: white;
+
+  letter-spacing: 0;
+
+  transition: all 0.3s ease;
+}
+
+.logoText:hover {
+  color: var(--primary);
+}
+
+.logoSubText {
+  color: rgba(255, 255, 255, 0.48);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.headerSearch {
+  min-width: 0;
+}
+
+.headerRight {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 22px;
+  color: var(--text-muted);
+}
+
+.headerAuth {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.headerActions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  font-size: 18px;
+}
+
+.mobileSearch {
+  display: none;
+  margin-top: 12px;
+}
+
+/* ========================= */
+/* MOBILE MENU BUTTON */
+/* ========================= */
+
+.mobileMenuBtn {
+  width: 42px;
+
+  height: 42px;
+
+  border-radius: var(--radius-control);
+
+  border: 1px solid
+    rgba(255, 255, 255, 0.08);
+
+  background: rgba(255, 255, 255, 0.03);
+
+  color: white;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  cursor: pointer;
+
+  transition: all 0.3s ease;
+}
+
+.mobileMenuBtn:hover {
+  background: rgba(255, 255, 255, 0.08);
+
+  transform: translateY(-2px);
+}
+
+/* ========================= */
+/* AUTH BUTTONS */
+/* ========================= */
+
+.loginBtnHeader,
+.registerBtnHeader {
+  height: 42px;
+
+  padding: 0 20px;
+
+  border-radius: var(--radius-control);
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  gap: 8px;
+
+  font-size: 14px;
+
+  font-weight: 600;
+
+  text-decoration: none;
+
+  transition: all 0.3s ease;
+}
+
+.loginBtnHeader {
+  border: 1px solid
+    rgba(255, 255, 255, 0.08);
+
+  background: rgba(255, 255, 255, 0.04);
+
+  color: white;
+}
+
+.loginBtnHeader svg {
+  font-size: 16px;
+}
+.loginBtnHeader:hover {
+  background: rgba(255, 255, 255, 0.08);
+
+  transform: translateY(-2px);
+}
+
+.registerBtnHeader {
+  background: var(--primary-hover);
+
+  color: white;
+}
+
+.registerBtnHeader:hover {
+  background: var(--primary);
+
+  transform: translateY(-2px);
+}
+
+/* ========================= */
+/* USER MENU BUTTON */
+/* ========================= */
+
+.userMenuBtn {
+  display: flex;
+
+  align-items: center;
+
+  gap: 10px;
+
+  padding: 10px 14px;
+
+  border-radius: var(--radius-control);
+
+  background: rgba(255, 255, 255, 0.04);
+
+  border: 1px solid
+    rgba(255, 255, 255, 0.08);
+
+  color: white;
+
+  cursor: pointer;
+
+  transition: all 0.3s ease;
+}
+
+.userMenuBtn:hover {
+  background: rgba(255, 255, 255, 0.08);
+
+  border-color: rgba(
+    255,
+    255,
+    255,
+    0.15
+  );
+
+  transform: translateY(-2px);
+}
+
+.userMenuName {
+  font-size: 14px;
+
+  font-weight: 600;
+}
+
+/* ========================= */
+/* HEADER ICONS */
+/* ========================= */
+
+.headerIcon {
+  position: relative;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  width: 42px;
+  height: 42px;
+
+  border-radius: var(--radius-control);
+
+  background: rgba(255, 255, 255, 0.04);
+
+  border: 1px solid rgba(255, 255, 255, 0.07);
+
+  color: rgba(255, 255, 255, 0.72);
+
+  cursor: pointer;
+
+  transition: all 0.3s ease;
+}
+
+.headerIcon:hover {
+  color: white;
+
+  background: rgba(59, 130, 246, 0.14);
+
+  border-color: rgba(96, 165, 250, 0.28);
+
+  transform: translateY(-2px);
+}
+
+/* ========================= */
+/* BADGE */
+/* ========================= */
+
+.headerBadge {
+  position: absolute;
+
+  top: -6px;
+
+  right: -7px;
+
+  width: 18px;
+
+  height: 18px;
+
+  border-radius: 50%;
+
+  color: white;
+
+  font-size: 10px;
+
+  font-weight: 700;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  box-shadow: 0 0 10px
+    rgba(0, 0, 0, 0.2);
+}
+
+/* ========================= */
+/* HEADER MENU (MUI) */
+/* ========================= */
+
+.headerMenu .MuiPaper-root {
+  background: #0f172a !important;
+
+  border: 1px solid
+    rgba(255, 255, 255, 0.08) !important;
+
+  border-radius: 14px !important;
+
+  min-width: 220px !important;
+
+  margin-top: 10px !important;
+
+  overflow: hidden !important;
+
+  box-shadow: 0 10px 40px
+    rgba(0, 0, 0, 0.45) !important;
+}
+
+.headerMenu .MuiMenuItem-root {
+  color: white !important;
+
+  font-size: 14px !important;
+
+  padding: 12px 18px !important;
+
+  transition: all 0.2s ease !important;
+}
+
+.headerMenu .MuiMenuItem-root:hover {
+  background: rgba(
+    255,
+    255,
+    255,
+    0.06
+  ) !important;
+}
+
+.headerMenu .MuiMenuItem-root svg {
+  font-size: 18px;
+}
+
+/* ========================= */
+/* LOGOUT */
+/* ========================= */
+
+.logoutMenuItem {
+  color: #ef4444 !important;
+}
+
+.logoutMenuItem:hover {
+  background: rgba(
+    239,
+    68,
+    68,
+    0.1
+  ) !important;
+}
+
+/* ========================= */
+/* RESPONSIVE */
+/* ========================= */
+
+@media (max-width: 992px) {
+  .topStripLinks {
+    display: none;
+  }
+
+  .headerMain {
+    grid-template-columns: auto 1fr auto;
+    gap: 14px;
+  }
+
+  .headerSearch {
+    display: none;
+  }
+
+  .mobileSearch {
+    display: block;
+  }
+
+  .headerAuth {
+    display: none;
+  }
+
+  .userMenuBtn {
+    padding: 8px 12px;
+  }
+
+  .userMenuName {
+    display: none;
+  }
+}
+
+@media (min-width: 1025px) {
+  .mobileMenuBtn {
+    display: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .topStripInner {
+    justify-content: center;
+    min-height: 30px;
+    text-align: center;
+  }
+
+  .middleHeader {
+    padding: 12px 0;
+  }
+
+  .logoText {
+    font-size: 26px;
+  }
+
+  .logoSubText {
+    display: none;
+  }
+
+  .headerIcon {
+    width: 38px;
+    height: 38px;
+    font-size: 16px;
+  }
+
+  .headerBadge {
+    width: 16px;
+
+    height: 16px;
+
+    font-size: 9px;
+  }
+}
+
+@media (max-width: 576px) {
+  .headerMain {
+    gap: 10px;
+  }
+
+  .mobileMenuBtn {
+    width: 38px;
+
+    height: 38px;
+  }
+  .logoText {
+    font-size: 23px;
+  }
+
+  .headerActions {
+    gap: 8px;
+  }
+
+  .headerIcon {
+    width: 36px;
+    height: 36px;
+  }
+}

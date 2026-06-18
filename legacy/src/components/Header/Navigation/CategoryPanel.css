@@ -1,0 +1,161 @@
+.categoryPanel {
+  width: 100%;
+
+  max-width: 320px;
+
+  height: 100vh;
+
+  background: #071327;
+
+  color: white;
+
+  display: flex;
+
+  flex-direction: column;
+
+  overflow: hidden;
+}
+
+/* ====================== */
+/* HEADING */
+/* ====================== */
+
+.categoryPanelHeading {
+  padding: 22px 20px 16px;
+
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+
+  background: rgba(255, 255, 255, 0.02);
+
+  backdrop-filter: blur(12px);
+}
+
+.categoryPanelHeading h3 {
+  font-size: 20px;
+
+  font-weight: 700;
+
+  color: white;
+
+  margin-bottom: 4px;
+}
+
+.categoryPanelHeading span {
+  font-size: 13px;
+
+  color: rgba(255, 255, 255, 0.55);
+
+  display: block;
+}
+
+/* ====================== */
+/* BODY */
+/* ====================== */
+
+.categoryPanelQuick {
+  padding: 16px 32px;
+}
+
+.categoryPanelQuickLink {
+  display: block;
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 12px;
+  text-align: center;
+  font-size: 13px;
+  font-weight: 700;
+  color: #dbeafe;
+  background: rgba(37, 99, 235, 0.2);
+  border: 1px solid rgba(96, 165, 250, 0.28);
+  transition: 0.25s ease;
+}
+
+.categoryPanelQuickLink:hover {
+  background: rgba(37, 99, 235, 0.32);
+  color: #fff;
+}
+
+.categoryPanelStatus {
+  padding: 16px 8px;
+  text-align: center;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.categoryPanelStatus--error {
+  color: #fca5a5;
+}
+
+.categoryPanelWrapper {
+  flex: 1;
+
+  overflow-y: auto;
+
+  padding: 14px;
+
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 10px;
+}
+
+/* ====================== */
+/* SCROLLBAR */
+/* ====================== */
+
+.categoryPanelWrapper::-webkit-scrollbar {
+  width: 5px;
+}
+
+.categoryPanelWrapper::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.categoryPanelWrapper::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.12);
+
+  border-radius: 20px;
+}
+
+.categoryPanelWrapper::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.22);
+}
+
+/* ====================== */
+/* ICONS */
+/* ====================== */
+
+.category-icon {
+  font-size: 16px;
+
+  color: #60a5fa;
+}
+
+.category-icon-small {
+  font-size: 13px;
+
+  color: rgba(255, 255, 255, 0.7);
+}
+
+/* ====================== */
+/* RESPONSIVE */
+/* ====================== */
+
+@media (max-width: 576px) {
+  .categoryPanel {
+    max-width: 100%;
+  }
+
+  .categoryPanelHeading {
+    padding: 18px 16px 14px;
+  }
+
+  .categoryPanelHeading h3 {
+    font-size: 18px;
+  }
+
+  .categoryPanelWrapper {
+    padding: 10px;
+  }
+}

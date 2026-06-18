@@ -1,16 +1,53 @@
-# React + Vite
+# Ecommerce Storefront (Next.js)
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Next.js App Router storefront migrated from the legacy Vite app in `legacy/`.
 
-Currently, two official plugins are available:
+## Stack
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- Next.js 14 (App Router)
+- TypeScript
+- Tailwind CSS + Shadcn UI
+- NextAuth v4
+- Express API backend (separate repo)
 
-## React Compiler
+## Development
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+```bash
+# Terminal 1 - Backend
+cd ../Ecommerce_Backend
+npm run dev
 
-## Expanding the ESLint configuration
+# Terminal 2 - Storefront
+npm install
+npm run dev
+```
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+Open http://localhost:3000
+
+## Environment
+
+Copy `.env.example` to `.env` and set:
+
+- `NEXTAUTH_SECRET` — generate with `openssl rand -base64 32`
+- `GOOGLE_CLIENT_ID` / `GOOGLE_CLIENT_SECRET` — dev credentials (separate from production)
+- `API_INTERNAL_URL` — backend for server-side fetch (default `http://localhost:888`)
+
+Client requests use `NEXT_PUBLIC_API_URL=/api` (proxied to backend via `next.config.mjs`).
+
+## Production URL map
+
+| Legacy URL | New URL |
+|------------|---------|
+| `/productListing` | `/products` |
+| `/product/:id` | `/products/:id` |
+| `/login` | `/auth/login` |
+| `/myAccount` | `/account` |
+| `/orders` | `/account/orders` |
+| `/my-list` | `/account/wishlist` |
+
+Permanent redirects are configured in `next.config.mjs`.
+
+## Migration status
+
+- Done: Next.js scaffold, Shadcn UI, NextAuth v4, Home/Products/Blog (SSR/ISR), auth login
+- Next phase: port Cart, Checkout, Register, Account modules from `legacy/src`
