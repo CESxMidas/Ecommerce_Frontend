@@ -14,7 +14,7 @@
 | **Luồng UX chính** | ~80% — shop/auth/account ổn |
 | **Production-ready UI** | ~75% — cần polish vài màn + mobile QA |
 
-**Build:** `npm run build` pass  
+**Build:** `npm run build` pass khi **BE đang chạy** (`:888`) — layout fetch categories lúc build  
 **Dev:** Nếu gặp 500, chạy `Remove-Item -Recurse -Force .next` rồi `npm run dev`
 
 ---
@@ -54,7 +54,7 @@
 |--------|----------|----------------|
 | **Tên brand lẫn lộn** | Metadata: `KEY STORE` · Header/Footer: `KEYSHOP` | `layout.tsx`, `site-header.tsx`, `site-footer.tsx` |
 | **Order detail chưa KEYSHOP** | Vẫn Shadcn `Card`, `text-muted-foreground`, `Button` | `order-detail-page.tsx` |
-| **License modal chưa KEYSHOP** | Shadcn `Button` | `license-key-modal.tsx` |
+| **License modal chưa KEYSHOP** | Shadcn `Button` | `components/shop/license-key-modal.tsx` |
 | **404 generic** | `page-shell` + Shadcn, không có commerce hero | `not-found.tsx` |
 
 **Việc tối nay / mai:** Thống nhất `KEYSHOP` (hoặc một tên), polish 3 file trên.
@@ -68,7 +68,7 @@ Còn dùng **Shadcn semantic** (`border-border`, `text-muted-foreground`, `bg-ca
 | File | Ghi chú |
 |------|---------|
 | `order-detail-page.tsx` | Nhiều nhất — ưu tiên số 1 |
-| `license-key-modal.tsx` | Modal sau thanh toán — UX quan trọng |
+| `components/shop/license-key-modal.tsx` | Modal sau thanh toán — UX quan trọng |
 | `product-listing.tsx` | Drawer/filter ổn; rà lại toolbar |
 | `site-header.tsx` | Dropdown account (Shadcn) — chấp nhận tạm hoặc custom |
 | `add-to-cart-button.tsx` | Nút nhỏ trên card |
@@ -154,7 +154,7 @@ Buổi tới — Session 2 (~2h)
   7. Wishlist API sync
   8. Mobile QA + fix lệch nhỏ
 
-Sau đó — FE Phase 5 cleanup (legacy/, README, production env)
+Sau đó — production env + E2E (xem FE-COMPLETION.md §4)
 ```
 
 ---

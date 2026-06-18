@@ -1,23 +1,23 @@
 # Ecommerce Storefront (Next.js)
 
-Next.js App Router storefront migrated from the legacy Vite app in `legacy/`.
+KEYSHOP digital storefront — Next.js 14 App Router + TypeScript + Tailwind.
 
 ## Stack
 
 - Next.js 14 (App Router)
 - TypeScript
-- Tailwind CSS + Shadcn UI
+- Tailwind CSS (KEYSHOP design tokens)
 - NextAuth v4
-- Express API backend (separate repo)
+- Express API backend (`../Ecommerce_Backend`)
 
 ## Development
 
 ```bash
-# Terminal 1 - Backend
+# Terminal 1 — Backend
 cd ../Ecommerce_Backend
 npm run dev
 
-# Terminal 2 - Storefront
+# Terminal 2 — Storefront
 npm install
 npm run dev
 ```
@@ -26,28 +26,24 @@ Open http://localhost:3000
 
 ## Environment
 
-Copy `.env.example` to `.env` and set:
+Copy `.env.example` to `.env`:
 
-- `NEXTAUTH_SECRET` — generate with `openssl rand -base64 32`
-- `GOOGLE_CLIENT_ID` / `GOOGLE_CLIENT_SECRET` — dev credentials (separate from production)
-- `API_INTERNAL_URL` — backend for server-side fetch (default `http://localhost:888`)
+- `NEXTAUTH_SECRET` — `openssl rand -base64 32`
+- `GOOGLE_CLIENT_ID` / `GOOGLE_CLIENT_SECRET` — optional OAuth
+- `API_INTERNAL_URL` — server-side API (default `http://localhost:888`)
 
-Client requests use `NEXT_PUBLIC_API_URL=/api` (proxied to backend via `next.config.mjs`).
+Client requests use `NEXT_PUBLIC_API_URL=/api` (proxied via `next.config.mjs`).
 
-## Production URL map
+## Project structure
 
-| Legacy URL | New URL |
-|------------|---------|
-| `/productListing` | `/products` |
-| `/product/:id` | `/products/:id` |
-| `/login` | `/auth/login` |
-| `/myAccount` | `/account` |
-| `/orders` | `/account/orders` |
-| `/my-list` | `/account/wishlist` |
+See [`STRUCTURE.md`](./STRUCTURE.md) for the full folder map.
 
-Permanent redirects are configured in `next.config.mjs`.
+## Legacy URL redirects
 
-## Migration status
+Permanent redirects from the old Vite SPA are in `next.config.mjs` (`/login` → `/auth/login`, `/orders` → `/account/orders`, etc.).
 
-- Done: Next.js scaffold, Shadcn UI, NextAuth v4, Home/Products/Blog (SSR/ISR), auth login
-- Next phase: port Cart, Checkout, Register, Account modules from `legacy/src`
+## Docs
+
+- [`STRUCTURE.md`](./STRUCTURE.md) — folder layout
+- [`FE-COMPLETION.md`](./FE-COMPLETION.md) — remaining work checklist
+- [`FE-UI-UX-AUDIT.md`](./FE-UI-UX-AUDIT.md) — UI/UX audit

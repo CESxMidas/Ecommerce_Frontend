@@ -1,7 +1,15 @@
 # FE Completion Checklist — KEYSHOP Next.js Storefront
 
-> Trạng thái sau Phase 1–4 (shop core, auth, account, content).  
+> Trạng thái sau Phase 1–4 + cleanup cấu trúc.  
 > Cập nhật: 2025-06-18
+
+## Bắt đầu từ đây (tối nay)
+
+1. Chạy dev: BE `localhost:888` → FE `npm run dev` (`localhost:3000`)
+2. Làm theo thứ tự **§ Thứ tự làm đề xuất** bên dưới
+3. UI/UX chi tiết → `FE-UI-UX-AUDIT.md` · Cấu trúc folder → `STRUCTURE.md`
+
+**Đã xong:** migrate Next.js + TypeScript 100% (`src/` chỉ `.ts`/`.tsx`), xóa `legacy/`, làm phẳng `app/`.
 
 ---
 
@@ -24,14 +32,18 @@ Legacy URL redirects đã cấu hình trong `next.config.mjs`.
 
 ### 1. Dọn dẹp codebase
 
-- [ ] Xóa thư mục `legacy/` (Vite SPA cũ, ~70 file `.jsx` — không chạy runtime)
-- [ ] Xóa `src/styles/legacy/` (19 file CSS không còn được import)
-- [ ] Cập nhật `README.md` (phần Migration status đã lỗi thời)
+- [x] Xóa thư mục `legacy/` (Vite SPA cũ — không chạy runtime)
+- [x] Xóa `src/styles/legacy/` (19 file CSS không còn được import)
+- [x] Làm phẳng `src/app/` routes (bỏ `(account)/account`, `(auth)/auth`, route groups)
+- [x] Gom `cart/` + `checkout/` components vào `components/shop/`
+- [x] `providers.tsx` → `components/providers/index.tsx`
+- [x] Thêm `STRUCTURE.md`
+- [x] Cập nhật `README.md`
 
 ### 2. UI còn lệch KEYSHOP (vẫn dùng Shadcn / generic)
 
 - [ ] `src/components/account/order-detail-page.tsx` → `AccountCard` + tokens KEYSHOP
-- [ ] `src/components/checkout/license-key-modal.tsx` → polish modal license keys
+- [ ] `src/components/shop/license-key-modal.tsx` → polish modal license keys
 - [ ] `src/components/layout/cart-panel.tsx` → đồng bộ với cart page
 - [ ] `src/app/not-found.tsx` → commerce hero thay page generic
 - [ ] Rà soát Shadcn còn lại: `product-listing.tsx`, `site-header.tsx`, `add-to-cart-button.tsx`
@@ -105,11 +117,21 @@ Thiếu `metadata` / `generateMetadata` trên:
 ## Thứ tự làm đề xuất
 
 ```
-1. Dọn legacy/ + src/styles/legacy/ + README
-2. Wishlist API + profile fetchProfile + checkout coupon UI
-3. Polish order-detail + cart-panel + license modal + 404
-4. Production env + image domains + test E2E
+✅ 1. Dọn legacy/ + cấu trúc folder + README  (XONG)
+
+2. Logic gaps (~2–4h)
+   - Wishlist API + cart-provider sync
+   - profile-page gọi fetchProfile on mount
+   - checkout summary hiện coupon
+
+3. UI polish (~3–5h) — chi tiết FE-UI-UX-AUDIT.md
+   - order-detail-page, license-key-modal, cart-panel, not-found
+   - brand KEY STORE → KEYSHOP
+
+4. Production env + image domains + E2E test
+
 5. SEO metadata + ESLint warnings
+
 6. Nice-to-have
 ```
 
@@ -119,7 +141,7 @@ Thiếu `metadata` / `generateMetadata` trên:
 
 | Nhóm | Thời gian |
 |------|-----------|
-| Cleanup + README | ~30 phút |
+| ~~Cleanup + README~~ | ~~xong~~ |
 | Logic gaps (wishlist, profile, coupon UI) | 2–4 giờ |
 | UI polish còn lại | 3–5 giờ |
 | Production + E2E test | 2–4 giờ |
@@ -132,5 +154,5 @@ Thiếu `metadata` / `generateMetadata` trên:
 ## Ghi chú kỹ thuật
 
 - **Runtime code** (`src/`): 100% `.ts` / `.tsx` — không còn `.jsx`
-- **`legacy/`**: reference only, `tsconfig` đã exclude — an toàn xóa sau khi không cần đối chiếu UI
+- **Cấu trúc:** xem `STRUCTURE.md`
 - **Dev:** FE `localhost:3000`, BE `localhost:888`, proxy `/api` qua `next.config.mjs`
