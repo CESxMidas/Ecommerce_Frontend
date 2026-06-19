@@ -27,20 +27,25 @@
   }
 
   * {
-    @apply border-border;
+    border-color: hsl(var(--border));
   }
 
   body {
-    @apply bg-keyshop-bg text-foreground antialiased;
+    background-color: #020817;
+    color: hsl(var(--foreground));
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
     overflow-x: hidden;
   }
 
   a {
-    @apply text-inherit no-underline;
+    color: inherit;
+    text-decoration: none;
   }
 
   ::selection {
-    @apply bg-primary/30 text-white;
+    background-color: hsl(var(--primary) / 0.3);
+    color: hsl(var(--foreground));
   }
 }
 
@@ -158,6 +163,11 @@
     @apply opacity-0 motion-reduce:opacity-100;
   }
 
+  /* Hero text visible + animated before Swiper adds .swiper-slide-active */
+  .swiper:not(.swiper-initialized) .swiper-slide:first-child .hero-slide-content > * {
+    animation: fade-in-up 0.55s ease-out both;
+  }
+
   .swiper-slide-active .hero-slide-content > * {
     animation: fade-in-up 0.55s ease-out both;
   }
@@ -180,7 +190,8 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .swiper-slide-active .hero-slide-content > * {
+  .swiper-slide-active .hero-slide-content > *,
+  .swiper:not(.swiper-initialized) .swiper-slide:first-child .hero-slide-content > * {
     animation: none;
     opacity: 1;
   }
