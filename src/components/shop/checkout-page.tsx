@@ -19,6 +19,7 @@ import {
   isPhysicalProduct,
 } from "@/lib/utils/product-schema";
 import type { AppliedCoupon, UserAddress } from "@/types/cart";
+import { getCheckoutErrorMessage } from "@/lib/utils/order-errors";
 
 type CheckoutForm = {
   firstName: string;
@@ -301,7 +302,7 @@ export default function CheckoutPageClient() {
         router.push("/account/orders");
       }
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : "Something went wrong");
+      toast.error(getCheckoutErrorMessage(error));
     } finally {
       setLoading(false);
     }

@@ -24,9 +24,12 @@ import {
 import {
   getCartItemKey,
   getDefaultPurchaseVariant,
+  getMaxPurchasableQuantity,
+  isOutOfStock,
   normalizeProduct,
   resolvePurchaseVariant,
 } from "@/lib/utils/product-schema";
+import { getAddToCartErrorMessage } from "@/lib/utils/order-errors";
 import {
   loadCompare,
   MAX_COMPARE_ITEMS,
@@ -259,6 +262,31 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
           ? getDefaultPurchaseVariant(normalizedProduct)
           : resolvePurchaseVariant(normalizedProduct, selectedVariant);
 
+      if (isOutOfStock(normalizedProduct)) {
+        toast.error(getAddToCartErrorMessage(normalizedProduct.name));
+        return false;
+      }
+
+      const cartKey = getCartItemKey({
+        productId: normalizedProduct.id,
+        variant,
+      });
+      const existingQuantity =
+        cartItems.find((item) => getCartItemKey(item) === cartKey)?.quantity ?? 0;
+      const maxQuantity = getMaxPurchasableQuantity(
+        normalizedProduct,
+        existingQuantity,
+      );
+
+      if (quantity > maxQuantity) {
+        toast.error(
+          normalizedProduct.usesKeyPool
+            ? `Chỉ còn ${normalizedProduct.stock} key trong kho`
+            : `Chỉ còn ${normalizedProduct.stock} sản phẩm trong kho`,
+        );
+        return false;
+      }
+
       if (getAccessToken()) {
         try {
           const items = await cartService.addToCart(
@@ -311,7 +339,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       toast.success("Added to cart");
       return true;
     },
-    [],
+    [cartItems],
   );
 
   const toggleWishlist = useCallback(

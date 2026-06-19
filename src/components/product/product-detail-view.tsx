@@ -24,8 +24,11 @@ import {
   getProductTypeLabel,
   getPurchaseVariants,
   getSalePrice,
+  getStockDetailLabel,
+  getStockStatusLabel,
   isInstantCodeProduct,
   isLicenseKeyProduct,
+  isOutOfStock,
   isPhysicalProduct,
   normalizeProduct,
   resolvePurchaseVariant,
@@ -82,6 +85,10 @@ export default function ProductDetailView({ product: rawProduct }: ProductDetail
   const displayName = getProductDisplayName(product);
   const vendor = product?.vendor || product?.brand || product?.categoryName || "";
   const images = getProductImages(product);
+  const outOfStock = isOutOfStock(product);
+  const maxQuantity = Math.max(1, Number(product?.stock ?? 0));
+  const stockStatusLabel = getStockStatusLabel(product);
+  const stockDetailLabel = getStockDetailLabel(product);
 
   useEffect(() => {
     setSelectedVariantId(defaultVariantId);
@@ -127,9 +134,9 @@ export default function ProductDetailView({ product: rawProduct }: ProductDetail
       ["Product type", getProductTypeLabel(product)],
       ["Delivery", getDeliveryLabel(product)],
       ["Category", product.categoryName],
-      ["Stock", product.stock > 0 ? `${product.stock} available` : "Out of stock"],
+      ["Stock", stockDetailLabel],
     ] as const;
-  }, [product]);
+  }, [product, stockDetailLabel]);
 
   if (!product) {
     return (
@@ -237,10 +244,21 @@ export default function ProductDetailView({ product: rawProduct }: ProductDetail
             </p>
 
             <div className="mt-6 flex flex-wrap items-center gap-3">
-              <span className="h-2.5 w-2.5 rounded-full bg-green-400" />
-              <span className="font-bold text-green-400">
-                {product.stock > 0 ? "In Stock" : "Out of Stock"}
+              <span
+                className={cn(
+                  "h-2.5 w-2.5 rounded-full",
+                  outOfStock ? "bg-red-400" : "bg-green-400",
+                )}
+              />
+              <span
+                className={cn(
+                  "font-bold",
+                  outOfStock ? "text-red-400" : "text-green-400",
+                )}
+              >
+                {stockStatusLabel}
               </span>
+              <span className="text-sm text-keyshop-muted">{stockDetailLabel}</span>
               <span className="text-sm text-keyshop-muted">{getDeliveryLabel(product)}</span>
             </div>
 
@@ -294,8 +312,9 @@ export default function ProductDetailView({ product: rawProduct }: ProductDetail
                 <span className="min-w-12 text-center">{quantity}</span>
                 <button
                   type="button"
-                  className="px-4 py-2"
-                  onClick={() => setQuantity((value) => value + 1)}
+                  className="px-4 py-2 disabled:opacity-40"
+                  disabled={outOfStock || quantity >= maxQuantity}
+                  onClick={() => setQuantity((value) => Math.min(maxQuantity, value + 1))}
                 >
                   <Plus className="h-4 w-4" />
                 </button>
@@ -305,17 +324,23 @@ export default function ProductDetailView({ product: rawProduct }: ProductDetail
             <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
               <button
                 type="button"
+                disabled={outOfStock}
                 onClick={() => addToCart(product, quantity, selectedVariant)}
-                className="rounded-control bg-keyshop-blue px-6 py-3 font-semibold hover:bg-keyshop-blue-hover"
+                className="rounded-control bg-keyshop-blue px-6 py-3 font-semibold hover:bg-keyshop-blue-hover disabled:cursor-not-allowed disabled:opacity-50"
               >
-                Add To Cart
+                {outOfStock ? stockStatusLabel : "Add To Cart"}
               </button>
               <button
                 type="button"
+                disabled={outOfStock}
                 onClick={handleBuyNow}
-                className="rounded-control border border-keyshop-blue px-6 py-3 font-semibold text-keyshop-blue hover:bg-keyshop-blue/10"
+                className="rounded-control border border-keyshop-blue px-6 py-3 font-semibold text-keyshop-blue hover:bg-keyshop-blue/10 disabled:cursor-not-allowed disabled:opacity-50"
               >
-                {isInstantCodeProduct(product) ? "Buy & Get Code" : "Buy Now"}
+                {outOfStock
+                  ? stockStatusLabel
+                  : isInstantCodeProduct(product)
+                    ? "Buy & Get Code"
+                    : "Buy Now"}
               </button>
               <button
                 type="button"
@@ -341,9 +366,7 @@ export default function ProductDetailView({ product: rawProduct }: ProductDetail
 
             <div className="mt-8 flex flex-wrap gap-3">
               {isLicenseKeyProduct(product) ? (
-                <FeaturePill>
-                  Key format: {product.keyPrefix || "KEY"}-#####
-                </FeaturePill>
+                <FeaturePill>Key giao từ kho sau thanh toán</FeaturePill>
               ) : null}
               <FeaturePill>{getDeliveryLabel(product)}</FeaturePill>
               <FeaturePill>
