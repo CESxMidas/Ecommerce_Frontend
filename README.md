@@ -36,7 +36,7 @@ Client requests use `NEXT_PUBLIC_API_URL=/api` (proxied via `next.config.mjs`).
 
 ## Project structure
 
-See [`STRUCTURE.md`](./STRUCTURE.md) for the full folder map.
+See [`FE-HANDOFF.md`](./FE-HANDOFF.md) for folder map, checklist, and today's work.
 
 ## Legacy URL redirects
 
@@ -44,6 +44,4 @@ Permanent redirects from the old Vite SPA are in `next.config.mjs` (`/login` →
 
 ## Docs
 
-- [`STRUCTURE.md`](./STRUCTURE.md) — folder layout
-- [`FE-COMPLETION.md`](./FE-COMPLETION.md) — remaining work checklist
-- [`FE-UI-UX-AUDIT.md`](./FE-UI-UX-AUDIT.md) — UI/UX audit
+- [`FE-HANDOFF.md`](./FE-HANDOFF.md) — cấu trúc, việc làm hôm nay, checklist E2E & production
