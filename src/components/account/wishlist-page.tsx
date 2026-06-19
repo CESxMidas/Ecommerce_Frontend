@@ -45,8 +45,8 @@ export default function WishlistPageClient() {
         />
       ) : (
         <div className="grid grid-cols-[repeat(auto-fill,minmax(220px,1fr))] gap-5">
-          {wishlist.map((item) => (
-            <ProductItem key={item.id} item={item} />
+          {wishlist.map((item, index) => (
+            <ProductItem key={item.id} item={item} index={index} />
           ))}
         </div>
       )}

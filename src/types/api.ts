@@ -79,6 +79,7 @@ export interface BlogPost {
   content: string;
   image: string;
   author?: string;
+  category?: string;
   publishedAt?: string;
 }
 

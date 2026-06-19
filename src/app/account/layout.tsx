@@ -1,4 +1,16 @@
+import type { Metadata } from "next";
+
 import AccountSidebar from "@/components/account/account-sidebar";
+import { noIndexMetadata } from "@/lib/metadata";
+
+export const metadata: Metadata = {
+  title: {
+    default: "Account",
+    template: "%s | Account | KEYSHOP",
+  },
+  description: "Manage your KEYSHOP profile, orders, and digital licenses.",
+  ...noIndexMetadata,
+};
 
 export default function AccountLayout({
   children,

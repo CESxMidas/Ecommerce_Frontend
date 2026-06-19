@@ -22,3 +22,8 @@ export function saveWishlist(items: unknown[], user: WishlistUser = null) {
   if (typeof window === "undefined") return;
   localStorage.setItem(getUserWishlistKey(user), JSON.stringify(items));
 }
+
+export function clearStoredWishlist(user: WishlistUser = null) {
+  if (typeof window === "undefined") return;
+  localStorage.setItem(getUserWishlistKey(user), JSON.stringify([]));
+}

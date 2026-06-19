@@ -14,17 +14,29 @@ import {
 } from "@/components/account/account-ui";
 import {
   changePassword,
+  fetchProfile,
   requestEmailChange,
   updateProfile,
   verifyEmailChange,
 } from "@/lib/services/user-service";
 import { getApiErrorMessage } from "@/lib/utils/api-error";
 
+function formatDateForInput(value?: string | null) {
+  if (!value) return "";
+
+  const date = new Date(value);
+
+  if (Number.isNaN(date.getTime())) return "";
+
+  return date.toISOString().slice(0, 10);
+}
+
 export default function AccountProfilePage() {
   const { data: session, update } = useSession();
   const [showPasswordBox, setShowPasswordBox] = useState(false);
   const [showEmailBox, setShowEmailBox] = useState(false);
   const [loadingProfile, setLoadingProfile] = useState(false);
+  const [loadingInitialProfile, setLoadingInitialProfile] = useState(true);
   const [loadingPassword, setLoadingPassword] = useState(false);
   const [loadingEmail, setLoadingEmail] = useState(false);
 
@@ -49,15 +61,50 @@ export default function AccountProfilePage() {
   });
 
   useEffect(() => {
-    if (!session?.user) return;
+    if (!session?.user) {
+      setLoadingInitialProfile(false);
+      return;
+    }
 
-    setProfileFields({
-      name: session.user.name || "",
-      phone: "",
-      avatar: session.user.image || "",
-      dateOfBirth: "",
-      gender: "",
-    });
+    let cancelled = false;
+
+    const loadProfile = async () => {
+      try {
+        setLoadingInitialProfile(true);
+        const profile = await fetchProfile();
+
+        if (cancelled) return;
+
+        setProfileFields({
+          name: profile.name || session.user.name || "",
+          phone: profile.phone || "",
+          avatar: profile.avatar || session.user.image || "",
+          dateOfBirth: formatDateForInput(profile.dateOfBirth),
+          gender: profile.gender || "",
+        });
+      } catch (error) {
+        if (!cancelled) {
+          setProfileFields({
+            name: session.user.name || "",
+            phone: "",
+            avatar: session.user.image || "",
+            dateOfBirth: "",
+            gender: "",
+          });
+          toast.error(getApiErrorMessage(error, "Failed to load profile"));
+        }
+      } finally {
+        if (!cancelled) {
+          setLoadingInitialProfile(false);
+        }
+      }
+    };
+
+    loadProfile();
+
+    return () => {
+      cancelled = true;
+    };
   }, [session?.user]);
 
   async function handleProfileSubmit(event: FormEvent<HTMLFormElement>) {
@@ -157,6 +204,11 @@ export default function AccountProfilePage() {
         />
 
         <form onSubmit={handleProfileSubmit} className="grid gap-4 md:grid-cols-2">
+          {loadingInitialProfile ? (
+            <p className="text-sm text-keyshop-muted md:col-span-2">
+              Loading profile...
+            </p>
+          ) : null}
           <div>
             <label htmlFor="name" className={accountLabelClass}>
               Full name
@@ -240,7 +292,7 @@ export default function AccountProfilePage() {
             </select>
           </div>
           <div className="flex flex-wrap gap-3 md:col-span-2">
-            <AccountActionButton type="submit" disabled={loadingProfile}>
+            <AccountActionButton type="submit" disabled={loadingProfile || loadingInitialProfile}>
               {loadingProfile ? "Updating..." : "Update profile"}
             </AccountActionButton>
             <AccountActionButton

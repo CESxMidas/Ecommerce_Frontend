@@ -84,6 +84,40 @@ const config: Config = {
           "linear-gradient(to right, rgba(0,0,0,0.92), rgba(0,0,0,0.55), rgba(0,0,0,0.25))",
         "home-page": "linear-gradient(180deg, #081225 0%, #0b1730 100%)",
       },
+      keyframes: {
+        "fade-in-up": {
+          "0%": { opacity: "0", transform: "translateY(16px)" },
+          "100%": { opacity: "1", transform: "translateY(0)" },
+        },
+        "fade-in": {
+          "0%": { opacity: "0" },
+          "100%": { opacity: "1" },
+        },
+        "scale-in": {
+          "0%": { opacity: "0", transform: "scale(0.96)" },
+          "100%": { opacity: "1", transform: "scale(1)" },
+        },
+        "slide-in-right": {
+          "0%": { transform: "translateX(100%)" },
+          "100%": { transform: "translateX(0)" },
+        },
+        "slide-in-left": {
+          "0%": { transform: "translateX(-100%)" },
+          "100%": { transform: "translateX(0)" },
+        },
+        shimmer: {
+          "0%": { backgroundPosition: "-200% 0" },
+          "100%": { backgroundPosition: "200% 0" },
+        },
+      },
+      animation: {
+        "fade-in-up": "fade-in-up 0.55s ease-out both",
+        "fade-in": "fade-in 0.3s ease-out both",
+        "scale-in": "scale-in 0.35s ease-out both",
+        "slide-in-right": "slide-in-right 0.32s ease-out both",
+        "slide-in-left": "slide-in-left 0.32s ease-out both",
+        shimmer: "shimmer 2s linear infinite",
+      },
     },
   },
   plugins: [tailwindcssAnimate],

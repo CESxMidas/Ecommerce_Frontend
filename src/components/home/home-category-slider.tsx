@@ -2,12 +2,12 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { Swiper, SwiperSlide } from "swiper/react";
-import { Autoplay, Navigation } from "swiper/modules";
+import { Autoplay } from "swiper/modules";
+import { SwiperSlide } from "swiper/react";
 
-import "swiper/css";
-import "swiper/css/navigation";
+import KeyshopSwiper from "@/components/ui/keyshop-swiper";
 
+import Reveal from "@/components/ui/reveal";
 import { flattenLeafCategories } from "@/lib/utils/category-utils";
 import type { Category } from "@/types/api";
 
@@ -25,7 +25,7 @@ export default function HomeCategorySlider({ categories }: HomeCategorySliderPro
   if (displayCategories.length === 0) return null;
 
   return (
-    <section className="mt-8">
+    <Reveal className="mt-8">
       <div className="mb-6">
         <h2 className="text-3xl font-bold text-white">Browse Categories</h2>
         <p className="mt-1 text-keyshop-muted">
@@ -33,9 +33,8 @@ export default function HomeCategorySlider({ categories }: HomeCategorySliderPro
         </p>
       </div>
 
-      <Swiper
-        modules={[Navigation, Autoplay]}
-        navigation
+      <KeyshopSwiper
+        modules={[Autoplay]}
         autoplay={{ delay: 3500, disableOnInteraction: false }}
         loop={displayCategories.length > 5}
         spaceBetween={20}
@@ -56,8 +55,14 @@ export default function HomeCategorySlider({ categories }: HomeCategorySliderPro
 
           return (
             <SwiperSlide key={category.id}>
-              <div className="relative h-56 overflow-hidden rounded-card">
-                <Image src={image} alt={category.name} fill className="object-cover" sizes="20vw" />
+              <div className="group relative h-56 overflow-hidden rounded-card transition-transform duration-300 hover:-translate-y-1 motion-reduce:hover:translate-y-0">
+                <Image
+                  src={image}
+                  alt={category.name}
+                  fill
+                  className="object-cover transition-transform duration-500 group-hover:scale-105 motion-reduce:group-hover:scale-100"
+                  sizes="20vw"
+                />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
                 <div className="absolute inset-x-0 bottom-0 p-5 text-white">
                   <h3 className="text-lg font-bold">{category.name}</h3>
@@ -73,7 +78,7 @@ export default function HomeCategorySlider({ categories }: HomeCategorySliderPro
             </SwiperSlide>
           );
         })}
-      </Swiper>
-    </section>
+      </KeyshopSwiper>
+    </Reveal>
   );
 }

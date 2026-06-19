@@ -1,15 +1,31 @@
 import Link from "next/link";
 
-import { Button } from "@/components/ui/button";
+import {
+  CommerceBtn,
+  CommerceHero,
+  CommercePage,
+  CommercePanel,
+} from "@/components/commerce/commerce-ui";
 
 export default function NotFound() {
   return (
-    <div className="page-shell flex min-h-[50vh] flex-col items-center justify-center text-center">
-      <h1 className="text-4xl font-bold">404</h1>
-      <p className="mt-2 text-muted-foreground">Page not found.</p>
-      <Button className="mt-6" asChild>
-        <Link href="/">Back to home</Link>
-      </Button>
-    </div>
+    <CommercePage>
+      <CommerceHero
+        kicker="404"
+        title="Page not found"
+        description="The page you are looking for may have moved or no longer exists."
+      />
+      <CommercePanel>
+        <p className="text-slate-300">
+          Check the URL or return to the storefront to keep shopping.
+        </p>
+        <div className="mt-6 flex flex-wrap gap-3">
+          <CommerceBtn href="/">Back to home</CommerceBtn>
+          <CommerceBtn href="/products" variant="ghost">
+            Browse products
+          </CommerceBtn>
+        </div>
+      </CommercePanel>
+    </CommercePage>
   );
 }

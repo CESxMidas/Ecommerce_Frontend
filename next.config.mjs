@@ -1,9 +1,41 @@
 /** @type {import('next').NextConfig} */
+
+// Only proxy known Express backend routes. NextAuth lives at /api/next-auth/* on Next.js.
+const BACKEND_API_PREFIXES = [
+  "auth",
+  "products",
+  "categories",
+  "cart",
+  "orders",
+  "user",
+  "wishlist",
+  "coupons",
+  "banners",
+  "blogs",
+  "admin",
+  "payments",
+  "health",
+];
+
+function createBackendRewrites(apiBase) {
+  return BACKEND_API_PREFIXES.flatMap((prefix) => [
+    {
+      source: `/api/${prefix}`,
+      destination: `${apiBase}/api/${prefix}`,
+    },
+    {
+      source: `/api/${prefix}/:path*`,
+      destination: `${apiBase}/api/${prefix}/:path*`,
+    },
+  ]);
+}
+
 const nextConfig = {
   images: {
     remotePatterns: [
       { protocol: "https", hostname: "images.unsplash.com" },
       { protocol: "https", hostname: "res.cloudinary.com" },
+      { protocol: "https", hostname: "i.imgur.com" },
     ],
   },
 
@@ -11,12 +43,9 @@ const nextConfig = {
     const apiBase =
       process.env.API_INTERNAL_URL || "http://localhost:888";
 
-    return [
-      {
-        source: "/api/:path*",
-        destination: `${apiBase}/api/:path*`,
-      },
-    ];
+    return {
+      afterFiles: createBackendRewrites(apiBase),
+    };
   },
 
   async redirects() {

@@ -279,8 +279,8 @@ export default function ProductListing({
 
             {pagination.items.length > 0 ? (
               <div className={cn("grid gap-5", gridClass)}>
-                {pagination.items.map((product) => (
-                  <ProductItem key={product.id} item={product} />
+                {pagination.items.map((product, index) => (
+                  <ProductItem key={product.id} item={product} index={index} />
                 ))}
               </div>
             ) : (

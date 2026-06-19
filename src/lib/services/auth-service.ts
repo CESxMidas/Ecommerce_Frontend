@@ -59,3 +59,12 @@ export async function getMe() {
 
   return data;
 }
+
+export async function logout() {
+  const { data } = await apiClient.post<{ message?: string }>(
+    API_ENDPOINTS.auth.logout,
+    {},
+  );
+
+  return data;
+}

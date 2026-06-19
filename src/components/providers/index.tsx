@@ -22,7 +22,7 @@ function GlobalLicenseKeyModal() {
 
 export default function Providers({ children }: { children: React.ReactNode }) {
   return (
-    <SessionProvider>
+    <SessionProvider basePath="/api/next-auth">
       <CartProvider>
         <AuthTokenSync />
         {children}

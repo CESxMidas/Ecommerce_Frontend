@@ -8,10 +8,11 @@ import {
   CommercePanel,
 } from "@/components/commerce/commerce-ui";
 import { getBlogs } from "@/lib/api/server";
+import { resolveMediaUrl } from "@/lib/utils/image";
 
 export const metadata: Metadata = {
   title: "Blog",
-  description: "News, guides, and updates from KEY STORE.",
+  description: "News, guides, and updates from KEYSHOP.",
 };
 
 export const revalidate = 300;
@@ -37,24 +38,28 @@ export default async function BlogListPage() {
             <Link
               key={blog.id}
               href={`/blog/${blog.id}`}
-              className="flex min-h-[150px] flex-col gap-2.5 rounded-card border border-slate-400/20 bg-slate-950/50 p-5 transition hover:border-keyshop-blue/35 hover:bg-white/[0.03]"
+              className="keyshop-card-hover group flex min-h-full flex-col overflow-hidden rounded-card border border-keyshop-line bg-white/[0.03] transition hover:border-keyshop-blue/35"
             >
-              <div className="relative mb-1 h-40 w-full overflow-hidden rounded-[18px] bg-white/10">
+              <div className="relative aspect-[16/10] w-full overflow-hidden bg-white/10">
                 <Image
-                  src={blog.image || "/images/bypass/cerberus-banner.png"}
+                  src={resolveMediaUrl(blog.image)}
                   alt={blog.title}
                   fill
-                  className="object-cover"
+                  className="object-cover transition-transform duration-500 group-hover:scale-105"
                   sizes="(max-width: 768px) 100vw, 33vw"
                 />
               </div>
-              <span className="text-[13px] font-extrabold uppercase text-sky-300">
-                Article
-              </span>
-              <h3 className="text-lg font-extrabold text-white">{blog.title}</h3>
-              <p className="line-clamp-3 text-sm leading-7 text-slate-300">
-                {blog.excerpt}
-              </p>
+              <div className="flex flex-1 flex-col p-5">
+                <span className="text-[11px] font-bold uppercase tracking-wide text-keyshop-blue">
+                  {blog.category || "Article"}
+                </span>
+                <h3 className="mt-2 text-lg font-extrabold text-white group-hover:text-keyshop-blue">
+                  {blog.title}
+                </h3>
+                <p className="mt-2 line-clamp-3 flex-1 text-sm leading-7 text-keyshop-muted">
+                  {blog.excerpt || blog.content}
+                </p>
+              </div>
             </Link>
           ))}
         </section>

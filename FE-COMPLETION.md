@@ -1,15 +1,14 @@
 # FE Completion Checklist — KEYSHOP Next.js Storefront
 
-> Trạng thái sau Phase 1–4 + cleanup cấu trúc.  
+> Trạng thái sau Phase 5 implementation.  
 > Cập nhật: 2025-06-18
 
-## Bắt đầu từ đây (tối nay)
+## Bắt đầu từ đây
 
 1. Chạy dev: BE `localhost:888` → FE `npm run dev` (`localhost:3000`)
-2. Làm theo thứ tự **§ Thứ tự làm đề xuất** bên dưới
-3. UI/UX chi tiết → `FE-UI-UX-AUDIT.md` · Cấu trúc folder → `STRUCTURE.md`
+2. UI/UX chi tiết → `FE-UI-UX-AUDIT.md` · Cấu trúc folder → `STRUCTURE.md`
 
-**Đã xong:** migrate Next.js + TypeScript 100% (`src/` chỉ `.ts`/`.tsx`), xóa `legacy/`, làm phẳng `app/`.
+**Đã xong:** migrate Next.js + TypeScript, cleanup legacy, logic gaps, UI polish Phase 5, SEO metadata cơ bản, production env template.
 
 ---
 
@@ -22,9 +21,7 @@
 | **Account** | `/account`, `/addresses`, `/wishlist`, `/orders`, `/orders/[id]`, `/licenses`, `/notifications`, `/tickets`, `/security` |
 | **Content** | `/blog`, `/blog/[id]`, `/compare`, `/track-order` |
 | **Static** | `/about`, `/contact`, `/legal/*`, `/support/*` |
-| **Kiến trúc** | Next.js 14 App Router, TypeScript, Tailwind KEYSHOP, NextAuth v4, API layer (`src/lib/api/`) |
-
-Legacy URL redirects đã cấu hình trong `next.config.mjs`.
+| **Kiến trúc** | Next.js 14 App Router, TypeScript, Tailwind KEYSHOP, NextAuth v4, API layer |
 
 ---
 
@@ -32,36 +29,37 @@ Legacy URL redirects đã cấu hình trong `next.config.mjs`.
 
 ### 1. Dọn dẹp codebase
 
-- [x] Xóa thư mục `legacy/` (Vite SPA cũ — không chạy runtime)
-- [x] Xóa `src/styles/legacy/` (19 file CSS không còn được import)
-- [x] Làm phẳng `src/app/` routes (bỏ `(account)/account`, `(auth)/auth`, route groups)
+- [x] Xóa thư mục `legacy/`
+- [x] Xóa `src/styles/legacy/`
+- [x] Làm phẳng `src/app/` routes
 - [x] Gom `cart/` + `checkout/` components vào `components/shop/`
 - [x] `providers.tsx` → `components/providers/index.tsx`
 - [x] Thêm `STRUCTURE.md`
 - [x] Cập nhật `README.md`
 
-### 2. UI còn lệch KEYSHOP (vẫn dùng Shadcn / generic)
+### 2. UI còn lệch KEYSHOP
 
-- [ ] `src/components/account/order-detail-page.tsx` → `AccountCard` + tokens KEYSHOP
-- [ ] `src/components/shop/license-key-modal.tsx` → polish modal license keys
-- [ ] `src/components/layout/cart-panel.tsx` → đồng bộ với cart page
-- [ ] `src/app/not-found.tsx` → commerce hero thay page generic
-- [ ] Rà soát Shadcn còn lại: `product-listing.tsx`, `site-header.tsx`, `add-to-cart-button.tsx`
+- [x] `order-detail-page.tsx` → `AccountCard` + tokens KEYSHOP
+- [x] `license-key-modal.tsx` → polish modal license keys
+- [x] `cart-panel.tsx` → đồng bộ với cart page
+- [x] `not-found.tsx` → commerce hero
+- [x] `add-to-cart-button.tsx` → KEYSHOP button
+- [x] Brand `KEY STORE` → `KEYSHOP` (`layout.tsx`, blog metadata)
+- [ ] `site-header.tsx` dropdown account — Shadcn, chấp nhận tạm (không blocking)
 
-### 3. Logic / API còn thiếu so với legacy
+### 3. Logic / API
 
-- [ ] **Wishlist API** — hiện chỉ `localStorage`; legacy sync `/wishlist` khi đăng nhập  
-  → Tạo `src/lib/services/wishlist-service.ts` + merge trong `cart-provider.tsx`
-- [ ] **Profile load** — `fetchProfile()` có nhưng `profile-page.tsx` chưa gọi → phone, DOB, gender trống
-- [ ] **Checkout summary** — coupon gửi API nhưng không hiển thị dòng giảm giá trong UI summary
-- [ ] **Remember me** (login) — có UI; xác nhận hành vi mong muốn (chỉ lưu email local?)
+- [x] **Wishlist API** — `wishlist-service.ts` + merge trong `cart-provider.tsx`
+- [x] **Profile load** — `fetchProfile()` on mount trong `profile-page.tsx`
+- [x] **Checkout summary** — hiển thị coupon + total sau giảm
+- [x] **Remember me** — lưu/xóa `rememberedEmail` trong `localStorage`, pre-fill on load
 
 ### 4. Production env & deploy
 
-- [ ] Bổ sung `.env.example` cho production (`NEXTAUTH_URL`, `API_INTERNAL_URL` Vercel/Render)
-- [ ] `next.config.mjs` — `images.remotePatterns` cho CDN ảnh sản phẩm
-- [ ] CORS backend cho domain production
-- [ ] VNPay return URL → `/account/orders?payment=...`
+- [x] `.env.example` production (`NEXTAUTH_URL`, `API_INTERNAL_URL`)
+- [x] `next.config.mjs` — `images.remotePatterns` (Cloudinary, Unsplash, Imgur)
+- [x] Backend `.env.example` — `CORS_ORIGIN` gồm `localhost:3000`
+- [x] VNPay return URL → `/account/orders/:id?payment=...` (backend `payment.controller.js`)
 
 ---
 
@@ -69,13 +67,11 @@ Legacy URL redirects đã cấu hình trong `next.config.mjs`.
 
 ### 5. SEO & metadata
 
-Thiếu `metadata` / `generateMetadata` trên:
+- [x] `/cart`, `/checkout`, `/compare`, `/track-order`
+- [x] Các trang `/account/*`
+- [x] OpenGraph image cho product / blog
 
-- [ ] `/cart`, `/checkout`, `/compare`, `/track-order`
-- [ ] Các trang `/account/*`
-- [ ] OpenGraph image cho product / blog
-
-### 6. Test E2E (với backend chạy)
+### 6. Test E2E (với backend chạy) — **test tay**
 
 - [ ] Guest → login → mua hàng → VNPay / COD → nhận license keys
 - [ ] Forgot / reset password, verify email
@@ -86,13 +82,16 @@ Thiếu `metadata` / `generateMetadata` trên:
 
 ### 7. Auth bổ sung
 
-- [ ] Google OAuth — env đầy đủ + test flow
-- [ ] GitHub / Discord — hiện "coming soon" (`social-auth-buttons.tsx`)
+- [ ] Google OAuth — cần `GOOGLE_CLIENT_ID` + `GOOGLE_CLIENT_SECRET` + callback `http://localhost:3000/api/next-auth/callback/google`
+- [x] GitHub / Discord — "coming soon" (`social-auth-buttons.tsx`)
+- [x] Logout gọi `POST /api/auth/logout` trước `signOut` (`performLogout`)
+- [x] Login một lần gọi API (NextAuth credentials only)
+- [x] Remember me — email localStorage + session JWT 30 ngày khi bật
 
 ### 8. ESLint / build warnings
 
-- [ ] `cart-provider.tsx` — `react-hooks/exhaustive-deps` (`sessionUser`)
-- [ ] Thay `<img>` bằng `next/image` ở `site-footer`, `cart-panel`, carousels (nếu còn)
+- [x] `cart-provider.tsx` — stable `sessionUserId` deps
+- [x] `<img>` → `next/image` ở `site-footer`, `cart-panel`, `blog-carousel`
 
 ---
 
@@ -102,57 +101,21 @@ Thiếu `metadata` / `generateMetadata` trên:
 
 - [ ] Loading skeletons (products, blog, account lists)
 - [ ] Error boundary / trang lỗi API thân thiện hơn
-- [ ] Blog: field `category` (legacy có; `BlogPost` type chưa có)
-- [ ] Static pages từ CMS API thay hardcode `src/lib/content/static-pages.ts`
-- [ ] Copy tiếng Việt (verify, thông báo) nếu cần parity legacy
+- [ ] Blog: field `category`
+- [ ] Static pages từ CMS API thay `static-pages.ts`
+- [ ] Copy tiếng Việt nếu cần parity legacy
 
 ### 10. Tối ưu kỹ thuật
 
 - [ ] Rà soát type `Product` vs `NormalizedProduct`
-- [ ] Suspense cho client pages nặng (`orders-page`, `product-listing`)
+- [ ] Suspense cho client pages nặng
 - [ ] Review `revalidate` / cache từng route SSR
-
----
-
-## Thứ tự làm đề xuất
-
-```
-✅ 1. Dọn legacy/ + cấu trúc folder + README  (XONG)
-
-2. Logic gaps (~2–4h)
-   - Wishlist API + cart-provider sync
-   - profile-page gọi fetchProfile on mount
-   - checkout summary hiện coupon
-
-3. UI polish (~3–5h) — chi tiết FE-UI-UX-AUDIT.md
-   - order-detail-page, license-key-modal, cart-panel, not-found
-   - brand KEY STORE → KEYSHOP
-
-4. Production env + image domains + E2E test
-
-5. SEO metadata + ESLint warnings
-
-6. Nice-to-have
-```
-
----
-
-## Ước lượng effort
-
-| Nhóm | Thời gian |
-|------|-----------|
-| ~~Cleanup + README~~ | ~~xong~~ |
-| Logic gaps (wishlist, profile, coupon UI) | 2–4 giờ |
-| UI polish còn lại | 3–5 giờ |
-| Production + E2E test | 2–4 giờ |
-| SEO + warnings + nice-to-have | 2–3 giờ |
-
-**Tổng:** ~1–2 ngày để production-ready; thêm 0.5–1 ngày nếu polish UX đầy đủ.
 
 ---
 
 ## Ghi chú kỹ thuật
 
-- **Runtime code** (`src/`): 100% `.ts` / `.tsx` — không còn `.jsx`
-- **Cấu trúc:** xem `STRUCTURE.md`
-- **Dev:** FE `localhost:3000`, BE `localhost:888`, proxy `/api` qua `next.config.mjs`
+- **Dev:** FE `localhost:3000`, BE `localhost:888`
+- **NextAuth:** `/api/next-auth/*` (Next.js) — `NEXTAUTH_URL=http://localhost:3000/api/next-auth`
+- **Backend API:** `/api/auth/login`, `/api/cart`, … — proxy qua `next.config.mjs` (không proxy `/api/next-auth`)
+- **Production CORS:** `CORS_ORIGIN` backend phải gồm URL storefront

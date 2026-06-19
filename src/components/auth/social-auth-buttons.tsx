@@ -2,6 +2,7 @@
 
 import { signIn } from "next-auth/react";
 import { Github } from "lucide-react";
+import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 
 import { AuthDivider } from "@/components/auth/auth-layout";
@@ -46,35 +47,74 @@ export default function SocialAuthButtons({
 }: {
   callbackUrl?: string;
 }) {
-  const googleEnabled = Boolean(process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID);
+  const [googleEnabled, setGoogleEnabled] = useState(false);
+  const [googleStatusLoaded, setGoogleStatusLoaded] = useState(false);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    async function loadOAuthStatus() {
+      try {
+        const response = await fetch("/api/next-auth/oauth-status");
+        const data = (await response.json()) as { google?: boolean };
+
+        if (!cancelled) {
+          setGoogleEnabled(Boolean(data.google));
+        }
+      } catch {
+        if (!cancelled) {
+          setGoogleEnabled(false);
+        }
+      } finally {
+        if (!cancelled) {
+          setGoogleStatusLoaded(true);
+        }
+      }
+    }
+
+    loadOAuthStatus();
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   const handleComingSoon = () => {
     toast("This feature is coming soon", { icon: "⏳" });
+  };
+
+  const handleGoogleSignIn = () => {
+    if (!googleEnabled) {
+      toast.error("Google sign-in is not configured on this environment");
+      return;
+    }
+
+    signIn("google", { callbackUrl });
   };
 
   return (
     <>
       <AuthDivider />
       <div className="flex items-center justify-center gap-4">
-        {googleEnabled ? (
-          <button
-            type="button"
-            aria-label="Google"
-            onClick={() => signIn("google", { callbackUrl })}
-            className="flex h-14 w-14 items-center justify-center rounded-full border border-keyshop-line bg-white/[0.04] text-white transition hover:border-keyshop-blue/40 hover:bg-keyshop-blue/15"
-          >
-            <GoogleIcon className="h-5 w-5" />
-          </button>
-        ) : (
-          <button
-            type="button"
-            aria-label="Google"
-            disabled
-            className="flex h-14 w-14 items-center justify-center rounded-full border border-keyshop-line bg-white/[0.04] text-white/40"
-          >
-            <GoogleIcon className="h-5 w-5" />
-          </button>
-        )}
+        <button
+          type="button"
+          aria-label="Google"
+          onClick={handleGoogleSignIn}
+          disabled={!googleStatusLoaded || !googleEnabled}
+          title={
+            googleEnabled
+              ? "Continue with Google"
+              : "Google sign-in is not configured"
+          }
+          className={cn(
+            "flex h-14 w-14 items-center justify-center rounded-full border border-keyshop-line bg-white/[0.04] text-white transition",
+            googleEnabled
+              ? "hover:border-keyshop-blue/40 hover:bg-keyshop-blue/15"
+              : "cursor-not-allowed text-white/40",
+          )}
+        >
+          <GoogleIcon className="h-5 w-5" />
+        </button>
 
         <button
           type="button"

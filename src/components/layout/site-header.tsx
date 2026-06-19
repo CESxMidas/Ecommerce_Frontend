@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { signOut, useSession } from "next-auth/react";
+import { useSession } from "next-auth/react";
 import {
   Globe,
   Heart,
@@ -17,6 +17,7 @@ import CategoryPanel from "@/components/layout/category-panel";
 import SearchBox from "@/components/layout/search-box";
 import SiteNavigation from "@/components/layout/site-navigation";
 import { useCart } from "@/components/providers/cart-provider";
+import { performLogout } from "@/lib/auth/logout";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -96,20 +97,21 @@ export default function SiteHeader({ categories }: SiteHeaderProps) {
                   </DropdownMenuTrigger>
                   <DropdownMenuContent
                     align="end"
-                    className="min-w-[200px] border-keyshop-line bg-keyshop-soft"
+                    sideOffset={8}
+                    className="z-[1300] min-w-[200px] rounded-card border border-keyshop-line bg-keyshop-soft p-1.5 text-white shadow-glow"
                   >
-                    <DropdownMenuItem asChild>
+                    <DropdownMenuItem asChild className="rounded-control text-white/90 focus:bg-white/10 focus:text-white">
                       <Link href="/account">My Account</Link>
                     </DropdownMenuItem>
-                    <DropdownMenuItem asChild>
+                    <DropdownMenuItem asChild className="rounded-control text-white/90 focus:bg-white/10 focus:text-white">
                       <Link href="/account/orders">Orders</Link>
                     </DropdownMenuItem>
-                    <DropdownMenuItem asChild>
+                    <DropdownMenuItem asChild className="rounded-control text-white/90 focus:bg-white/10 focus:text-white">
                       <Link href="/account/wishlist">My Wishlist</Link>
                     </DropdownMenuItem>
                     <DropdownMenuItem
-                      className="text-red-400 focus:text-red-400"
-                      onClick={() => signOut({ callbackUrl: "/" })}
+                      className="rounded-control text-red-400 focus:bg-red-500/10 focus:text-red-400"
+                      onClick={() => performLogout("/")}
                     >
                       Logout
                     </DropdownMenuItem>

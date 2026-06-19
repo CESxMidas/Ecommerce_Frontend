@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { signOut, useSession } from "next-auth/react";
+import { useSession } from "next-auth/react";
 import {
   Heart,
   Key,
@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 
 import { cn } from "@/lib/utils";
+import { performLogout } from "@/lib/auth/logout";
 
 const links = [
   { href: "/account", label: "My Profile", icon: User },
@@ -91,7 +92,7 @@ export default function AccountSidebar() {
         <button
           type="button"
           className="mt-1 flex min-h-[46px] w-full items-center gap-3 rounded-xl border border-transparent px-3 text-sm font-bold text-slate-300 transition hover:border-red-500/20 hover:bg-red-500/10 hover:text-red-300"
-          onClick={() => signOut({ callbackUrl: "/" })}
+          onClick={() => performLogout("/")}
         >
           <LogOut className="h-4 w-4 shrink-0" />
           Logout

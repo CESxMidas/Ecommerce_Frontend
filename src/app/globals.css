@@ -44,6 +44,18 @@
   }
 }
 
+@keyframes fade-in-up {
+  0% {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 @layer components {
   .page-shell {
     @apply container py-8 md:py-10;
@@ -58,5 +70,118 @@
 
   .scrollbar-hide::-webkit-scrollbar {
     display: none;
+  }
+
+  .keyshop-card-hover {
+    @apply transition-all duration-300 ease-out motion-reduce:transition-none;
+  }
+
+  .keyshop-card-hover:hover {
+    @apply -translate-y-1 border-keyshop-blue/35 shadow-glow motion-reduce:translate-y-0;
+  }
+
+  .keyshop-interactive {
+    @apply transition-all duration-200 ease-out active:scale-[0.98] motion-reduce:active:scale-100;
+  }
+
+  .keyshop-nav-dropdown {
+    @apply invisible absolute left-0 top-full z-[1300] min-w-[200px] translate-y-2 rounded-card border border-keyshop-line bg-keyshop-soft p-2 opacity-0 shadow-card transition-all duration-200 ease-out;
+  }
+
+  .group:hover .keyshop-nav-dropdown,
+  .group:focus-within .keyshop-nav-dropdown {
+    @apply visible translate-y-0 opacity-100;
+  }
+
+  .keyshop-swiper {
+    @apply overflow-hidden;
+  }
+
+  .keyshop-swiper .swiper-button-prev,
+  .keyshop-swiper .swiper-button-next {
+    display: none;
+  }
+
+  .keyshop-swiper-nav {
+    @apply absolute top-1/2 z-20 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full border-0 bg-keyshop-bg/70 text-keyshop-blue shadow-sm backdrop-blur-sm transition duration-200 ease-out;
+  }
+
+  .keyshop-swiper-nav:hover {
+    @apply scale-105 bg-keyshop-bg/90 opacity-100;
+  }
+
+  .keyshop-swiper-nav:active {
+    @apply scale-95;
+  }
+
+  .keyshop-swiper-nav.swiper-button-disabled {
+    @apply pointer-events-none opacity-25;
+  }
+
+  .keyshop-swiper-nav-prev {
+    @apply left-1 sm:left-2;
+  }
+
+  .keyshop-swiper-nav-next {
+    @apply right-1 sm:right-2;
+  }
+
+  .keyshop-swiper-nav-hero {
+    @apply h-10 w-10 bg-black/30;
+  }
+
+  .keyshop-swiper-nav-hero.keyshop-swiper-nav-prev {
+    @apply left-2 sm:left-4;
+  }
+
+  .keyshop-swiper-nav-hero.keyshop-swiper-nav-next {
+    @apply right-2 sm:right-4;
+  }
+
+  .keyshop-swiper-nav-hero:hover {
+    @apply bg-black/45;
+  }
+
+  .keyshop-swiper-nav-gallery {
+    @apply h-8 w-8 bg-keyshop-bg/80;
+  }
+
+  .keyshop-swiper-nav-gallery.keyshop-swiper-nav-prev {
+    @apply left-0;
+  }
+
+  .keyshop-swiper-nav-gallery.keyshop-swiper-nav-next {
+    @apply right-0;
+  }
+
+  .hero-slide-content > * {
+    @apply opacity-0 motion-reduce:opacity-100;
+  }
+
+  .swiper-slide-active .hero-slide-content > * {
+    animation: fade-in-up 0.55s ease-out both;
+  }
+
+  .swiper-slide-active .hero-slide-content > *:nth-child(1) {
+    animation-delay: 0.05s;
+  }
+
+  .swiper-slide-active .hero-slide-content > *:nth-child(2) {
+    animation-delay: 0.12s;
+  }
+
+  .swiper-slide-active .hero-slide-content > *:nth-child(3) {
+    animation-delay: 0.2s;
+  }
+
+  .swiper-slide-active .hero-slide-content > *:nth-child(4) {
+    animation-delay: 0.28s;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .swiper-slide-active .hero-slide-content > * {
+    animation: none;
+    opacity: 1;
   }
 }

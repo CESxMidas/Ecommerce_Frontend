@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import {
   Bolt,
   Facebook,
@@ -121,10 +122,12 @@ export default function SiteFooter() {
             ))}
           </div>
           <p className="text-sm text-keyshop-muted">Copyright 2026 - KEYSHOP</p>
-          <img
+          <Image
             src="https://i.imgur.com/D9jR4YQ.png"
             alt="Payment methods"
-            className="h-8 object-contain opacity-90"
+            width={160}
+            height={32}
+            className="h-8 w-auto object-contain opacity-90"
           />
         </div>
       </div>

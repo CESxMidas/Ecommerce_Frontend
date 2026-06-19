@@ -3,6 +3,7 @@ import type { LucideIcon } from "lucide-react";
 import type { ReactNode } from "react";
 
 import { cn } from "@/lib/utils";
+import { resolveMediaUrl } from "@/lib/utils/image";
 
 type AuthSplitLayoutProps = {
   heroImage: string;
@@ -22,7 +23,14 @@ export function AuthSplitLayout({
   return (
     <section className="flex min-h-[100svh] bg-keyshop-bg">
       <div className="relative hidden flex-1 overflow-hidden lg:block">
-        <Image src={heroImage} alt="" fill className="object-cover" priority />
+        <Image
+          src={resolveMediaUrl(heroImage)}
+          alt=""
+          fill
+          className="object-cover object-center"
+          priority
+          sizes="50vw"
+        />
         <div className="absolute inset-0 bg-gradient-to-b from-keyshop-bg/15 to-keyshop-bg/92" />
         <div className="absolute bottom-14 left-14 z-10 max-w-[520px]">
           <span className="mb-5 inline-flex items-center rounded-full border border-white/10 bg-keyshop-blue/15 px-[18px] py-2.5 text-xs font-bold text-sky-400">

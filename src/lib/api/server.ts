@@ -1,4 +1,5 @@
 import { API_ENDPOINTS } from "@/constants/apiEndpoints";
+import { resolveMediaUrl } from "@/lib/utils/image";
 import type { Banner, BlogPost, Category, Product } from "@/types/api";
 
 function getServerApiBase() {
@@ -42,8 +43,15 @@ function asArray<T>(value: unknown): T[] {
 }
 
 function normalizeProduct(raw: Record<string, unknown>): Product {
-  const thumbnail = String(raw.thumbnail || raw.image || asArray<string>(raw.images)[0] || "");
-  const images = asArray<string>(raw.images);
+  const rawThumbnail = String(raw.thumbnail || raw.image || asArray<string>(raw.images)[0] || "");
+  const rawImages = asArray<string>(raw.images);
+  const thumbnail = resolveMediaUrl(rawThumbnail);
+  const images =
+    rawImages.length > 0
+      ? rawImages.map((image) => resolveMediaUrl(image, thumbnail))
+      : thumbnail
+        ? [thumbnail]
+        : [];
   const id = String(raw.id ?? raw.productId ?? raw._id ?? "");
 
   return {
@@ -56,7 +64,7 @@ function normalizeProduct(raw: Record<string, unknown>): Product {
     salePrice: raw.salePrice != null ? Number(raw.salePrice) : null,
     listPrice: raw.listPrice != null ? Number(raw.listPrice) : null,
     thumbnail,
-    images: images.length > 0 ? images : thumbnail ? [thumbnail] : [],
+    images,
     categoryId: raw.categoryId != null ? String(raw.categoryId) : "",
     categoryName: String(raw.categoryName || ""),
     stock: Number(raw.stock ?? 0),
@@ -144,7 +152,7 @@ function normalizeBanner(raw: Record<string, unknown>): Banner {
     id: String(raw.id ?? raw._id ?? ""),
     title: String(raw.title || ""),
     subtitle: raw.subtitle ? String(raw.subtitle) : undefined,
-    image: String(raw.image || ""),
+    image: resolveMediaUrl(String(raw.image || "")),
     link: raw.link ? String(raw.link) : undefined,
     order:
       typeof raw.sortOrder === "number"
@@ -179,14 +187,17 @@ function normalizeBannersPayload(data: unknown): { banners: Banner[] } {
 }
 
 function normalizeBlog(raw: Record<string, unknown>): BlogPost {
+  const description = String(raw.description || "");
+
   return {
     id: String(raw.id ?? raw._id ?? ""),
     title: String(raw.title || ""),
     slug: String(raw.slug || ""),
-    excerpt: String(raw.excerpt || raw.summary || ""),
-    content: String(raw.content || ""),
-    image: String(raw.image || raw.thumbnail || ""),
+    excerpt: String(raw.excerpt || raw.summary || description || ""),
+    content: String(raw.content || description || ""),
+    image: resolveMediaUrl(String(raw.image || raw.thumbnail || "")),
     author: raw.author ? String(raw.author) : undefined,
+    category: raw.category ? String(raw.category) : undefined,
     publishedAt: raw.publishedAt ? String(raw.publishedAt) : undefined,
   };
 }

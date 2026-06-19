@@ -4,7 +4,7 @@ import { signIn } from "next-auth/react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Eye, EyeOff, Lock, Mail } from "lucide-react";
-import { FormEvent, Suspense, useState } from "react";
+import { FormEvent, Suspense, useEffect, useState } from "react";
 import toast from "react-hot-toast";
 
 import {
@@ -17,8 +17,7 @@ import {
   AuthSubmitButton,
 } from "@/components/auth/auth-layout";
 import SocialAuthButtons from "@/components/auth/social-auth-buttons";
-import { login as loginRequest } from "@/lib/services/auth-service";
-import { getApiErrorData, getApiErrorMessage } from "@/lib/utils/api-error";
+import { parseEmailNotVerifiedError } from "@/lib/auth/constants";
 
 function LoginForm() {
   const router = useRouter();
@@ -31,6 +30,15 @@ function LoginForm() {
     email: "",
     password: "",
   });
+
+  useEffect(() => {
+    const rememberedEmail = localStorage.getItem("rememberedEmail");
+
+    if (rememberedEmail) {
+      setFormFields((prev) => ({ ...prev, email: rememberedEmail }));
+      setRememberMe(true);
+    }
+  }, []);
 
   async function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -52,45 +60,38 @@ function LoginForm() {
 
     setLoading(true);
 
-    try {
-      await loginRequest({
-        email: formFields.email.trim(),
-        password: formFields.password,
-      });
-    } catch (error) {
-      const data = getApiErrorData(error);
-
-      if (data?.code === "EMAIL_NOT_VERIFIED") {
-        toast[data.emailSent ? "success" : "error"](
-          data.message || "Please verify your account",
-        );
-        router.push(
-          `/auth/verify?email=${encodeURIComponent(data.email || formFields.email)}`,
-        );
-        setLoading(false);
-        return;
-      }
-
-      toast.error(getApiErrorMessage(error, "Login failed"));
-      setLoading(false);
-      return;
-    }
-
     const result = await signIn("credentials", {
       email: formFields.email.trim(),
       password: formFields.password,
+      rememberMe: rememberMe ? "true" : "false",
       redirect: false,
     });
 
     setLoading(false);
 
     if (result?.error) {
-      toast.error(result.error);
+      const verificationError = parseEmailNotVerifiedError(result.error);
+
+      if (verificationError) {
+        toast[verificationError.emailSent ? "success" : "error"](
+          verificationError.message || "Please verify your account",
+        );
+        router.push(
+          `/auth/verify?email=${encodeURIComponent(
+            verificationError.email || formFields.email,
+          )}`,
+        );
+        return;
+      }
+
+      toast.error(result.error || "Login failed");
       return;
     }
 
-    if (rememberMe && typeof window !== "undefined") {
+    if (rememberMe) {
       localStorage.setItem("rememberedEmail", formFields.email.trim());
+    } else {
+      localStorage.removeItem("rememberedEmail");
     }
 
     toast.success("Login successful");

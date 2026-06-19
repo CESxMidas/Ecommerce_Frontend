@@ -12,6 +12,7 @@ import { useSession } from "next-auth/react";
 import toast from "react-hot-toast";
 
 import * as cartService from "@/lib/services/cart-service";
+import * as wishlistService from "@/lib/services/wishlist-service";
 import {
   calcCartSummary,
   clearStoredCart,
@@ -31,7 +32,11 @@ import {
   MAX_COMPARE_ITEMS,
   saveCompare,
 } from "@/lib/utils/compare-storage";
-import { loadWishlist, saveWishlist } from "@/lib/utils/wishlist-storage";
+import {
+  clearStoredWishlist,
+  loadWishlist,
+  saveWishlist,
+} from "@/lib/utils/wishlist-storage";
 import { getAccessToken } from "@/lib/api/client";
 import type {
   CartItem,
@@ -123,6 +128,7 @@ function getSessionUser(session: ReturnType<typeof useSession>["data"]) {
 export function CartProvider({ children }: { children: React.ReactNode }) {
   const { data: session, status } = useSession();
   const sessionUser = getSessionUser(session);
+  const sessionUserId = sessionUser?._id ?? sessionUser?.email ?? null;
   const isAuthenticated = status === "authenticated";
 
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
@@ -137,7 +143,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     setWishlist(loadWishlist(sessionUser));
     setCompareItems(loadCompare());
     setHydrated(true);
-  }, [sessionUser?._id, sessionUser?.email]);
+  }, [sessionUserId, sessionUser?.email]);
 
   useEffect(() => {
     if (!hydrated) return;
@@ -177,7 +183,38 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     };
 
     syncServerCart();
-  }, [status, sessionUser]);
+  }, [status, sessionUserId]);
+
+  useEffect(() => {
+    if (status !== "authenticated" || !getAccessToken()) return;
+
+    const syncServerWishlist = async () => {
+      try {
+        const localWishlist = loadWishlist();
+        const serverWishlist = await wishlistService.fetchWishlist();
+
+        if (localWishlist.length > 0) {
+          const mergedIds = Array.from(
+            new Set([
+              ...serverWishlist.map((item) => String(item.id)),
+              ...localWishlist.map((item: { id?: string | number }) =>
+                String(item.id),
+              ),
+            ]),
+          );
+          const syncedWishlist = await wishlistService.replaceWishlist(mergedIds);
+          clearStoredWishlist();
+          setWishlist(syncedWishlist);
+        } else {
+          setWishlist(serverWishlist);
+        }
+      } catch {
+        setWishlist(loadWishlist(sessionUser));
+      }
+    };
+
+    syncServerWishlist();
+  }, [status, sessionUserId]);
 
   useEffect(() => {
     const clearCompletedCheckoutCart = () => {
@@ -231,7 +268,6 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
           );
           setCartItems(items);
           toast.success("Added to cart");
-          setOpenCartPanel(true);
           return true;
         } catch (error) {
           toast.error(
@@ -273,34 +309,49 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       });
 
       toast.success("Added to cart");
-      setOpenCartPanel(true);
       return true;
     },
     [],
   );
 
   const toggleWishlist = useCallback(
-    (product: NormalizedProduct | Record<string, unknown>) => {
+    async (product: NormalizedProduct | Record<string, unknown>) => {
       const normalizedProduct = normalizeProduct(product as Record<string, unknown>);
       if (!normalizedProduct) return;
 
-      setWishlist((prev) => {
-        const exists = prev.some(
-          (item) => String(item.id) === String(normalizedProduct.id),
-        );
+      const productId = String(normalizedProduct.id);
+      const exists = wishlist.some((item) => String(item.id) === productId);
 
-        if (exists) {
-          toast.success("Removed from wishlist");
-          return prev.filter(
-            (item) => String(item.id) !== String(normalizedProduct.id),
+      if (getAccessToken()) {
+        try {
+          const items = exists
+            ? await wishlistService.removeFromWishlist(productId)
+            : await wishlistService.addToWishlist(productId);
+          setWishlist(items);
+          toast.success(
+            exists ? "Removed from wishlist" : "Added to wishlist",
           );
+        } catch (error) {
+          toast.error(
+            error instanceof Error ? error.message : "Failed to update wishlist",
+          );
+        }
+        return;
+      }
+
+      setWishlist((prev) => {
+        const inList = prev.some((item) => String(item.id) === productId);
+
+        if (inList) {
+          toast.success("Removed from wishlist");
+          return prev.filter((item) => String(item.id) !== productId);
         }
 
         toast.success("Added to wishlist");
         return [...prev, normalizedProduct];
       });
     },
-    [],
+    [wishlist],
   );
 
   const isInWishlist = useCallback(

@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 
 import { cn } from "@/lib/utils";
 
@@ -19,6 +20,12 @@ export default function SideDrawer({
   className,
   children,
 }: SideDrawerProps) {
+  const [portalReady, setPortalReady] = useState(false);
+
+  useEffect(() => {
+    setPortalReady(true);
+  }, []);
+
   useEffect(() => {
     if (!open) return;
 
@@ -37,21 +44,23 @@ export default function SideDrawer({
     };
   }, [open, onClose]);
 
-  if (!open) return null;
+  if (!portalReady || !open) {
+    return null;
+  }
 
-  return (
+  return createPortal(
     <>
       <div
-        className="fixed inset-0 z-[1200] bg-keyshop-bg/70 backdrop-blur-[2px]"
+        className="fixed inset-0 z-[1200] min-h-screen animate-fade-in bg-keyshop-bg/70 backdrop-blur-[2px] motion-reduce:animate-none"
         onClick={onClose}
         aria-hidden="true"
       />
       <div
         className={cn(
-          "fixed top-0 z-[1201] h-screen max-w-full overflow-y-auto bg-[#071739] transition-transform duration-300",
+          "fixed inset-y-0 z-[1201] max-h-screen overflow-y-auto shadow-2xl",
           anchor === "left"
-            ? "left-0 w-[min(320px,100vw)]"
-            : "right-0 w-[min(580px,100vw)] bg-keyshop-bg",
+            ? "left-0 w-[min(320px,100vw)] animate-slide-in-left bg-[#071739] motion-reduce:animate-none"
+            : "right-0 w-[min(580px,100vw)] animate-slide-in-right bg-keyshop-bg motion-reduce:animate-none",
           className,
         )}
         role="dialog"
@@ -59,6 +68,7 @@ export default function SideDrawer({
       >
         {children}
       </div>
-    </>
+    </>,
+    document.body,
   );
 }

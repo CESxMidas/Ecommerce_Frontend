@@ -10,8 +10,8 @@ const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: {
-    default: "KEY STORE | Premium Digital Keys",
-    template: "%s | KEY STORE",
+    default: "KEYSHOP | Premium Digital Keys",
+    template: "%s | KEYSHOP",
   },
   description:
     "Buy premium game and software license keys with instant delivery.",

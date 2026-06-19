@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { signOut } from "next-auth/react";
 import toast from "react-hot-toast";
 
 import {
@@ -11,6 +10,7 @@ import {
   AccountListItem,
   AccountLoading,
 } from "@/components/account/account-ui";
+import { performLogout } from "@/lib/auth/logout";
 import {
   deleteAllSessions,
   deleteSession,
@@ -68,7 +68,7 @@ export default function SecurityPageClient() {
     try {
       await deleteAllSessions();
       toast.success("All sessions removed");
-      await signOut({ callbackUrl: "/auth/login" });
+      await performLogout("/auth/login");
     } catch (error) {
       toast.error(getApiErrorMessage(error, "Failed to logout sessions"));
     }

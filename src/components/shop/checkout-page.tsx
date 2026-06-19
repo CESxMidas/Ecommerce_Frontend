@@ -73,6 +73,31 @@ export default function CheckoutPageClient() {
   const [savedAddresses, setSavedAddresses] = useState<UserAddress[]>([]);
   const [selectedAddressId, setSelectedAddressId] = useState("");
   const [formFields, setFormFields] = useState<CheckoutForm>(emptyForm);
+  const [appliedCoupon, setAppliedCoupon] = useState<AppliedCoupon | null>(() => {
+    if (typeof window === "undefined") return null;
+
+    try {
+      return JSON.parse(localStorage.getItem("appliedCoupon") || "null");
+    } catch {
+      return null;
+    }
+  });
+
+  const hasValidCoupon =
+    appliedCoupon &&
+    cartSummary.subtotal > 0 &&
+    Number(appliedCoupon.subtotal) === Number(cartSummary.subtotal);
+  const effectiveCoupon = hasValidCoupon ? appliedCoupon : null;
+  const displayTotal = effectiveCoupon
+    ? effectiveCoupon.total + (cartSummary.subtotal > 0 ? cartSummary.tax : 0)
+    : cartSummary.total;
+
+  useEffect(() => {
+    if (appliedCoupon && !hasValidCoupon) {
+      localStorage.removeItem("appliedCoupon");
+      setAppliedCoupon(null);
+    }
+  }, [appliedCoupon, hasValidCoupon]);
 
   useEffect(() => {
     if (!session?.user) return;
@@ -233,22 +258,14 @@ export default function CheckoutPageClient() {
     try {
       setLoading(true);
 
-      let appliedCoupon: AppliedCoupon | null = null;
-
-      try {
-        appliedCoupon = JSON.parse(
-          localStorage.getItem("appliedCoupon") || "null",
-        );
-      } catch {
-        appliedCoupon = null;
-      }
+      let appliedCouponForOrder: AppliedCoupon | null = effectiveCoupon;
 
       if (
-        appliedCoupon &&
-        Number(appliedCoupon.subtotal) !== Number(cartSummary.subtotal)
+        appliedCouponForOrder &&
+        Number(appliedCouponForOrder.subtotal) !== Number(cartSummary.subtotal)
       ) {
         localStorage.removeItem("appliedCoupon");
-        appliedCoupon = null;
+        appliedCouponForOrder = null;
       }
 
       const order = await placeOrder({
@@ -256,7 +273,7 @@ export default function CheckoutPageClient() {
         phone: formFields.phone,
         address: `${formFields.address}${formFields.city ? `, ${formFields.city}` : ""}${formFields.country ? `, ${formFields.country}` : ""}`,
         pincode: formFields.pincode.trim() || "DIGITAL",
-        total: cartSummary.total,
+        total: displayTotal,
         email: session?.user?.email || formFields.email,
         userId: session?.user?.email || formFields.email,
         items: cartItems.map((item) => ({
@@ -266,7 +283,7 @@ export default function CheckoutPageClient() {
           product: item.product,
         })),
         paymentMethod,
-        couponCode: appliedCoupon?.code || "",
+        couponCode: appliedCouponForOrder?.code || "",
       });
 
       if (order?.paymentUrl) {
@@ -558,13 +575,23 @@ export default function CheckoutPageClient() {
                   </span>
                 </div>
               ) : null}
+              {effectiveCoupon?.discount ? (
+                <div className="flex justify-between">
+                  <span className="text-keyshop-muted">
+                    Coupon ({effectiveCoupon.code})
+                  </span>
+                  <span className="text-keyshop-green">
+                    -{formatPrice(effectiveCoupon.discount)}
+                  </span>
+                </div>
+              ) : null}
               <div className="flex justify-between">
                 <span className="text-keyshop-muted">Tax</span>
                 <span className="text-white">{formatPrice(cartSummary.tax)}</span>
               </div>
               <div className="flex justify-between pt-3 text-[22px] font-bold text-white">
                 <span>Total</span>
-                <span>{formatPrice(cartSummary.total)}</span>
+                <span>{formatPrice(displayTotal)}</span>
               </div>
             </div>
 

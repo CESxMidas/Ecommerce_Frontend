@@ -2,11 +2,9 @@
 
 import Image from "next/image";
 import { useState } from "react";
-import { Swiper, SwiperSlide } from "swiper/react";
-import { Navigation } from "swiper/modules";
+import { SwiperSlide } from "swiper/react";
 
-import "swiper/css";
-import "swiper/css/navigation";
+import KeyshopSwiper from "@/components/ui/keyshop-swiper";
 
 import { cn } from "@/lib/utils";
 
@@ -36,9 +34,8 @@ export default function ProductGallery({ images, alt }: ProductGalleryProps) {
         />
       </div>
 
-      <Swiper
-        modules={[Navigation]}
-        navigation
+      <KeyshopSwiper
+        navClassName="keyshop-swiper-nav-gallery"
         spaceBetween={14}
         slidesPerView={4}
         breakpoints={{
@@ -69,7 +66,7 @@ export default function ProductGallery({ images, alt }: ProductGalleryProps) {
             </button>
           </SwiperSlide>
         ))}
-      </Swiper>
+      </KeyshopSwiper>
     </div>
   );
 }

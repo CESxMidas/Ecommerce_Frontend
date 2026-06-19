@@ -2,6 +2,7 @@ import BlogCarousel from "@/components/home/blog-carousel";
 import HomeCategorySlider from "@/components/home/home-category-slider";
 import HomeHeroSlider from "@/components/home/home-hero-slider";
 import HomeProductSections from "@/components/home/home-product-sections";
+import Reveal from "@/components/ui/reveal";
 import type { Banner, BlogPost, Category, Product } from "@/types/api";
 
 type HomeViewProps = {
@@ -27,7 +28,9 @@ export default function HomeView({
       <HomeProductSections products={products} banners={banners} />
 
       <div className="container">
-        <BlogCarousel blogs={blogs} />
+        <Reveal delay={200}>
+          <BlogCarousel blogs={blogs} />
+        </Reveal>
       </div>
     </div>
   );

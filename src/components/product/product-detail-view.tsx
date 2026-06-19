@@ -72,6 +72,7 @@ export default function ProductDetailView({ product: rawProduct }: ProductDetail
   const [submittingReview, setSubmittingReview] = useState(false);
 
   const purchaseVariants = getPurchaseVariants(product);
+  const defaultVariantId = purchaseVariants[0]?.id || "";
   const selectedVariant = product
     ? resolvePurchaseVariant(product, selectedVariantId)
     : null;
@@ -83,8 +84,8 @@ export default function ProductDetailView({ product: rawProduct }: ProductDetail
   const images = getProductImages(product);
 
   useEffect(() => {
-    setSelectedVariantId(purchaseVariants[0]?.id || "");
-  }, [product?.id, purchaseVariants]);
+    setSelectedVariantId(defaultVariantId);
+  }, [product?.id, defaultVariantId]);
 
   useEffect(() => {
     if (!product?.id) return;

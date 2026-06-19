@@ -3,6 +3,11 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
 
 import { API_BASE_URL, API_ENDPOINTS } from "@/constants/apiEndpoints";
+import {
+  encodeEmailNotVerifiedError,
+  EMAIL_NOT_VERIFIED_PREFIX,
+  REMEMBER_ME_MAX_AGE_SECONDS,
+} from "@/lib/auth/constants";
 import type { AuthUser } from "@/types/api";
 
 function getServerApiUrl() {
@@ -15,6 +20,13 @@ function getServerApiUrl() {
   );
 }
 
+type LoginErrorBody = {
+  message?: string;
+  code?: string;
+  email?: string;
+  emailSent?: boolean;
+};
+
 async function loginWithCredentials(email: string, password: string) {
   const response = await fetch(
     `${getServerApiUrl()}${API_ENDPOINTS.auth.login}`,
@@ -26,9 +38,19 @@ async function loginWithCredentials(email: string, password: string) {
     },
   );
 
-  const data = await response.json();
+  const data = (await response.json()) as AuthUser & LoginErrorBody;
 
   if (!response.ok) {
+    if (data?.code === "EMAIL_NOT_VERIFIED") {
+      throw new Error(
+        encodeEmailNotVerifiedError({
+          message: data.message || "Please verify your account",
+          email: data.email,
+          emailSent: data.emailSent,
+        }),
+      );
+    }
+
     throw new Error(data?.message || "Login failed");
   }
 
@@ -55,6 +77,10 @@ async function loginWithGoogle(idToken: string, clientId: string) {
   return data as AuthUser;
 }
 
+const googleOAuthEnabled = Boolean(
+  process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET,
+);
+
 export const authOptions: NextAuthOptions = {
   providers: [
     CredentialsProvider({
@@ -62,40 +88,53 @@ export const authOptions: NextAuthOptions = {
       credentials: {
         email: { label: "Email", type: "email" },
         password: { label: "Password", type: "password" },
+        rememberMe: { label: "Remember Me", type: "text" },
       },
       async authorize(credentials) {
         if (!credentials?.email || !credentials?.password) {
           return null;
         }
 
-        const user = await loginWithCredentials(
-          credentials.email,
-          credentials.password,
-        );
+        try {
+          const user = await loginWithCredentials(
+            credentials.email,
+            credentials.password,
+          );
 
-        return {
-          id: user._id,
-          name: user.name,
-          email: user.email,
-          image: user.avatar || null,
-          accessToken: user.token,
-          role: user.role,
-          verifyEmail: user.verify_email,
-        };
+          return {
+            id: user._id,
+            name: user.name,
+            email: user.email,
+            image: user.avatar || null,
+            accessToken: user.token,
+            role: user.role,
+            verifyEmail: user.verify_email,
+            rememberMe: credentials.rememberMe === "true",
+          };
+        } catch (error) {
+          if (
+            error instanceof Error &&
+            error.message.startsWith(EMAIL_NOT_VERIFIED_PREFIX)
+          ) {
+            throw error;
+          }
+
+          return null;
+        }
       },
     }),
-    ...(process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET
+    ...(googleOAuthEnabled
       ? [
           GoogleProvider({
-            clientId: process.env.GOOGLE_CLIENT_ID,
-            clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+            clientId: process.env.GOOGLE_CLIENT_ID!,
+            clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
           }),
         ]
       : []),
   ],
   session: {
     strategy: "jwt",
-    maxAge: 60 * 60,
+    maxAge: REMEMBER_ME_MAX_AGE_SECONDS,
   },
   pages: {
     signIn: "/auth/login",
@@ -114,6 +153,15 @@ export const authOptions: NextAuthOptions = {
         token.accessToken = (user as { accessToken?: string }).accessToken;
         token.role = (user as { role?: string }).role;
         token.userId = user.id;
+
+        const rememberMe = Boolean((user as { rememberMe?: boolean }).rememberMe);
+        token.rememberMe = rememberMe;
+
+        const sessionLength = rememberMe
+          ? REMEMBER_ME_MAX_AGE_SECONDS
+          : 60 * 60;
+
+        token.exp = Math.floor(Date.now() / 1000) + sessionLength;
       }
 
       if (account?.provider === "google" && account.id_token) {
@@ -129,6 +177,9 @@ export const authOptions: NextAuthOptions = {
         token.name = beUser.name;
         token.email = beUser.email;
         token.picture = beUser.avatar;
+        token.rememberMe = true;
+        token.exp =
+          Math.floor(Date.now() / 1000) + REMEMBER_ME_MAX_AGE_SECONDS;
       }
 
       return token;

@@ -3,11 +3,14 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Expand, Heart, ShoppingCart, Shuffle, Star } from "lucide-react";
+import { useState } from "react";
 
+import ProductQuickViewModal from "@/components/product/product-quick-view-modal";
 import { useCart } from "@/components/providers/cart-provider";
 import { formatPrice } from "@/lib/utils/format";
 import {
   computeDiscountLabel,
+  getDefaultPurchaseVariant,
   getListPrice,
   getProductDisplayName,
   getProductThumbnail,
@@ -21,11 +24,13 @@ import type { Product } from "@/types/api";
 
 type ProductItemProps = {
   item: Product | Record<string, unknown>;
+  index?: number;
 };
 
-export default function ProductItem({ item }: ProductItemProps) {
+export default function ProductItem({ item, index }: ProductItemProps) {
   const { addToCart, toggleWishlist, toggleCompare, isInWishlist, isInCompare } =
     useCart();
+  const [quickViewOpen, setQuickViewOpen] = useState(false);
 
   const product = normalizeProduct(item as Record<string, unknown>);
   if (!product) return null;
@@ -37,50 +42,74 @@ export default function ProductItem({ item }: ProductItemProps) {
   const thumbnail = getProductThumbnail(product);
   const vendor = product.vendor || product.brand || product.categoryName;
   const variants = getPurchaseVariants(product);
-  const minVariantPrice =
+  const defaultVariant = getDefaultPurchaseVariant(product);
+  const featuredVariant =
     variants.length > 0
-      ? Math.min(...variants.map((variant) => Number(variant.price) || salePrice))
-      : salePrice;
+      ? variants.reduce((lowest, variant) =>
+          Number(variant.price) < Number(lowest.price) ? variant : lowest,
+        )
+      : null;
+  const displaySalePrice = featuredVariant?.price ?? salePrice;
+  const displayListPrice = featuredVariant?.listPrice ?? listPrice;
   const colorVariants = variants.filter((variant) => variant.color);
   const href = `/products/${product.slug || product.id}`;
+  const hasMultipleOptions = variants.length > 1;
+
+  const handleAddToCart = () => {
+    addToCart(product, 1, defaultVariant);
+  };
 
   return (
-    <article className="group flex h-full min-w-0 flex-col overflow-hidden rounded-card border border-keyshop-line bg-product-card shadow-card backdrop-blur-[14px]">
+    <article
+      className={cn(
+        "group keyshop-card-hover flex h-full min-w-0 flex-col overflow-hidden rounded-card border border-keyshop-line bg-product-card shadow-card backdrop-blur-[14px]",
+        typeof index === "number" && "animate-fade-in-up motion-reduce:animate-none",
+      )}
+      style={
+        typeof index === "number"
+          ? { animationDelay: `${Math.min(index, 8) * 70}ms` }
+          : undefined
+      }
+    >
       <div className="relative aspect-square overflow-hidden bg-gray-100">
-        <div className="absolute left-4 top-4 z-20 flex max-w-[calc(100%-5rem)] flex-wrap gap-2">
+        <div className="absolute left-3 top-3 z-20 flex max-w-[calc(100%-4.5rem)] flex-wrap gap-1.5">
           {discount ? (
-            <span className="inline-flex min-h-7 items-center rounded-full bg-[#ff4d4f] px-2.5 text-[11px] font-bold text-white">
+            <span className="inline-flex min-h-6 items-center rounded-full bg-[#ff4d4f] px-2 text-[10px] font-bold text-white">
               {discount}
             </span>
           ) : null}
           {product.badge ? (
-            <span className="inline-flex min-h-7 items-center rounded-full bg-green-300 px-2.5 text-[11px] font-bold text-green-950">
+            <span className="inline-flex min-h-6 items-center rounded-full bg-green-300 px-2 text-[10px] font-bold text-green-950">
               {product.badge}
             </span>
           ) : null}
         </div>
 
-        <div className="absolute right-3 top-3 z-20 flex flex-col gap-2 opacity-0 transition-opacity group-hover:opacity-100">
-          <ActionButton
+        <div className="absolute right-2 top-2 z-20 flex flex-col gap-1.5 opacity-100 transition-opacity sm:opacity-0 sm:group-hover:opacity-100">
+          <IconActionButton
             active={isInWishlist(String(product.id))}
             onClick={() => toggleWishlist(product)}
             label="Wishlist"
           >
-            <Heart className="h-4 w-4" />
-          </ActionButton>
-          <ActionButton
+            <Heart className="h-3.5 w-3.5" />
+          </IconActionButton>
+          <IconActionButton
             active={isInCompare(String(product.id))}
             onClick={() => toggleCompare(product)}
             label="Compare"
           >
-            <Shuffle className="h-4 w-4" />
-          </ActionButton>
-          <ActionButton href={href} label="View">
-            <Expand className="h-4 w-4" />
-          </ActionButton>
-          <ActionButton onClick={() => addToCart(product)} label="Add to cart">
-            <ShoppingCart className="h-4 w-4" />
-          </ActionButton>
+            <Shuffle className="h-3.5 w-3.5" />
+          </IconActionButton>
+          <IconActionButton
+            onClick={(event) => {
+              event.preventDefault();
+              event.stopPropagation();
+              setQuickViewOpen(true);
+            }}
+            label="Quick view"
+          >
+            <Expand className="h-3.5 w-3.5" />
+          </IconActionButton>
         </div>
 
         <Link href={href} className="block h-full w-full">
@@ -95,10 +124,13 @@ export default function ProductItem({ item }: ProductItemProps) {
       </div>
 
       <div className="flex flex-1 flex-col p-4">
-        <p className="text-xs font-semibold uppercase tracking-wide text-keyshop-muted">
+        <p className="truncate text-[11px] font-semibold uppercase tracking-wide text-keyshop-muted">
           {vendor}
         </p>
-        <Link href={href} className="mt-2 line-clamp-2 text-sm font-semibold text-white hover:text-keyshop-blue">
+        <Link
+          href={href}
+          className="mt-1.5 line-clamp-2 min-h-[2.5rem] text-sm font-semibold leading-5 text-white hover:text-keyshop-blue"
+        >
           {displayName}
         </Link>
 
@@ -114,46 +146,90 @@ export default function ProductItem({ item }: ProductItemProps) {
               )}
             />
           ))}
+          {product.reviewsCount > 0 ? (
+            <span className="ml-1 text-[11px] text-keyshop-muted">
+              ({product.reviewsCount})
+            </span>
+          ) : null}
         </div>
 
         {variants.length > 0 ? (
-          <div className="mt-3 text-xs text-keyshop-muted">
-            <p>
-              {isPhysicalProduct(product)
-                ? `${variants.length} color options`
-                : `${variants.length} plans, monthly default`}
-            </p>
-            {colorVariants.length > 0 ? (
-              <div className="mt-2 flex gap-1.5">
+          <div className="mt-2.5 flex flex-wrap items-center gap-1.5">
+            {isPhysicalProduct(product) && colorVariants.length > 0 ? (
+              <>
                 {colorVariants.slice(0, 4).map((variant) => (
                   <span
                     key={variant.id}
                     title={variant.name}
-                    className="h-4 w-4 rounded-full border border-white/20"
+                    className="h-3.5 w-3.5 rounded-full border border-white/25"
                     style={{ background: variant.color || undefined }}
                   />
                 ))}
-              </div>
-            ) : null}
+                {colorVariants.length > 4 ? (
+                  <span className="text-[10px] text-keyshop-muted">
+                    +{colorVariants.length - 4}
+                  </span>
+                ) : null}
+              </>
+            ) : (
+              variants.slice(0, 3).map((variant) => (
+                <span
+                  key={variant.id}
+                  className="rounded-full border border-keyshop-line px-2 py-0.5 text-[10px] text-keyshop-muted"
+                >
+                  {variant.name}
+                </span>
+              ))
+            )}
           </div>
         ) : null}
 
-        <div className="mt-auto flex items-end gap-2 pt-4">
-          {listPrice != null ? (
-            <span className="text-sm text-keyshop-muted line-through">
-              {formatPrice(listPrice)}
+        <div className="mt-auto flex flex-col gap-3 pt-4">
+          <div className="flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
+            {hasMultipleOptions ? (
+              <span className="text-[11px] font-medium uppercase tracking-wide text-keyshop-muted">
+                From
+              </span>
+            ) : null}
+            <span className="text-lg font-bold text-keyshop-blue">
+              {formatPrice(displaySalePrice)}
             </span>
-          ) : null}
-          <span className="text-lg font-bold text-keyshop-blue">
-            {variants.length > 0 ? formatPrice(minVariantPrice) : formatPrice(salePrice)}
-          </span>
+            {displayListPrice != null && displayListPrice > displaySalePrice ? (
+              <span className="text-sm text-keyshop-muted line-through decoration-white/25">
+                {formatPrice(displayListPrice)}
+              </span>
+            ) : null}
+          </div>
+
+          <div className="flex gap-2">
+            <button
+              type="button"
+              onClick={handleAddToCart}
+              className="keyshop-interactive inline-flex min-h-10 flex-1 items-center justify-center gap-2 rounded-control bg-keyshop-blue px-3 text-xs font-bold uppercase tracking-wide text-white hover:bg-keyshop-blue-hover"
+            >
+              <ShoppingCart className="h-3.5 w-3.5" />
+              Add to cart
+            </button>
+            <Link
+              href={href}
+              className="inline-flex min-h-10 items-center justify-center rounded-control border border-keyshop-line px-3 text-xs font-semibold text-white transition hover:border-keyshop-blue/50 hover:text-keyshop-blue"
+            >
+              View
+            </Link>
+          </div>
         </div>
       </div>
+
+      <ProductQuickViewModal
+        open={quickViewOpen}
+        product={item}
+        onClose={() => setQuickViewOpen(false)}
+      />
     </article>
   );
 }
 
-function ActionButton({
+function IconActionButton({
   children,
   onClick,
   href,
@@ -161,13 +237,13 @@ function ActionButton({
   label,
 }: {
   children: React.ReactNode;
-  onClick?: () => void;
+  onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
   href?: string;
   active?: boolean;
   label: string;
 }) {
   const className = cn(
-    "flex h-9 w-9 items-center justify-center rounded-full border border-keyshop-line bg-keyshop-bg/90 text-white transition-colors hover:bg-keyshop-blue",
+    "flex h-8 w-8 items-center justify-center rounded-full border border-keyshop-line bg-keyshop-bg/90 text-white transition-colors hover:bg-keyshop-blue",
     active && "bg-keyshop-blue",
   );
 

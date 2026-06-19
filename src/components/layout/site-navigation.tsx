@@ -67,7 +67,7 @@ export default function SiteNavigation({ categories }: SiteNavigationProps) {
                 Support
                 <ChevronDown className="h-3 w-3" />
               </button>
-              <div className="invisible absolute left-0 top-full z-50 min-w-[200px] rounded-card border border-keyshop-line bg-keyshop-soft p-2 opacity-0 shadow-card transition-all group-hover:visible group-hover:opacity-100">
+              <div className="invisible absolute left-0 top-full z-[1300] min-w-[200px] translate-y-2 rounded-card border border-keyshop-line bg-keyshop-soft p-2 opacity-0 shadow-card transition-all duration-200 ease-out group-hover:visible group-hover:translate-y-0 group-hover:opacity-100 group-focus-within:visible group-focus-within:translate-y-0 group-focus-within:opacity-100">
                 {[
                   ["/support/help-center", "Help Center"],
                   ["/contact", "Contact Us"],
