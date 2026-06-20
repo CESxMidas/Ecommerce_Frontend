@@ -32,7 +32,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       },
     };
   } catch {
-    return { title: "Blog Post" };
+    return { title: "Bài viết" };
   }
 }
 
@@ -45,7 +45,7 @@ export default async function BlogDetailPage({ params }: Props) {
     return (
       <CommercePage>
         <CommerceHero
-          kicker={blog.category || "Article"}
+          kicker={blog.category || "Bài viết"}
           title={blog.title}
           description={
             blog.publishedAt
@@ -76,9 +76,9 @@ export default async function BlogDetailPage({ params }: Props) {
 
           <CommerceActions>
             <CommerceBtn href="/blog" variant="ghost">
-              Back to articles
+              Quay lại bài viết
             </CommerceBtn>
-            <CommerceBtn href="/products">Browse products</CommerceBtn>
+            <CommerceBtn href="/products">Xem sản phẩm</CommerceBtn>
           </CommerceActions>
         </CommercePanel>
       </CommercePage>

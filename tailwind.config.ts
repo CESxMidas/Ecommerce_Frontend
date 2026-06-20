@@ -34,6 +34,7 @@ const config: Config = {
           blue: "#3b82f6",
           "blue-hover": "#2563eb",
           green: "#22c55e",
+          danger: "#ef4444",
           muted: "rgba(255, 255, 255, 0.65)",
           line: "rgba(255, 255, 255, 0.08)",
         },

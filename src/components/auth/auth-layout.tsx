@@ -43,7 +43,7 @@ export function AuthSplitLayout({
         </div>
       </div>
 
-      <div className="flex flex-1 items-center justify-center overflow-y-auto bg-[#020b2d] p-5 [scrollbar-width:none] [&::-webkit-scrollbar]:w-0">
+      <div className="keyshop-scrollbar flex flex-1 items-center justify-center overflow-y-auto bg-keyshop-soft p-5">
         {children}
       </div>
     </section>
@@ -230,7 +230,7 @@ export function AuthOutlineButton({
 export function AuthDivider() {
   return (
     <div className="relative my-5 text-center text-xs font-semibold uppercase tracking-wider text-white/40">
-      <span className="relative z-10 bg-transparent px-3">Or continue with</span>
+      <span className="relative z-10 bg-transparent px-3">Hoặc đăng nhập bằng</span>
       <div className="absolute inset-x-0 top-1/2 border-t border-keyshop-line" />
     </div>
   );

@@ -17,11 +17,11 @@ export default function WishlistPageClient() {
   return (
     <AccountCard>
       <AccountCardHeader
-        title="My List"
+        title="Danh sách yêu thích"
         description={
           <>
-            There are <span className="font-bold text-white">{wishlist.length}</span>{" "}
-            products in your wishlist
+            Bạn có <span className="font-bold text-white">{wishlist.length}</span>{" "}
+            sản phẩm trong danh sách yêu thích
           </>
         }
         action={
@@ -30,7 +30,7 @@ export default function WishlistPageClient() {
               href="/products"
               className="text-sm font-semibold text-keyshop-blue hover:text-sky-300"
             >
-              Continue shopping
+              Tiếp tục mua sắm
             </Link>
           ) : null
         }
@@ -38,13 +38,13 @@ export default function WishlistPageClient() {
 
       {isEmpty ? (
         <AccountEmptyState
-          title="Your wishlist is empty"
-          description="Save your favorite products to your wishlist and shop them later anytime."
-          actionLabel="Continue Shopping"
+          title="Danh sách yêu thích trống"
+          description="Lưu sản phẩm yêu thích để mua sau bất cứ lúc nào."
+          actionLabel="Tiếp tục mua sắm"
           actionHref="/products"
         />
       ) : (
-        <div className="grid grid-cols-[repeat(auto-fill,minmax(220px,1fr))] gap-5">
+        <div className="grid grid-cols-[repeat(auto-fill,minmax(220px,1fr))] items-stretch gap-5">
           {wishlist.map((item, index) => (
             <ProductItem key={item.id} item={item} index={index} />
           ))}

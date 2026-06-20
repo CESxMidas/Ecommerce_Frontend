@@ -5,9 +5,9 @@ import StaticPageView from "@/components/commerce/static-page-view";
 import { getStaticPage } from "@/lib/content/static-pages";
 
 const titles: Record<string, string> = {
-  terms: "Terms of Service",
-  "privacy-policy": "Privacy Policy",
-  "payment-policy": "Payment Policy",
+  terms: "Điều khoản dịch vụ",
+  "privacy-policy": "Chính sách bảo mật",
+  "payment-policy": "Chính sách thanh toán",
 };
 
 type Props = {

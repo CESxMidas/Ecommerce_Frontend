@@ -58,7 +58,7 @@ export default function NotificationsPageClient() {
       await markNotificationRead(id);
       await load();
     } catch (error) {
-      toast.error(getApiErrorMessage(error, "Failed to update notification"));
+      toast.error(getApiErrorMessage(error, "Không thể cập nhật thông báo"));
     }
   };
 
@@ -66,27 +66,27 @@ export default function NotificationsPageClient() {
     try {
       await markAllNotificationsRead();
       await load();
-      toast.success("Notifications updated");
+      toast.success("Đã cập nhật thông báo");
     } catch (error) {
-      toast.error(getApiErrorMessage(error, "Failed to update notifications"));
+      toast.error(getApiErrorMessage(error, "Không thể cập nhật thông báo"));
     }
   };
 
   return (
     <AccountCard>
       <AccountCardHeader
-        title="Notifications"
+        title="Thông báo"
         action={
           notifications.some((item) => !item.readAt) ? (
-            <AccountActionButton onClick={markAll}>Mark all read</AccountActionButton>
+            <AccountActionButton onClick={markAll}>Đánh dấu tất cả đã đọc</AccountActionButton>
           ) : null
         }
       />
 
       {loading ? (
-        <AccountLoading label="Loading notifications..." />
+        <AccountLoading label="Đang tải thông báo..." />
       ) : notifications.length === 0 ? (
-        <p className="text-sm text-keyshop-muted">No notifications yet.</p>
+        <p className="text-sm text-keyshop-muted">Chưa có thông báo.</p>
       ) : (
         <div className="space-y-4">
           {notifications.map((item) => (
@@ -96,7 +96,7 @@ export default function NotificationsPageClient() {
               action={
                 !item.readAt ? (
                   <AccountActionButton onClick={() => markRead(item.id)}>
-                    Read
+                    Đã đọc
                   </AccountActionButton>
                 ) : null
               }

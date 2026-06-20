@@ -1,5 +1,5 @@
 import { getCartItemListPrice, getCartItemSalePrice } from "@/lib/utils/product-schema";
-import type { CartItem, CartSummary } from "@/types/cart";
+import type { AppliedCoupon, CartItem, CartSummary } from "@/types/cart";
 
 const LEGACY_CART_KEY = "cart";
 const GUEST_CART_KEY = "cart:guest";
@@ -86,25 +86,34 @@ export function calcCartSummary(items: CartItem[]): CartSummary {
     0,
   );
 
-  const savings = items.reduce((sum, item) => {
+  const listSubtotal = items.reduce((sum, item) => {
     const list = getCartItemListPrice(item);
     const sale = getCartItemSalePrice(item);
+    const unitList = list != null && list > sale ? list : sale;
 
-    if (!list) {
-      return sum;
-    }
-
-    return sum + Math.max(0, list - sale) * item.quantity;
+    return sum + unitList * item.quantity;
   }, 0);
 
-  const tax = subtotal > 0 ? 2 : 0;
-  const total = Math.max(0, subtotal + tax);
+  const savings = Math.max(0, listSubtotal - subtotal);
+  const total = Math.max(0, subtotal);
 
   return {
     count,
+    listSubtotal,
     subtotal,
     savings,
-    tax,
+    tax: 0,
     total,
   };
+}
+
+export function getPayableCartTotal(
+  summary: CartSummary,
+  coupon: AppliedCoupon | null | undefined,
+) {
+  if (coupon && Number(coupon.subtotal) === Number(summary.subtotal)) {
+    return Math.max(0, coupon.total);
+  }
+
+  return summary.total;
 }

@@ -21,19 +21,19 @@ import { getApiErrorMessage } from "@/lib/utils/api-error";
 const PAYMENT_MESSAGES: Record<string, { type: "success" | "error"; message: string }> = {
   success: {
     type: "success",
-    message: "Payment completed. Your order is being processed.",
+    message: "Thanh toán thành công. Đơn hàng của bạn đang được xử lý.",
   },
   failed: {
     type: "error",
-    message: "Payment was not completed. You can try paying again.",
+    message: "Thanh toán chưa hoàn tất. Bạn có thể thử thanh toán lại.",
   },
   invalid_signature: {
     type: "error",
-    message: "Payment verification failed. Please contact support.",
+    message: "Xác minh thanh toán thất bại. Vui lòng liên hệ bộ phận hỗ trợ.",
   },
   invalid_amount: {
     type: "error",
-    message: "Payment amount did not match this order.",
+    message: "Số tiền thanh toán không khớp với đơn hàng này.",
   },
 };
 
@@ -69,7 +69,7 @@ export default function OrderDetailPageClient({ orderId }: { orderId: string }) 
         }
       } catch (err) {
         if (!cancelled) {
-          setError(getApiErrorMessage(err, "Could not load order"));
+          setError(getApiErrorMessage(err, "Không thể tải đơn hàng"));
         }
       } finally {
         if (!cancelled) {
@@ -108,19 +108,19 @@ export default function OrderDetailPageClient({ orderId }: { orderId: string }) 
   }, [completeCheckout, orderId, paymentResult]);
 
   if (loading) {
-    return <p className="text-sm text-keyshop-muted">Loading order...</p>;
+    return <p className="text-sm text-keyshop-muted">Đang tải đơn hàng...</p>;
   }
 
   if (error || !order) {
     return (
       <AccountCard className="text-center">
-        <p className="text-keyshop-muted">{error || "Order not found"}</p>
+        <p className="text-keyshop-muted">{error || "Không tìm thấy đơn hàng"}</p>
         <div className="mt-4">
           <Link
             href="/account/orders"
             className="inline-flex min-h-[42px] items-center justify-center rounded-control border border-keyshop-line bg-white/[0.03] px-4 text-xs font-extrabold uppercase tracking-wide text-white transition hover:border-keyshop-blue/40"
           >
-            Back to orders
+            Quay lại đơn hàng
           </Link>
         </div>
       </AccountCard>
@@ -132,31 +132,31 @@ export default function OrderDetailPageClient({ orderId }: { orderId: string }) 
   return (
     <AccountCard>
       <AccountCardHeader
-        title={`Order #${currentOrderId}`}
-        description={`${order.status || "Pending"} · ${order.paymentStatus || order.paymentMethod || "Pending payment"}`}
+        title={`Đơn hàng #${currentOrderId}`}
+        description={`${order.status || "Chờ xử lý"} · ${order.paymentStatus || order.paymentMethod || "Chờ thanh toán"}`}
         action={
           <Link
             href="/account/orders"
             className="inline-flex min-h-[42px] items-center justify-center rounded-control border border-keyshop-line bg-white/[0.03] px-4 text-xs font-extrabold uppercase tracking-wide text-white transition hover:border-keyshop-blue/40"
           >
-            Back to orders
+            Quay lại đơn hàng
           </Link>
         }
       />
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <StatCard label="Status" value={order.status || "Pending"} />
+        <StatCard label="Trạng thái" value={order.status || "Chờ xử lý"} />
         <StatCard
-          label="Payment"
-          value={order.paymentStatus || order.paymentMethod || "Pending"}
+          label="Thanh toán"
+          value={order.paymentStatus || order.paymentMethod || "Chờ xử lý"}
         />
-        <StatCard label="Total" value={formatPrice(order.total || 0)} />
-        <StatCard label="Customer" value={order.name || "—"} />
+        <StatCard label="Tổng tiền" value={formatPrice(order.total || 0)} />
+        <StatCard label="Khách hàng" value={order.name || "—"} />
       </div>
 
       <div className="mt-6">
         <h3 className="text-sm font-extrabold uppercase tracking-wide text-white">
-          Delivery contact
+          Thông tin nhận hàng
         </h3>
         <p className="mt-2 text-sm text-keyshop-muted">
           {order.name} · {order.phone} · {order.email}
@@ -166,7 +166,7 @@ export default function OrderDetailPageClient({ orderId }: { orderId: string }) 
 
       <div className="mt-8">
         <h3 className="mb-3 text-sm font-extrabold uppercase tracking-wide text-white">
-          Items
+          Sản phẩm
         </h3>
         <div className="space-y-3">
           {(order.items || []).map((item) => (
@@ -181,7 +181,7 @@ export default function OrderDetailPageClient({ orderId }: { orderId: string }) 
                     item.product?.image ||
                     "/images/bypass/cerberus-banner.png"
                   }
-                  alt={item.product?.name || "Product"}
+                  alt={item.product?.name || "Sản phẩm"}
                   fill
                   className="object-cover"
                   sizes="64px"
@@ -191,14 +191,14 @@ export default function OrderDetailPageClient({ orderId }: { orderId: string }) 
                 <p className="font-bold text-white">
                   {item.product?.name ||
                     item.product?.title ||
-                    `Product ${item.productId}`}
+                    `Sản phẩm ${item.productId}`}
                 </p>
                 <p className="text-sm text-keyshop-muted">
-                  Quantity: {item.quantity}
+                  Số lượng: {item.quantity}
                 </p>
                 {item.licenseKeys?.length ? (
                   <p className="mt-2 text-sm text-sky-300">
-                    License keys: {item.licenseKeys.join(", ")}
+                    Mã bản quyền: {item.licenseKeys.join(", ")}
                   </p>
                 ) : null}
               </div>

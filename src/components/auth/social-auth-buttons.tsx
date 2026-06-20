@@ -1,11 +1,16 @@
 "use client";
 
 import { signIn } from "next-auth/react";
+import { useRouter } from "next/navigation";
 import { Github } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
 
 import { AuthDivider } from "@/components/auth/auth-layout";
+import {
+  getGoogleClientId,
+  loadGoogleIdentityScript,
+} from "@/lib/auth/google-identity";
 import { cn } from "@/lib/utils";
 
 function GoogleIcon({ className }: { className?: string }) {
@@ -47,8 +52,38 @@ export default function SocialAuthButtons({
 }: {
   callbackUrl?: string;
 }) {
+  const router = useRouter();
+  const googleButtonRef = useRef<HTMLDivElement>(null);
   const [googleEnabled, setGoogleEnabled] = useState(false);
   const [googleStatusLoaded, setGoogleStatusLoaded] = useState(false);
+  const [googleReady, setGoogleReady] = useState(false);
+  const clientId = getGoogleClientId();
+
+  const completeGoogleLogin = useCallback(
+    async (credential: string) => {
+      try {
+        const result = await signIn("credentials", {
+          googleCredential: credential,
+          googleClientId: clientId,
+          redirect: false,
+        });
+
+        if (result?.error) {
+          toast.error(result.error);
+          return;
+        }
+
+        toast.success("Đăng nhập Google thành công");
+        router.push(callbackUrl);
+        router.refresh();
+      } catch (error) {
+        toast.error(
+          error instanceof Error ? error.message : "Đăng nhập Google thất bại",
+        );
+      }
+    },
+    [callbackUrl, clientId, router],
+  );
 
   useEffect(() => {
     let cancelled = false;
@@ -63,7 +98,7 @@ export default function SocialAuthButtons({
         }
       } catch {
         if (!cancelled) {
-          setGoogleEnabled(false);
+          setGoogleEnabled(Boolean(clientId));
         }
       } finally {
         if (!cancelled) {
@@ -77,44 +112,88 @@ export default function SocialAuthButtons({
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [clientId]);
 
-  const handleComingSoon = () => {
-    toast("This feature is coming soon", { icon: "⏳" });
-  };
-
-  const handleGoogleSignIn = () => {
-    if (!googleEnabled) {
-      toast.error("Google sign-in is not configured on this environment");
+  useEffect(() => {
+    if (!googleEnabled || !clientId || !googleButtonRef.current) {
       return;
     }
 
-    signIn("google", { callbackUrl });
+    let cancelled = false;
+
+    loadGoogleIdentityScript()
+      .then(() => {
+        if (cancelled || !googleButtonRef.current || !window.google?.accounts?.id) {
+          return;
+        }
+
+        window.google.accounts.id.initialize({
+          client_id: clientId,
+          callback: (response) => {
+            if (response.credential) {
+              completeGoogleLogin(response.credential);
+            }
+          },
+          auto_select: false,
+          cancel_on_tap_outside: true,
+        });
+
+        googleButtonRef.current.replaceChildren();
+
+        window.google.accounts.id.renderButton(googleButtonRef.current, {
+          type: "standard",
+          theme: "outline",
+          size: "large",
+          shape: "circle",
+          width: 56,
+        });
+
+        setGoogleReady(true);
+      })
+      .catch(() => {
+        if (!cancelled) {
+          setGoogleEnabled(false);
+        }
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [clientId, completeGoogleLogin, googleEnabled]);
+
+  const handleComingSoon = () => {
+    toast("Tính năng sắp ra mắt", { icon: "⏳" });
   };
 
   return (
     <>
       <AuthDivider />
       <div className="flex items-center justify-center gap-4">
-        <button
-          type="button"
-          aria-label="Google"
-          onClick={handleGoogleSignIn}
-          disabled={!googleStatusLoaded || !googleEnabled}
+        <div
+          className={cn(
+            "relative h-14 w-14 shrink-0 overflow-hidden rounded-full border border-keyshop-line bg-white/[0.04]",
+            googleEnabled && googleReady
+              ? "hover:border-keyshop-blue/40 hover:bg-keyshop-blue/15"
+              : "cursor-not-allowed opacity-50",
+          )}
           title={
             googleEnabled
-              ? "Continue with Google"
-              : "Google sign-in is not configured"
+              ? "Tiếp tục với Google"
+              : "Chưa cấu hình đăng nhập Google"
           }
-          className={cn(
-            "flex h-14 w-14 items-center justify-center rounded-full border border-keyshop-line bg-white/[0.04] text-white transition",
-            googleEnabled
-              ? "hover:border-keyshop-blue/40 hover:bg-keyshop-blue/15"
-              : "cursor-not-allowed text-white/40",
-          )}
         >
-          <GoogleIcon className="h-5 w-5" />
-        </button>
+          <div
+            ref={googleButtonRef}
+            className="absolute inset-0 z-10 opacity-[0.01]"
+            aria-label="Google"
+          />
+          <div className="pointer-events-none flex h-full w-full items-center justify-center text-white">
+            <GoogleIcon className="h-5 w-5" />
+          </div>
+          {!googleStatusLoaded || !googleEnabled ? (
+            <div className="absolute inset-0 z-20 cursor-not-allowed bg-keyshop-bg/40" />
+          ) : null}
+        </div>
 
         <button
           type="button"

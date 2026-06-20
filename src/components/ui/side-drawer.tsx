@@ -57,9 +57,9 @@ export default function SideDrawer({
       />
       <div
         className={cn(
-          "fixed inset-y-0 z-[1201] max-h-screen overflow-y-auto shadow-2xl",
+          "keyshop-scrollbar fixed inset-y-0 z-[1201] max-h-screen overflow-y-auto shadow-2xl",
           anchor === "left"
-            ? "left-0 w-[min(320px,100vw)] animate-slide-in-left bg-[#071739] motion-reduce:animate-none"
+            ? "left-0 w-[min(320px,100vw)] animate-slide-in-left bg-keyshop-soft motion-reduce:animate-none"
             : "right-0 w-[min(580px,100vw)] animate-slide-in-right bg-keyshop-bg motion-reduce:animate-none",
           className,
         )}

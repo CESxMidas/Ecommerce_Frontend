@@ -108,7 +108,7 @@ export function AccountEmptyState({
   );
 }
 
-export function AccountLoading({ label = "Loading..." }: { label?: string }) {
+export function AccountLoading({ label = "Đang tải..." }: { label?: string }) {
   return <p className="text-sm text-keyshop-muted">{label}</p>;
 }
 

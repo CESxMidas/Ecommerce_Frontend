@@ -113,7 +113,7 @@ export function normalizeProduct(raw: Record<string, unknown> | null) {
     description: (raw.description as string) || "",
     price: Number(raw.price ?? salePrice) || 0,
     discountPrice: raw.discountPrice as number | null | undefined,
-    currency: (raw.currency as string) || "USD",
+    currency: (raw.currency as string) || "VND",
     images,
     thumbnail,
     categoryId: raw.categoryId != null ? String(raw.categoryId) : "",
@@ -275,13 +275,13 @@ export function getCartItemListPrice(item: {
 }
 
 export function getDeliveryLabel(product: Partial<NormalizedProduct> | null) {
-  if (isPhysicalProduct(product)) return "Physical delivery";
-  if (product?.productType === "account") return "Account delivery";
-  if (product?.productType === "manual_service") return "Manual service";
-  if (product?.productType === "redeem_code") return "Redeem code";
-  if (product?.productType === "license_key") return "Instant key";
+  if (isPhysicalProduct(product)) return "Giao hàng vật lý";
+  if (product?.productType === "account") return "Giao tài khoản";
+  if (product?.productType === "manual_service") return "Dịch vụ thủ công";
+  if (product?.productType === "redeem_code") return "Mã nạp";
+  if (product?.productType === "license_key") return "Giao key ngay";
 
-  return "Digital delivery";
+  return "Giao hàng số";
 }
 
 export function getProductDisplayName(product: Partial<NormalizedProduct> | null) {
@@ -303,14 +303,14 @@ export function getProductImages(product: Partial<NormalizedProduct> | null) {
 
 export function getProductTypeLabel(product: Partial<NormalizedProduct> | null) {
   const labels: Record<string, string> = {
-    license_key: "License key",
-    redeem_code: "Redeem code",
-    account: "Account",
-    manual_service: "Manual service",
-    hardware: "Hardware",
+    license_key: "Key bản quyền",
+    redeem_code: "Mã nạp",
+    account: "Tài khoản",
+    manual_service: "Dịch vụ thủ công",
+    hardware: "Phần cứng",
   };
 
-  return labels[product?.productType || ""] || "Product";
+  return labels[product?.productType || ""] || "Sản phẩm";
 }
 
 export function getDefaultPurchaseVariant(product: NormalizedProduct | null) {

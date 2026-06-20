@@ -122,8 +122,8 @@ export function getProductPriceBounds(products: Product[]): [number, number] {
 }
 
 export const SORT_LABELS: Record<string, string> = {
-  latest: "Latest",
-  "price-asc": "Price: Low to High",
-  "price-desc": "Price: High to Low",
-  popular: "Popular",
+  latest: "Mới nhất",
+  "price-asc": "Giá: thấp đến cao",
+  "price-desc": "Giá: cao đến thấp",
+  popular: "Phổ biến",
 };

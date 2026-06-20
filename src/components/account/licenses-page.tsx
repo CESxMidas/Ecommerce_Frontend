@@ -59,27 +59,27 @@ export default function LicensesPageClient() {
 
   const copyKey = async (key: string) => {
     await navigator.clipboard.writeText(key);
-    toast.success("License key copied");
+    toast.success("Đã sao chép mã bản quyền");
   };
 
   const resend = async (orderId: string) => {
     try {
       await resendLicenseKeys(orderId);
-      toast.success("License keys resent by email");
+      toast.success("Đã gửi lại mã bản quyền qua email");
     } catch (error) {
-      toast.error(getApiErrorMessage(error, "Failed to resend keys"));
+      toast.error(getApiErrorMessage(error, "Không thể gửi lại mã"));
     }
   };
 
   return (
     <AccountCard>
-      <AccountCardHeader title="License Keys" />
+      <AccountCardHeader title="Mã bản quyền" />
 
       {licenses.length > 0 ? (
         <div className="mb-6 flex flex-col gap-3 rounded-card border border-keyshop-line bg-white/[0.02] p-4 sm:flex-row sm:items-center sm:justify-between">
           <div className="text-sm text-keyshop-muted">
-            <strong className="text-white">{filteredLicenses.length}</strong> license
-            entries
+            <strong className="text-white">{filteredLicenses.length}</strong> mã
+            bản quyền
           </div>
           <select
             value={productFilter}
@@ -87,7 +87,7 @@ export default function LicensesPageClient() {
             className={accountSelectClass}
           >
             <option value="all" className="bg-keyshop-bg">
-              All products
+              Tất cả sản phẩm
             </option>
             {productOptions.map((productName) => (
               <option key={productName} value={productName} className="bg-keyshop-bg">
@@ -99,9 +99,9 @@ export default function LicensesPageClient() {
       ) : null}
 
       {loading ? (
-        <AccountLoading label="Loading licenses..." />
+        <AccountLoading label="Đang tải mã bản quyền..." />
       ) : filteredLicenses.length === 0 ? (
-        <p className="text-sm text-keyshop-muted">No license keys yet.</p>
+        <p className="text-sm text-keyshop-muted">Chưa có mã bản quyền.</p>
       ) : (
         <div className="space-y-4">
           {filteredLicenses.map((item) => (
@@ -109,7 +109,7 @@ export default function LicensesPageClient() {
               key={item.id}
               action={
                 <AccountActionButton onClick={() => resend(item.orderId)}>
-                  Resend
+                  Gửi lại
                 </AccountActionButton>
               }
             >
@@ -121,7 +121,7 @@ export default function LicensesPageClient() {
                   </span>
                 ) : null}
               </div>
-              <p className="text-sm text-keyshop-muted">Order #{item.orderId}</p>
+              <p className="text-sm text-keyshop-muted">Đơn hàng #{item.orderId}</p>
               <div className="space-y-2 pt-1">
                 {(item.keys || []).map((key) => (
                   <div
@@ -136,14 +136,14 @@ export default function LicensesPageClient() {
                       className="text-xs font-extrabold uppercase text-keyshop-muted hover:text-white"
                       onClick={() => setVisible({ ...visible, [key]: !visible[key] })}
                     >
-                      {visible[key] ? "Hide" : "Show"}
+                      {visible[key] ? "Ẩn" : "Hiện"}
                     </button>
                     <button
                       type="button"
                       className="text-xs font-extrabold uppercase text-keyshop-blue hover:text-sky-300"
                       onClick={() => copyKey(key)}
                     >
-                      Copy
+                      Sao chép
                     </button>
                   </div>
                 ))}

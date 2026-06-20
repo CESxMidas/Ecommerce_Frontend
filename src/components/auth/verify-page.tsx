@@ -31,22 +31,22 @@ export default function VerifyPageClient({ email }: { email: string }) {
     const code = otp.join("").trim();
 
     if (!email) {
-      toast.error("Missing email");
+      toast.error("Thiếu email");
       return;
     }
 
     if (code.length !== 6) {
-      toast.error("Enter all 6 digits");
+      toast.error("Vui lòng nhập đủ 6 chữ số");
       return;
     }
 
     try {
       setLoading(true);
       await verifyAccount({ email, otp: code });
-      toast.success("Verification successful");
+      toast.success("Xác minh thành công");
       router.push("/auth/login");
     } catch (error) {
-      toast.error(getApiErrorMessage(error, "Invalid or expired code"));
+      toast.error(getApiErrorMessage(error, "Mã không hợp lệ hoặc đã hết hạn"));
     } finally {
       setLoading(false);
     }
@@ -54,14 +54,14 @@ export default function VerifyPageClient({ email }: { email: string }) {
 
   async function resendOTP() {
     if (!email) {
-      toast.error("Missing email");
+      toast.error("Thiếu email");
       return;
     }
 
     try {
       setLoading(true);
       const result = await resendVerification(email);
-      toast.success(result.message || "Verification code resent");
+      toast.success(result.message || "Mã xác minh đã được gửi lại");
     } catch (error) {
       toast.error(getApiErrorMessage(error));
     } finally {
@@ -75,12 +75,12 @@ export default function VerifyPageClient({ email }: { email: string }) {
         <AuthGradientIcon icon={MailCheck} />
         <AuthCardTop
           centered
-          title="Verify your email"
-          description="Enter the 6-digit code sent to your inbox (check spam too)."
+          title="Xác minh email"
+          description="Nhập mã 6 chữ số đã gửi tới hộp thư (kiểm tra cả thư rác)."
         />
 
         <div className="mb-6 rounded-2xl border border-keyshop-line bg-white/[0.03] p-4">
-          <p className="text-xs text-white/50">Sent to</p>
+          <p className="text-xs text-white/50">Gửi tới</p>
           <p className="mt-1 font-semibold text-white">{email || "—"}</p>
         </div>
 
@@ -88,18 +88,18 @@ export default function VerifyPageClient({ email }: { email: string }) {
 
         <div className="mt-6 space-y-3">
           <AuthSubmitButton type="button" onClick={verifyOTP} disabled={loading}>
-            {loading ? "Processing..." : "Verify"}
+            {loading ? "Đang xử lý..." : "Xác minh"}
           </AuthSubmitButton>
 
           <AuthOutlineButton onClick={resendOTP} disabled={loading}>
             <RefreshCw className="h-4 w-4" />
-            Resend code
+            Gửi lại mã
           </AuthOutlineButton>
         </div>
 
         <AuthBottomText>
           <Link href="/auth/login" className="font-semibold text-keyshop-blue hover:text-sky-300">
-            Back to login
+            Quay lại đăng nhập
           </Link>
         </AuthBottomText>
       </AuthCenteredCard>

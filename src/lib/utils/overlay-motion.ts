@@ -28,7 +28,7 @@ export function overlayDrawerPanelClass(
   className?: string,
 ) {
   return cn(
-    "fixed inset-y-0 z-[1201] max-h-screen max-w-full overflow-y-auto bg-[#071739]",
+    "keyshop-scrollbar fixed inset-y-0 z-[1201] max-h-screen max-w-full overflow-y-auto bg-keyshop-soft",
     motionTransition,
     anchor === "left"
       ? cn(
@@ -45,7 +45,7 @@ export function overlayDrawerPanelClass(
 
 export function overlayModalPanelClass(active: boolean, className?: string) {
   return cn(
-    "max-h-[92vh] w-full overflow-y-auto rounded-card border border-keyshop-line bg-keyshop-bg shadow-glow",
+    "keyshop-scrollbar max-h-[92vh] w-full overflow-y-auto rounded-card border border-keyshop-line bg-keyshop-bg shadow-glow",
     motionTransition,
     active
       ? "translate-y-0 scale-100 opacity-100"

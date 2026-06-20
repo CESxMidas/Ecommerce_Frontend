@@ -18,12 +18,12 @@ const FALLBACK_IMAGE =
 const fallbackBlogs: BlogPost[] = [
   {
     id: "fallback-1",
-    title: "How To Activate Windows 11 Pro",
+    title: "Cách kích hoạt Windows 11 Pro",
     slug: "how-to-activate-windows-11-pro",
-    excerpt: "Step-by-step guide for activating Windows securely and legally.",
-    content: "Step-by-step guide for activating Windows securely and legally.",
+    excerpt: "Hướng dẫn từng bước kích hoạt Windows an toàn và hợp lệ.",
+    content: "Hướng dẫn từng bước kích hoạt Windows an toàn và hợp lệ.",
     image: FALLBACK_IMAGE,
-    category: "Guide",
+    category: "Hướng dẫn",
     publishedAt: "2026-05-12",
   },
 ];
@@ -53,15 +53,15 @@ export default function BlogCarousel({ blogs }: BlogCarouselProps) {
       <div className="mb-8 flex flex-wrap items-end justify-between gap-4">
         <div>
           <h2 className="text-3xl font-extrabold text-white md:text-[34px]">
-            Latest Articles
+            Bài viết mới nhất
           </h2>
-          <p className="mt-2 text-keyshop-muted">News, guides and software updates</p>
+          <p className="mt-2 text-keyshop-muted">Tin tức, hướng dẫn và cập nhật phần mềm</p>
         </div>
         <Link
           href="/blog"
           className="keyshop-interactive inline-flex items-center gap-2 text-sm font-semibold text-keyshop-blue hover:text-keyshop-blue-hover"
         >
-          View all articles
+          Xem tất cả bài viết
           <ArrowRight className="h-4 w-4" />
         </Link>
       </div>
@@ -84,7 +84,7 @@ export default function BlogCarousel({ blogs }: BlogCarouselProps) {
           const excerpt =
             blog.excerpt ||
             blog.content ||
-            "Read the latest guide from KEYSHOP.";
+            "Đọc hướng dẫn mới nhất từ KEYSHOP.";
 
           return (
             <SwiperSlide key={blog.id} className="!h-auto">
@@ -136,7 +136,7 @@ export default function BlogCarousel({ blogs }: BlogCarouselProps) {
                     href={`/blog/${blog.id}`}
                     className="keyshop-interactive mt-4 inline-flex items-center gap-2 text-sm font-semibold text-keyshop-blue hover:text-keyshop-blue-hover"
                   >
-                    Read More
+                    Đọc thêm
                     <ArrowRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1 motion-reduce:group-hover:translate-x-0" />
                   </Link>
                 </div>

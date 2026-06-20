@@ -67,7 +67,7 @@ export default function AddressesPageClient() {
     event.preventDefault();
 
     if (!formFields.address_line.trim() || !formFields.city.trim()) {
-      toast.error("Address line and city are required");
+      toast.error("Địa chỉ và thành phố là bắt buộc");
       return;
     }
 
@@ -80,7 +80,7 @@ export default function AddressesPageClient() {
     );
 
     if (isDuplicate) {
-      toast.error("This address already exists");
+      toast.error("Địa chỉ này đã tồn tại");
       return;
     }
 
@@ -91,7 +91,7 @@ export default function AddressesPageClient() {
         mobile: "",
       });
       setFormFields(emptyForm);
-      toast.success("Address added");
+      toast.success("Đã thêm địa chỉ");
       await loadAddresses();
     } catch (error) {
       toast.error(getApiErrorMessage(error));
@@ -103,7 +103,7 @@ export default function AddressesPageClient() {
   async function handleSetDefault(addressId: string) {
     try {
       await setDefaultAddress(addressId);
-      toast.success("Default address updated");
+      toast.success("Đã cập nhật địa chỉ mặc định");
       await loadAddresses();
     } catch (error) {
       toast.error(getApiErrorMessage(error));
@@ -113,7 +113,7 @@ export default function AddressesPageClient() {
   async function handleDelete(addressId: string) {
     try {
       await deleteAddress(addressId);
-      toast.success("Address removed");
+      toast.success("Đã xóa địa chỉ");
       await loadAddresses();
     } catch (error) {
       toast.error(getApiErrorMessage(error));
@@ -123,12 +123,12 @@ export default function AddressesPageClient() {
   return (
     <div className="space-y-6">
       <AccountCard>
-        <AccountCardHeader title="My Addresses" />
+        <AccountCardHeader title="Địa chỉ của tôi" />
 
         {loading ? (
-          <AccountLoading label="Loading addresses..." />
+          <AccountLoading label="Đang tải địa chỉ..." />
         ) : addresses.length === 0 ? (
-          <p className="text-sm text-keyshop-muted">No saved addresses yet.</p>
+          <p className="text-sm text-keyshop-muted">Chưa có địa chỉ đã lưu.</p>
         ) : (
           <div className="grid gap-4">
             {addresses.map((address) => {
@@ -145,16 +145,16 @@ export default function AddressesPageClient() {
                     </div>
                     <div>
                       <h3 className="font-bold text-white">
-                        {address.label || "Saved address"}
+                        {address.label || "Địa chỉ đã lưu"}
                         {address.isDefault ? (
                           <span className="ml-2 rounded-full bg-keyshop-green/15 px-2 py-0.5 text-xs font-bold text-emerald-300">
-                            Default
+                            Mặc định
                           </span>
                         ) : null}
                       </h3>
                       <p className="mt-1 flex items-center gap-2 text-sm text-keyshop-muted">
                         <User className="h-3.5 w-3.5" />
-                        {address.fullName || session?.user?.name || "Receiver"}
+                        {address.fullName || session?.user?.name || "Người nhận"}
                       </p>
                       <p className="mt-2 text-sm text-keyshop-muted">
                         {address.address_line}, {address.city}
@@ -170,14 +170,14 @@ export default function AddressesPageClient() {
                         variant="outline"
                         onClick={() => handleSetDefault(addressId)}
                       >
-                        Set default
+                        Đặt mặc định
                       </AccountActionButton>
                     ) : null}
                     <AccountActionButton
                       variant="outline"
                       onClick={() => handleDelete(addressId)}
                     >
-                      Remove
+                      Xóa
                     </AccountActionButton>
                   </div>
                 </div>
@@ -188,21 +188,21 @@ export default function AddressesPageClient() {
       </AccountCard>
 
       <AccountCard>
-        <AccountCardHeader title="Add new address" />
+        <AccountCardHeader title="Thêm địa chỉ mới" />
         <form onSubmit={handleSubmit} className="grid gap-4 md:grid-cols-2">
           <div>
-            <label className={accountLabelClass}>Label</label>
+            <label className={accountLabelClass}>Nhãn</label>
             <input
               value={formFields.label}
               onChange={(event) =>
                 setFormFields({ ...formFields, label: event.target.value })
               }
-              placeholder="Home, Office"
+              placeholder="Nhà, Văn phòng"
               className={accountFieldClass}
             />
           </div>
           <div>
-            <label className={accountLabelClass}>Receiver name</label>
+            <label className={accountLabelClass}>Tên người nhận</label>
             <input
               value={formFields.fullName}
               onChange={(event) =>
@@ -212,7 +212,7 @@ export default function AddressesPageClient() {
             />
           </div>
           <div className="md:col-span-2">
-            <label className={accountLabelClass}>Address line</label>
+            <label className={accountLabelClass}>Địa chỉ</label>
             <input
               value={formFields.address_line}
               onChange={(event) =>
@@ -225,7 +225,7 @@ export default function AddressesPageClient() {
             />
           </div>
           <div>
-            <label className={accountLabelClass}>City</label>
+            <label className={accountLabelClass}>Thành phố</label>
             <input
               value={formFields.city}
               onChange={(event) =>
@@ -235,7 +235,7 @@ export default function AddressesPageClient() {
             />
           </div>
           <div>
-            <label className={accountLabelClass}>State</label>
+            <label className={accountLabelClass}>Tỉnh/Thành</label>
             <input
               value={formFields.state}
               onChange={(event) =>
@@ -245,7 +245,7 @@ export default function AddressesPageClient() {
             />
           </div>
           <div>
-            <label className={accountLabelClass}>Pincode</label>
+            <label className={accountLabelClass}>Mã bưu điện</label>
             <input
               value={formFields.pincode}
               onChange={(event) =>
@@ -255,7 +255,7 @@ export default function AddressesPageClient() {
             />
           </div>
           <div>
-            <label className={accountLabelClass}>Country</label>
+            <label className={accountLabelClass}>Quốc gia</label>
             <input
               value={formFields.country}
               onChange={(event) =>
@@ -276,10 +276,10 @@ export default function AddressesPageClient() {
               }
               className="accent-keyshop-blue"
             />
-            Set as default address
+            Đặt làm địa chỉ mặc định
           </label>
           <AccountActionButton type="submit" disabled={saving}>
-            {saving ? "Saving..." : "Add address"}
+            {saving ? "Đang lưu..." : "Thêm địa chỉ"}
           </AccountActionButton>
         </form>
       </AccountCard>

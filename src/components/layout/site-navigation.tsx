@@ -1,98 +1,69 @@
 "use client";
 
 import Link from "next/link";
-import {
-  ChevronDown,
-  Monitor,
-  Headphones,
-  Home,
-  Key,
-  Menu,
-  ShoppingBag,
-} from "lucide-react";
+import { usePathname, useSearchParams } from "next/navigation";
+import { ChevronDown, Menu } from "lucide-react";
 import { useState } from "react";
 
 import CategoryPanel from "@/components/layout/category-panel";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import SideDrawer from "@/components/ui/side-drawer";
+import {
+  COMPANY_NAV_ITEMS,
+  PRIMARY_NAV_ITEM,
+  SHOP_NAV_GROUP,
+  SUPPORT_NAV_GROUP,
+  isNavGroupActive,
+  isNavLinkActive,
+  type NavDropdownGroup,
+  type NavLinkItem,
+} from "@/lib/navigation/site-nav";
+import { cn } from "@/lib/utils";
 import type { Category } from "@/types/api";
 
 type SiteNavigationProps = {
   categories: Category[];
 };
 
+const NAV_LIST_ITEM_CLASS =
+  "flex shrink-0 lg:min-w-0 lg:flex-1 lg:justify-center";
+
 export default function SiteNavigation({ categories }: SiteNavigationProps) {
   const [open, setOpen] = useState(false);
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const search = searchParams.toString();
+  const searchSuffix = search ? `?${search}` : "";
 
   return (
     <>
-      <nav className="border-b border-white/[0.05] bg-keyshop-bg/80">
-        <div className="container flex min-h-[54px] items-center justify-between gap-4">
+      <nav className="keyshop-nav-bar">
+        <div className="container flex min-h-[56px] items-center gap-3 lg:gap-5">
           <button
             type="button"
             onClick={() => setOpen(true)}
-            className="hidden items-center gap-2 rounded-control bg-keyshop-blue px-4 py-2.5 text-sm font-semibold text-white hover:bg-keyshop-blue-hover lg:inline-flex"
+            className="hidden shrink-0 items-center gap-2.5 rounded-control bg-keyshop-blue px-4 py-2.5 text-sm font-semibold text-white hover:bg-keyshop-blue-hover lg:inline-flex"
           >
             <Menu className="h-4 w-4" />
-            All Categories
+            Tất cả danh mục
           </button>
 
-          <ul className="hidden flex-1 items-center gap-1 lg:flex">
-            {[
-              { href: "/", label: "Home", icon: Home },
-              { href: "/products", label: "Shop", icon: ShoppingBag },
-              {
-                href: "/products?category=digital-products",
-                label: "Digital Products",
-                icon: Key,
-              },
-              { href: "/products?category=hardware", label: "Hardware", icon: Monitor },
-            ].map((item) => (
-              <li key={item.href}>
-                <Link
-                  href={item.href}
-                  className="flex items-center gap-2 rounded-control px-3 py-2 text-sm font-medium text-white/80 transition-colors hover:bg-white/5 hover:text-white"
-                >
-                  <item.icon className="h-4 w-4" />
-                  {item.label}
-                </Link>
-              </li>
+          <ul className="flex min-w-0 flex-1 items-center gap-2 overflow-x-auto scrollbar-hide sm:gap-3 lg:gap-0">
+            <NavItem item={PRIMARY_NAV_ITEM} pathname={pathname} search={searchSuffix} />
+
+            <NavDropdown group={SHOP_NAV_GROUP} pathname={pathname} search={searchSuffix} />
+
+            {COMPANY_NAV_ITEMS.map((item) => (
+              <NavItem key={item.href} item={item} pathname={pathname} search={searchSuffix} />
             ))}
 
-            <li className="group relative">
-              <button
-                type="button"
-                className="flex items-center gap-2 rounded-control px-3 py-2 text-sm font-medium text-white/80 transition-colors hover:bg-white/5 hover:text-white"
-              >
-                <Headphones className="h-4 w-4" />
-                Support
-                <ChevronDown className="h-3 w-3" />
-              </button>
-              <div className="invisible absolute left-0 top-full z-[1300] min-w-[200px] translate-y-2 rounded-card border border-keyshop-line bg-keyshop-soft p-2 opacity-0 shadow-card transition-all duration-200 ease-out group-hover:visible group-hover:translate-y-0 group-hover:opacity-100 group-focus-within:visible group-focus-within:translate-y-0 group-focus-within:opacity-100">
-                {[
-                  ["/support/help-center", "Help Center"],
-                  ["/contact", "Contact Us"],
-                  ["/track-order", "Track Order"],
-                  ["/legal/payment-policy", "Payment Policy"],
-                  ["/support/returns", "Refund Policy"],
-                ].map(([href, label]) => (
-                  <Link
-                    key={href}
-                    href={href}
-                    className="block rounded-control px-3 py-2 text-sm text-white/80 hover:bg-white/5 hover:text-white"
-                  >
-                    {label}
-                  </Link>
-                ))}
-              </div>
-            </li>
+            <NavDropdown group={SUPPORT_NAV_GROUP} pathname={pathname} search={searchSuffix} />
           </ul>
-
-          <Link
-            href="/track-order"
-            className="text-sm font-medium text-keyshop-blue hover:text-keyshop-blue-hover"
-          >
-            Track Order
-          </Link>
         </div>
       </nav>
 
@@ -100,5 +71,89 @@ export default function SiteNavigation({ categories }: SiteNavigationProps) {
         <CategoryPanel categories={categories} onNavigate={() => setOpen(false)} />
       </SideDrawer>
     </>
+  );
+}
+
+function NavItem({
+  item,
+  pathname,
+  search,
+}: {
+  item: NavLinkItem;
+  pathname: string;
+  search: string;
+}) {
+  const active = isNavLinkActive(pathname, search, item.href, item.match);
+
+  return (
+    <li className={NAV_LIST_ITEM_CLASS}>
+      <Link
+        href={item.href}
+        className={cn(
+          "keyshop-nav-link whitespace-nowrap lg:px-2 xl:px-3",
+          active && "keyshop-nav-link-active",
+        )}
+      >
+        <item.icon className="h-4 w-4 shrink-0" />
+        {item.label}
+      </Link>
+    </li>
+  );
+}
+
+function NavDropdown({
+  group,
+  pathname,
+  search,
+}: {
+  group: NavDropdownGroup;
+  pathname: string;
+  search: string;
+}) {
+  const active = isNavGroupActive(pathname, search, group);
+
+  return (
+    <li className={NAV_LIST_ITEM_CLASS}>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <button
+            type="button"
+            className={cn(
+              "keyshop-nav-link whitespace-nowrap outline-none lg:px-2 xl:px-3",
+              "data-[state=open]:bg-white/10 data-[state=open]:text-white",
+              active && "keyshop-nav-link-active",
+            )}
+          >
+            <group.icon className="h-4 w-4 shrink-0" />
+            {group.label}
+            <ChevronDown className="h-3 w-3 shrink-0 opacity-70" />
+          </button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent
+          align="start"
+          sideOffset={10}
+          className="z-[1300] min-w-[240px] space-y-0.5 rounded-card border border-keyshop-line bg-keyshop-soft p-2 text-white shadow-card"
+        >
+          {group.items.map((item) => {
+            const itemActive = isNavLinkActive(pathname, search, item.href, item.match);
+
+            return (
+              <DropdownMenuItem key={item.href} asChild className="p-0 focus:bg-transparent">
+                <Link
+                  href={item.href}
+                  className={cn(
+                    "keyshop-nav-link w-full px-3.5 py-3",
+                    itemActive && "keyshop-nav-link-active",
+                  )}
+                >
+                  <item.icon className="h-4 w-4 shrink-0 text-keyshop-blue" />
+                  {item.label}
+                </Link>
+              </DropdownMenuItem>
+            );
+          })}
+        </DropdownMenuContent>
+      </DropdownMenu>
+    </li>
   );
 }

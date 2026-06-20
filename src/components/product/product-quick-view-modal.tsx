@@ -136,19 +136,19 @@ export default function ProductQuickViewModal({
       open={open}
       onClose={onClose}
       panelClassName="max-w-5xl"
-      ariaLabel={`Quick view: ${displayName}`}
+      ariaLabel={`Xem nhanh: ${displayName}`}
     >
       <div className="flex items-start justify-between gap-4 border-b border-keyshop-line px-4 py-4 sm:px-6">
         <div>
           <p className="text-xs font-semibold uppercase tracking-wide text-keyshop-blue">
-            Quick view
+            Xem nhanh
           </p>
           <h2 className="mt-1 text-lg font-bold text-white sm:text-xl">{displayName}</h2>
         </div>
         <button
           type="button"
           onClick={onClose}
-          aria-label="Close quick view"
+          aria-label="Đóng xem nhanh"
           className="rounded-control p-2 text-keyshop-muted transition hover:bg-white/5 hover:text-white"
         >
           <X className="h-5 w-5" />
@@ -158,7 +158,7 @@ export default function ProductQuickViewModal({
       {loading ? (
         <div className="flex min-h-[320px] items-center justify-center p-10 text-keyshop-muted">
           <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-          Loading product details...
+          Đang tải thông tin sản phẩm...
         </div>
       ) : (
         <div className="grid gap-6 p-4 sm:p-6 lg:grid-cols-2">
@@ -191,7 +191,7 @@ export default function ProductQuickViewModal({
               ))}
               {product.reviewsCount > 0 ? (
                 <span className="ml-2 text-sm text-keyshop-muted">
-                  ({product.reviewsCount} reviews)
+                  ({product.reviewsCount} đánh giá)
                 </span>
               ) : null}
             </div>
@@ -206,7 +206,7 @@ export default function ProductQuickViewModal({
                 </span>
               ) : null}
               {discount ? (
-                <span className="rounded-full bg-[#ff4d4f] px-2.5 py-1 text-xs font-bold">
+                <span className="rounded-full bg-keyshop-danger px-2.5 py-1 text-xs font-bold">
                   {discount}
                 </span>
               ) : null}
@@ -220,7 +220,7 @@ export default function ProductQuickViewModal({
             <div className="mt-4 flex flex-wrap items-center gap-3 text-sm">
               <span className="h-2 w-2 rounded-full bg-green-400" />
               <span className="font-semibold text-green-400">
-                {product.stock > 0 ? "In Stock" : "Out of Stock"}
+                {product.stock > 0 ? "Còn hàng" : "Hết hàng"}
               </span>
               <span className="text-keyshop-muted">{getDeliveryLabel(product)}</span>
             </div>
@@ -228,7 +228,7 @@ export default function ProductQuickViewModal({
             {purchaseVariants.length > 0 ? (
               <div className="mt-5">
                 <h4 className="mb-2 text-sm font-semibold">
-                  {isPhysicalProduct(product) ? "Options" : "Key type"}
+                  {isPhysicalProduct(product) ? "Tùy chọn" : "Loại key"}
                 </h4>
                 <div className="flex flex-wrap gap-2">
                   {purchaseVariants.map((variant) => (
@@ -262,7 +262,7 @@ export default function ProductQuickViewModal({
             ) : null}
 
             <div className="mt-5">
-              <h4 className="mb-2 text-sm font-semibold">Quantity</h4>
+              <h4 className="mb-2 text-sm font-semibold">Số lượng</h4>
               <div className="inline-flex items-center rounded-control border border-keyshop-line">
                 <button
                   type="button"
@@ -289,14 +289,14 @@ export default function ProductQuickViewModal({
                 onClick={handleAddToCart}
                 className="keyshop-interactive rounded-control bg-keyshop-blue px-5 py-3 text-sm font-semibold hover:bg-keyshop-blue-hover"
               >
-                Add to cart
+                Thêm vào giỏ
               </button>
               <Link
                 href={href}
                 onClick={onClose}
                 className="keyshop-interactive rounded-control border border-keyshop-line px-5 py-3 text-center text-sm font-semibold hover:border-keyshop-blue/50 hover:text-keyshop-blue"
               >
-                View full details
+                Xem chi tiết
               </Link>
             </div>
           </div>

@@ -44,17 +44,17 @@ function LoginForm() {
     event.preventDefault();
 
     if (!formFields.email.trim()) {
-      toast.error("Email is required");
+      toast.error("Vui lòng nhập email");
       return;
     }
 
     if (!/\S+@\S+\.\S+/.test(formFields.email)) {
-      toast.error("Invalid email format");
+      toast.error("Email không hợp lệ");
       return;
     }
 
     if (!formFields.password.trim()) {
-      toast.error("Password is required");
+      toast.error("Vui lòng nhập mật khẩu");
       return;
     }
 
@@ -74,7 +74,7 @@ function LoginForm() {
 
       if (verificationError) {
         toast[verificationError.emailSent ? "success" : "error"](
-          verificationError.message || "Please verify your account",
+          verificationError.message || "Vui lòng xác minh tài khoản",
         );
         router.push(
           `/auth/verify?email=${encodeURIComponent(
@@ -84,7 +84,7 @@ function LoginForm() {
         return;
       }
 
-      toast.error(result.error || "Login failed");
+      toast.error(result.error || "Đăng nhập thất bại");
       return;
     }
 
@@ -94,7 +94,7 @@ function LoginForm() {
       localStorage.removeItem("rememberedEmail");
     }
 
-    toast.success("Login successful");
+    toast.success("Đăng nhập thành công");
     router.push(callbackUrl);
     router.refresh();
   }
@@ -102,14 +102,14 @@ function LoginForm() {
   return (
     <AuthSplitLayout
       heroImage="/images/bypass/cerberus-banner.png"
-      badge="Next Level Gaming"
-      title="Premium Digital Gaming Marketplace"
-      description="Access your account and continue exploring premium software keys and exclusive offers."
+      badge="Gaming đỉnh cao"
+      title="Chợ game số cao cấp"
+      description="Đăng nhập để tiếp tục khám phá key game và ưu đãi độc quyền."
     >
       <AuthGlassCard>
         <AuthCardTop
-          title="Welcome back"
-          description="Login to continue your shopping experience."
+          title="Chào mừng trở lại"
+          description="Đăng nhập để tiếp tục mua sắm."
         />
 
         <form onSubmit={onSubmit}>
@@ -126,13 +126,13 @@ function LoginForm() {
           </AuthField>
 
           <AuthField
-            label="Password"
+            label="Mật khẩu"
             action={
               <Link
                 href="/auth/forgot-password"
                 className="text-xs font-semibold text-keyshop-blue hover:text-sky-300"
               >
-                Forgot password?
+                Quên mật khẩu?
               </Link>
             }
           >
@@ -143,7 +143,7 @@ function LoginForm() {
               value={formFields.password}
               onChange={(password) => setFormFields({ ...formFields, password })}
               autoComplete="current-password"
-              placeholder="Enter your password"
+              placeholder="Nhập mật khẩu"
               endAction={
                 <button
                   type="button"
@@ -167,20 +167,20 @@ function LoginForm() {
               onChange={(event) => setRememberMe(event.target.checked)}
               className="h-4 w-4 rounded border-keyshop-line accent-keyshop-blue"
             />
-            Remember me
+            Ghi nhớ đăng nhập
           </label>
 
           <AuthSubmitButton disabled={loading}>
-            {loading ? "Signing in..." : "Sign in"}
+            {loading ? "Đang đăng nhập..." : "Đăng nhập"}
           </AuthSubmitButton>
         </form>
 
         <SocialAuthButtons callbackUrl={callbackUrl} />
 
         <AuthBottomText>
-          Don&apos;t have an account?{" "}
+          Chưa có tài khoản?{" "}
           <Link href="/auth/register" className="font-semibold text-keyshop-blue hover:text-sky-300">
-            Create account
+            Tạo tài khoản
           </Link>
         </AuthBottomText>
       </AuthGlassCard>
@@ -193,7 +193,7 @@ export default function LoginPageClient() {
     <Suspense
       fallback={
         <div className="flex min-h-[100svh] items-center justify-center bg-keyshop-bg text-white/60">
-          Loading...
+          Đang tải...
         </div>
       }
     >

@@ -42,7 +42,7 @@ export default function OverlayModal({
   }, []);
 
   useOverlayLock(open && active);
-  useOverlayEscape(open, onClose);
+  useOverlayEscape(open && active, onClose);
 
   if (!portalReady || !mounted) {
     return null;

@@ -3,8 +3,8 @@ import type { Metadata } from "next";
 import SecurityPageClient from "@/components/account/security-page";
 
 export const metadata: Metadata = {
-  title: "Security",
-  description: "Manage active sessions and account security settings.",
+  title: "Bảo mật",
+  description: "Quản lý phiên đăng nhập và cài đặt bảo mật tài khoản.",
 };
 
 export default function SecurityPage() {

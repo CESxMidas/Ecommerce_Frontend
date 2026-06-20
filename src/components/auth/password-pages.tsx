@@ -29,14 +29,14 @@ export function ForgotPasswordPageClient() {
     event.preventDefault();
 
     if (!email.trim() || !/\S+@\S+\.\S+/.test(email)) {
-      toast.error("Valid email is required");
+      toast.error("Vui lòng nhập email hợp lệ");
       return;
     }
 
     try {
       setLoading(true);
       const result = await forgotPassword(email.trim());
-      toast.success(result.message || "Password reset code sent");
+      toast.success(result.message || "Mã đặt lại mật khẩu đã được gửi");
       router.push(`/auth/reset-password?email=${encodeURIComponent(email)}`);
     } catch (error) {
       toast.error(getApiErrorMessage(error));
@@ -51,8 +51,8 @@ export function ForgotPasswordPageClient() {
         <AuthGradientIcon icon={Mail} />
         <AuthCardTop
           centered
-          title="Forgot your password?"
-          description="Enter your email and we'll send you a reset code."
+          title="Quên mật khẩu?"
+          description="Nhập email để nhận mã đặt lại mật khẩu."
         />
 
         <form onSubmit={onSubmit}>
@@ -62,18 +62,18 @@ export function ForgotPasswordPageClient() {
               icon={Mail}
               value={email}
               onChange={setEmail}
-              placeholder="Email address"
+              placeholder="Địa chỉ email"
             />
           </AuthField>
 
           <AuthSubmitButton disabled={loading}>
-            {loading ? "Sending..." : "Send reset code"}
+            {loading ? "Đang gửi..." : "Gửi mã đặt lại"}
           </AuthSubmitButton>
         </form>
 
         <AuthBottomText>
           <Link href="/auth/login" className="font-semibold text-keyshop-blue hover:text-sky-300">
-            Back to login
+            Quay lại đăng nhập
           </Link>
         </AuthBottomText>
       </AuthCenteredCard>
@@ -102,23 +102,23 @@ function ResetPasswordForm() {
     event.preventDefault();
 
     if (formFields.password.length < 6) {
-      toast.error("Password must be at least 6 characters");
+      toast.error("Mật khẩu phải có ít nhất 6 ký tự");
       return;
     }
 
     if (formFields.password !== formFields.confirmPassword) {
-      toast.error("Passwords do not match");
+      toast.error("Mật khẩu không khớp");
       return;
     }
 
     if (!isAuthenticated) {
       if (!formFields.email.trim()) {
-        toast.error("Email is required");
+        toast.error("Vui lòng nhập email");
         return;
       }
 
       if (!formFields.otp.trim()) {
-        toast.error("Reset code is required");
+        toast.error("Vui lòng nhập mã đặt lại");
         return;
       }
     }
@@ -137,7 +137,7 @@ function ResetPasswordForm() {
       }
 
       await resetPassword(payload);
-      toast.success("Password reset successfully");
+      toast.success("Đặt lại mật khẩu thành công");
       router.push("/auth/login");
     } catch (error) {
       toast.error(getApiErrorMessage(error));
@@ -152,8 +152,8 @@ function ResetPasswordForm() {
         <AuthGradientIcon icon={Lock} />
         <AuthCardTop
           centered
-          title="Create new password"
-          description="Your new password must be different from previous passwords."
+          title="Tạo mật khẩu mới"
+          description="Mật khẩu mới phải khác mật khẩu trước đó."
         />
 
         <form onSubmit={onSubmit}>
@@ -169,19 +169,19 @@ function ResetPasswordForm() {
                   onChange={(email) => setFormFields({ ...formFields, email })}
                 />
               </AuthField>
-              <AuthField label="Reset code">
+              <AuthField label="Mã đặt lại">
                 <AuthInput
                   id="otp"
                   name="otp"
                   value={formFields.otp}
                   onChange={(otp) => setFormFields({ ...formFields, otp })}
-                  placeholder="6-digit code"
+                  placeholder="Mã 6 chữ số"
                 />
               </AuthField>
             </>
           ) : null}
 
-          <AuthField label="New password">
+          <AuthField label="Mật khẩu mới">
             <AuthInput
               id="password"
               name="password"
@@ -201,7 +201,7 @@ function ResetPasswordForm() {
             />
           </AuthField>
 
-          <AuthField label="Confirm password">
+          <AuthField label="Xác nhận mật khẩu">
             <AuthInput
               id="confirmPassword"
               name="confirmPassword"
@@ -228,13 +228,13 @@ function ResetPasswordForm() {
           </AuthField>
 
           <AuthSubmitButton disabled={loading}>
-            {loading ? "Updating..." : "Reset password"}
+            {loading ? "Đang cập nhật..." : "Đặt lại mật khẩu"}
           </AuthSubmitButton>
         </form>
 
         <AuthBottomText>
           <Link href="/auth/login" className="font-semibold text-keyshop-blue hover:text-sky-300">
-            Back to login
+            Quay lại đăng nhập
           </Link>
         </AuthBottomText>
       </AuthCenteredCard>
@@ -247,7 +247,7 @@ export function ResetPasswordPageClient() {
     <Suspense
       fallback={
         <div className="flex min-h-[100svh] items-center justify-center bg-keyshop-bg text-white/60">
-          Loading...
+          Đang tải...
         </div>
       }
     >

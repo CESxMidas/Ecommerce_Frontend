@@ -3,8 +3,8 @@ import type { Metadata } from "next";
 import AddressesPageClient from "@/components/account/addresses-page";
 
 export const metadata: Metadata = {
-  title: "Addresses",
-  description: "Manage shipping addresses for your KEYSHOP orders.",
+  title: "Địa chỉ",
+  description: "Quản lý địa chỉ giao hàng cho đơn hàng KEYSHOP.",
 };
 
 export default function AddressesPage() {

@@ -57,39 +57,39 @@ export default function SecurityPageClient() {
   const removeSession = async (id: string) => {
     try {
       await deleteSession(id);
-      toast.success("Session removed");
+      toast.success("Đã đăng xuất phiên");
       await loadSessions();
     } catch (error) {
-      toast.error(getApiErrorMessage(error, "Failed to remove session"));
+      toast.error(getApiErrorMessage(error, "Không thể đăng xuất phiên"));
     }
   };
 
   const removeAllSessions = async () => {
     try {
       await deleteAllSessions();
-      toast.success("All sessions removed");
+      toast.success("Đã đăng xuất tất cả phiên");
       await performLogout("/auth/login");
     } catch (error) {
-      toast.error(getApiErrorMessage(error, "Failed to logout sessions"));
+      toast.error(getApiErrorMessage(error, "Không thể đăng xuất các phiên"));
     }
   };
 
   return (
     <AccountCard>
       <AccountCardHeader
-        title="Security"
-        description="Manage active login sessions and account security state."
+        title="Bảo mật"
+        description="Quản lý phiên đăng nhập và trạng thái bảo mật tài khoản."
         action={
           <AccountActionButton variant="outline" onClick={removeAllSessions}>
-            Logout all
+            Đăng xuất tất cả
           </AccountActionButton>
         }
       />
 
       {loading ? (
-        <AccountLoading label="Loading sessions..." />
+        <AccountLoading label="Đang tải phiên đăng nhập..." />
       ) : sessions.length === 0 ? (
-        <p className="text-sm text-keyshop-muted">No active sessions found.</p>
+        <p className="text-sm text-keyshop-muted">Không tìm thấy phiên đăng nhập.</p>
       ) : (
         <div className="space-y-4">
           {sessions.map((session) => (
@@ -97,21 +97,21 @@ export default function SecurityPageClient() {
               key={session.id}
               action={
                 <AccountActionButton onClick={() => removeSession(session.id)}>
-                  Remove
+                  Xóa
                 </AccountActionButton>
               }
             >
               <h3 className="text-lg font-bold text-white">
-                {session.deviceName || "Browser"}
+                {session.deviceName || "Trình duyệt"}
               </h3>
               <p className="text-sm text-keyshop-muted">
-                {session.ipAddress || "Unknown IP"}
+                {session.ipAddress || "IP không xác định"}
               </p>
               <p className="text-xs text-slate-500">
-                Last used:{" "}
+                Lần dùng cuối:{" "}
                 {session.lastUsedAt
                   ? new Date(session.lastUsedAt).toLocaleString()
-                  : "Unknown"}
+                  : "Không rõ"}
               </p>
             </AccountListItem>
           ))}

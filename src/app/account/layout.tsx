@@ -5,10 +5,10 @@ import { noIndexMetadata } from "@/lib/metadata";
 
 export const metadata: Metadata = {
   title: {
-    default: "Account",
-    template: "%s | Account | KEYSHOP",
+    default: "Tài khoản",
+    template: "%s | Tài khoản | KEYSHOP",
   },
-  description: "Manage your KEYSHOP profile, orders, and digital licenses.",
+  description: "Quản lý hồ sơ, đơn hàng và key bản quyền KEYSHOP.",
   ...noIndexMetadata,
 };
 

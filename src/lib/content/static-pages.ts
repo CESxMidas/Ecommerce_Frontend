@@ -12,140 +12,140 @@ export type StaticPageContent = {
 
 export const STATIC_PAGES: Record<string, StaticPageContent> = {
   about: {
-    kicker: "Company",
-    title: "About KEYSHOP",
+    kicker: "Công ty",
+    title: "Giới thiệu KEYSHOP",
     intro:
-      "KEYSHOP is a digital ecommerce store focused on software keys, gaming products and fast digital delivery.",
+      "KEYSHOP là cửa hàng thương mại điện tử chuyên key phần mềm, sản phẩm game và giao hàng số nhanh.",
     sections: [
       {
-        title: "What we sell",
-        body: "We focus on digital products such as software licenses, game-related tools and downloadable products that can be delivered quickly after checkout.",
+        title: "Sản phẩm chúng tôi cung cấp",
+        body: "Chúng tôi tập trung vào sản phẩm số như bản quyền phần mềm, công cụ game và sản phẩm tải xuống có thể giao ngay sau thanh toán.",
       },
       {
-        title: "Our standard",
-        body: "Product pages, order status, support, payment handling and license delivery are designed to be clear so customers can buy with confidence.",
+        title: "Cam kết dịch vụ",
+        body: "Trang sản phẩm, trạng thái đơn hàng, hỗ trợ, thanh toán và giao key được thiết kế rõ ràng để khách hàng mua hàng an tâm.",
       },
     ],
   },
   contact: {
-    kicker: "Support",
-    title: "Contact Us",
+    kicker: "Hỗ trợ",
+    title: "Liên hệ",
     intro:
-      "Need help with an order, product activation or account issue? Contact our support team with your order ID and account email.",
+      "Cần hỗ trợ đơn hàng, kích hoạt sản phẩm hoặc tài khoản? Liên hệ đội hỗ trợ kèm mã đơn và email đăng ký.",
     sections: [
       { title: "Email", body: "hoangdohuy0907@gmail.com" },
-      { title: "Phone", body: "+84 941 383 007" },
+      { title: "Điện thoại", body: "+84 941 383 007" },
       {
-        title: "Support hours",
-        body: "Support requests are reviewed daily. Include screenshots and your order ID for faster handling.",
+        title: "Giờ hỗ trợ",
+        body: "Yêu cầu hỗ trợ được xử lý hàng ngày. Gửi kèm ảnh chụp màn hình và mã đơn để được phản hồi nhanh hơn.",
       },
     ],
   },
   "help-center": {
-    kicker: "Support",
-    title: "Help Center",
-    intro: "Find quick answers for orders, payments, digital delivery and account access.",
+    kicker: "Hỗ trợ",
+    title: "Trung tâm trợ giúp",
+    intro: "Tìm câu trả lời nhanh về đơn hàng, thanh toán, giao hàng số và truy cập tài khoản.",
     sections: [
       {
-        title: "Order help",
-        body: "Use the order tracking page to check status. Logged-in customers can also open My Orders for full order details.",
+        title: "Hỗ trợ đơn hàng",
+        body: "Dùng trang tra cứu đơn để kiểm tra trạng thái. Khách đã đăng nhập có thể xem chi tiết trong mục Đơn hàng.",
       },
       {
-        title: "License keys",
-        body: "License key products are shown after successful purchase and remain visible inside your order details.",
+        title: "Key bản quyền",
+        body: "Key hiển thị sau khi mua thành công và luôn có trong chi tiết đơn hàng của bạn.",
       },
       {
-        title: "Account help",
-        body: "Use forgot password or email verification pages if you cannot access your account.",
+        title: "Hỗ trợ tài khoản",
+        body: "Dùng trang quên mật khẩu hoặc xác minh email nếu không đăng nhập được.",
       },
     ],
   },
   terms: {
-    kicker: "Legal",
-    title: "Terms and Conditions",
-    intro: "These terms describe the basic rules for using the store and purchasing digital products.",
+    kicker: "Pháp lý",
+    title: "Điều khoản sử dụng",
+    intro: "Điều khoản mô tả quy tắc cơ bản khi sử dụng cửa hàng và mua sản phẩm số.",
     sections: [
       {
-        title: "Orders",
-        body: "Customers are responsible for providing accurate account, contact and payment information before placing an order.",
+        title: "Đặt hàng",
+        body: "Khách hàng chịu trách nhiệm cung cấp đúng thông tin tài khoản, liên hệ và thanh toán trước khi đặt hàng.",
       },
       {
-        title: "Digital products",
-        body: "Digital items may be delivered immediately after successful payment, so cancellation options can be limited once delivery starts.",
+        title: "Sản phẩm số",
+        body: "Sản phẩm số có thể được giao ngay sau thanh toán thành công, nên tùy chọn hủy có thể bị giới hạn.",
       },
       {
-        title: "Account usage",
-        body: "You are responsible for keeping your account credentials secure and for all activity made through your account.",
+        title: "Sử dụng tài khoản",
+        body: "Bạn chịu trách nhiệm bảo mật thông tin đăng nhập và mọi hoạt động qua tài khoản của mình.",
       },
     ],
   },
   "privacy-policy": {
-    kicker: "Legal",
-    title: "Privacy Policy",
-    intro: "This page explains the main customer data used to operate orders, accounts and support.",
+    kicker: "Pháp lý",
+    title: "Chính sách bảo mật",
+    intro: "Trang này giải thích dữ liệu khách hàng được dùng để vận hành đơn hàng, tài khoản và hỗ trợ.",
     sections: [
       {
-        title: "Data we use",
-        body: "We use account details, contact information, order items and payment status to process purchases and provide support.",
+        title: "Dữ liệu thu thập",
+        body: "Chúng tôi dùng thông tin tài khoản, liên hệ, sản phẩm đặt mua và trạng thái thanh toán để xử lý đơn và hỗ trợ.",
       },
       {
-        title: "Why we use data",
-        body: "Customer data is used for authentication, order fulfillment, payment verification, fraud prevention and support requests.",
+        title: "Mục đích sử dụng",
+        body: "Dữ liệu dùng cho xác thực, giao hàng, xác minh thanh toán, phòng chống gian lận và xử lý yêu cầu hỗ trợ.",
       },
       {
-        title: "Customer control",
-        body: "Customers can update profile and address details from their account pages where supported.",
+        title: "Quyền của khách hàng",
+        body: "Khách hàng có thể cập nhật hồ sơ và địa chỉ trong tài khoản khi tính năng được hỗ trợ.",
       },
     ],
   },
   returns: {
-    kicker: "Policy",
-    title: "Return and Refund Policy",
-    intro: "Digital ecommerce needs clear refund rules because many products are delivered instantly.",
+    kicker: "Chính sách",
+    title: "Chính sách hoàn tiền",
+    intro: "Thương mại điện tử số cần quy tắc hoàn tiền rõ ràng vì nhiều sản phẩm được giao ngay.",
     sections: [
       {
-        title: "Eligible cases",
-        body: "Refund or replacement may be reviewed when the delivered key is invalid, duplicate or not delivered due to a system issue.",
+        title: "Trường hợp được xem xét",
+        body: "Hoàn tiền hoặc đổi key có thể được xem xét khi key không hợp lệ, trùng lặp hoặc không giao do lỗi hệ thống.",
       },
       {
-        title: "Non-refundable cases",
-        body: "Activated, redeemed or successfully delivered digital products may not be refundable unless required by support review.",
+        title: "Trường hợp không hoàn",
+        body: "Sản phẩm đã kích hoạt, đổi thành công hoặc giao đầy đủ có thể không được hoàn trừ khi hỗ trợ xác nhận khác.",
       },
       {
-        title: "How to request",
-        body: "Contact support with order ID, product name, screenshots and a clear description of the issue.",
+        title: "Cách gửi yêu cầu",
+        body: "Liên hệ hỗ trợ kèm mã đơn, tên sản phẩm, ảnh chụp màn hình và mô tả rõ vấn đề.",
       },
     ],
   },
   shipping: {
-    kicker: "Policy",
-    title: "Shipping and Delivery",
+    kicker: "Chính sách",
+    title: "Giao hàng",
     intro:
-      "Most products in this store are digital and delivered through the order system rather than physical shipping.",
+      "Phần lớn sản phẩm tại cửa hàng là số và được giao qua hệ thống đơn hàng thay vì vận chuyển vật lý.",
     sections: [
       {
-        title: "Digital delivery",
-        body: "License keys and digital products are attached to your order after checkout and can be viewed from order details.",
+        title: "Giao hàng số",
+        body: "Key và sản phẩm số được gắn vào đơn sau thanh toán và xem được trong chi tiết đơn hàng.",
       },
       {
-        title: "Delivery delays",
-        body: "Some orders can be delayed while payment, inventory or fraud checks complete.",
+        title: "Trì hoãn giao hàng",
+        body: "Một số đơn có thể chậm trong khi xác minh thanh toán, tồn kho hoặc kiểm tra gian lận.",
       },
     ],
   },
   "payment-policy": {
-    kicker: "Policy",
-    title: "Secure Payment",
+    kicker: "Chính sách",
+    title: "Thanh toán an toàn",
     intro:
-      "Payments are processed through supported payment providers and order status is updated after confirmation.",
+      "Thanh toán qua các cổng được hỗ trợ và trạng thái đơn được cập nhật sau khi xác nhận.",
     sections: [
       {
-        title: "Payment status",
-        body: "Orders can show pending, paid, failed or cancelled states depending on provider confirmation.",
+        title: "Trạng thái thanh toán",
+        body: "Đơn có thể ở trạng thái chờ thanh toán, đã thanh toán, thất bại hoặc đã hủy tùy cổng thanh toán.",
       },
       {
-        title: "Payment retry",
-        body: "If payment fails or expires, use My Orders to review available retry options.",
+        title: "Thử lại thanh toán",
+        body: "Nếu thanh toán thất bại hoặc hết hạn, vào mục Đơn hàng để xem tùy chọn thanh toán lại.",
       },
     ],
   },

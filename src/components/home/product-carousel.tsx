@@ -36,7 +36,7 @@ export default function ProductCarousel({ products, limit = 10 }: ProductCarouse
       }}
     >
       {items.map((item, index) => (
-        <SwiperSlide key={item.id}>
+        <SwiperSlide key={item.id} className="!h-auto">
           <ProductItem item={item} index={index} />
         </SwiperSlide>
       ))}

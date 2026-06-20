@@ -31,7 +31,7 @@ export default function TrackOrderPageClient() {
       const data = await trackOrder(form);
       setOrder(data);
     } catch (err) {
-      setError(getApiErrorMessage(err, "Could not track this order"));
+      setError(getApiErrorMessage(err, "Không thể tra cứu đơn hàng này"));
     } finally {
       setLoading(false);
     }
@@ -40,33 +40,33 @@ export default function TrackOrderPageClient() {
   return (
     <CommercePage>
       <CommerceHero
-        kicker="Tracking"
-        title="Order Tracking"
-        description="Enter your order ID and email or phone number to check the latest order status."
+        kicker="Theo dõi"
+        title="Tra cứu đơn hàng"
+        description="Nhập mã đơn hàng và email hoặc số điện thoại để xem trạng thái mới nhất."
       />
 
       <CommercePanel>
         <form className="grid max-w-xl gap-4" onSubmit={handleSubmit}>
-          <CommerceField label="Order ID">
+          <CommerceField label="Mã đơn hàng">
             <input
               value={form.orderId}
               onChange={(event) => setForm({ ...form, orderId: event.target.value })}
-              placeholder="Example: 12345"
+              placeholder="Ví dụ: 12345"
               required
               className={commerceFieldClass}
             />
           </CommerceField>
-          <CommerceField label="Email or phone">
+          <CommerceField label="Email hoặc số điện thoại">
             <input
               value={form.contact}
               onChange={(event) => setForm({ ...form, contact: event.target.value })}
-              placeholder="Email or phone used on the order"
+              placeholder="Email hoặc SĐT đã dùng khi đặt hàng"
               required
               className={commerceFieldClass}
             />
           </CommerceField>
           <CommerceBtn type="submit" disabled={loading}>
-            {loading ? "Checking..." : "Track order"}
+            {loading ? "Đang tra cứu..." : "Tra cứu đơn hàng"}
           </CommerceBtn>
         </form>
 

@@ -7,8 +7,10 @@ import { FormEvent, useEffect, useState } from "react";
 import toast from "react-hot-toast";
 
 import { useCart } from "@/components/providers/cart-provider";
+import { OrderSummaryTotals } from "@/components/shop/order-summary-totals";
 import { placeOrder } from "@/lib/services/order-service";
 import { fetchAddresses } from "@/lib/services/user-service";
+import { getPayableCartTotal } from "@/lib/utils/cart-storage";
 import { cn } from "@/lib/utils";
 import { formatPrice } from "@/lib/utils/format";
 import {
@@ -88,9 +90,7 @@ export default function CheckoutPageClient() {
     cartSummary.subtotal > 0 &&
     Number(appliedCoupon.subtotal) === Number(cartSummary.subtotal);
   const effectiveCoupon = hasValidCoupon ? appliedCoupon : null;
-  const displayTotal = effectiveCoupon
-    ? effectiveCoupon.total + (cartSummary.subtotal > 0 ? cartSummary.tax : 0)
-    : cartSummary.total;
+  const displayTotal = getPayableCartTotal(cartSummary, effectiveCoupon);
 
   useEffect(() => {
     if (appliedCoupon && !hasValidCoupon) {
@@ -192,42 +192,42 @@ export default function CheckoutPageClient() {
 
   const validateValue = () => {
     if (!formFields.firstName.trim()) {
-      toast.error("First name is required");
+      toast.error("Vui lòng nhập họ");
       return false;
     }
 
     if (!formFields.lastName.trim()) {
-      toast.error("Last name is required");
+      toast.error("Vui lòng nhập tên");
       return false;
     }
 
     if (!formFields.email.trim()) {
-      toast.error("Email is required");
+      toast.error("Vui lòng nhập email");
       return false;
     }
 
     if (!/\S+@\S+\.\S+/.test(formFields.email)) {
-      toast.error("Invalid email format");
+      toast.error("Email không hợp lệ");
       return false;
     }
 
     if (!formFields.phone.trim()) {
-      toast.error("Phone number is required");
+      toast.error("Vui lòng nhập số điện thoại");
       return false;
     }
 
     if (!/^[0-9+\-\s()]{8,20}$/.test(formFields.phone.trim())) {
-      toast.error("Invalid phone number");
+      toast.error("Số điện thoại không hợp lệ");
       return false;
     }
 
     if (!formFields.address.trim()) {
-      toast.error("Address is required");
+      toast.error("Vui lòng nhập địa chỉ");
       return false;
     }
 
     if (!formFields.city.trim()) {
-      toast.error("City is required");
+      toast.error("Vui lòng nhập thành phố");
       return false;
     }
 
@@ -235,7 +235,7 @@ export default function CheckoutPageClient() {
       formFields.pincode.trim() &&
       !/^[A-Za-z0-9\-\s]{3,12}$/.test(formFields.pincode.trim())
     ) {
-      toast.error("Invalid pincode");
+      toast.error("Mã bưu điện không hợp lệ");
       return false;
     }
 
@@ -246,12 +246,12 @@ export default function CheckoutPageClient() {
     if (!validateValue()) return;
 
     if (!allItemsAllowCod && paymentMethod === "cod") {
-      toast.error("COD is only available for physical products");
+      toast.error("COD chỉ áp dụng cho sản phẩm vật lý");
       return;
     }
 
     if (cartItems.length === 0) {
-      toast.error("Your cart is empty");
+      toast.error("Giỏ hàng trống");
       return;
     }
 
@@ -295,13 +295,13 @@ export default function CheckoutPageClient() {
 
       await completeCheckout();
       showLicenseKeysFromOrder(order);
-      toast.success("Order placed successfully");
+      toast.success("Đặt hàng thành công");
 
       if (!order?.items?.some((item) => item.licenseKeys?.length)) {
         router.push("/account/orders");
       }
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : "Something went wrong");
+      toast.error(error instanceof Error ? error.message : "Đã xảy ra lỗi");
     } finally {
       setLoading(false);
     }
@@ -312,19 +312,19 @@ export default function CheckoutPageClient() {
       <div className="grid gap-6 lg:grid-cols-[7fr_3fr]">
         <div className="space-y-6">
           <div className="rounded-card border border-keyshop-line bg-white/[0.03] p-7 backdrop-blur-xl">
-            <h1 className="text-[34px] font-extrabold text-white">Checkout</h1>
+            <h1 className="text-[34px] font-extrabold text-white">Thanh toán</h1>
             <p className="mt-2 text-sm text-keyshop-muted">
-              Confirm your account details for digital license delivery.
+              Xác nhận thông tin để giao key và sản phẩm số.
             </p>
           </div>
 
           <div className="rounded-card border border-keyshop-line bg-white/[0.03] p-7 backdrop-blur-xl">
-            <h2 className="text-[22px] font-bold text-white">Delivery Contact</h2>
+            <h2 className="text-[22px] font-bold text-white">Thông tin giao hàng</h2>
             <div className="mt-5 space-y-4">
               {savedAddresses.length > 0 ? (
                 <div>
                   <label htmlFor="saved-address" className={labelClass}>
-                    Saved Address
+                    Địa chỉ đã lưu
                   </label>
                   <select
                     id="saved-address"
@@ -338,7 +338,7 @@ export default function CheckoutPageClient() {
                         value={address.id || address._id}
                         className="bg-keyshop-bg"
                       >
-                        {address.isDefault ? "Default - " : ""}
+                        {address.isDefault ? "Mặc định — " : ""}
                         {address.label || address.address_line}, {address.city}
                       </option>
                     ))}
@@ -349,7 +349,7 @@ export default function CheckoutPageClient() {
               <form className="grid gap-4 md:grid-cols-2" onSubmit={(e) => e.preventDefault()}>
                 <div>
                   <label htmlFor="firstName" className={labelClass}>
-                    First Name
+                    Họ
                   </label>
                   <input
                     id="firstName"
@@ -361,7 +361,7 @@ export default function CheckoutPageClient() {
                 </div>
                 <div>
                   <label htmlFor="lastName" className={labelClass}>
-                    Last Name
+                    Tên
                   </label>
                   <input
                     id="lastName"
@@ -373,7 +373,7 @@ export default function CheckoutPageClient() {
                 </div>
                 <div className="md:col-span-2">
                   <label htmlFor="email" className={labelClass}>
-                    Email Address
+                    Email
                   </label>
                   <input
                     id="email"
@@ -386,7 +386,7 @@ export default function CheckoutPageClient() {
                 </div>
                 <div className="md:col-span-2">
                   <label htmlFor="phone" className={labelClass}>
-                    Phone Number
+                    Số điện thoại
                   </label>
                   <input
                     id="phone"
@@ -398,7 +398,7 @@ export default function CheckoutPageClient() {
                 </div>
                 <div>
                   <label htmlFor="country" className={labelClass}>
-                    Country
+                    Quốc gia
                   </label>
                   <input
                     id="country"
@@ -410,7 +410,7 @@ export default function CheckoutPageClient() {
                 </div>
                 <div>
                   <label htmlFor="city" className={labelClass}>
-                    City
+                    Thành phố
                   </label>
                   <input
                     id="city"
@@ -422,7 +422,7 @@ export default function CheckoutPageClient() {
                 </div>
                 <div>
                   <label htmlFor="pincode" className={labelClass}>
-                    Pincode
+                    Mã bưu điện
                   </label>
                   <input
                     id="pincode"
@@ -434,7 +434,7 @@ export default function CheckoutPageClient() {
                 </div>
                 <div className="md:col-span-2">
                   <label htmlFor="address" className={labelClass}>
-                    Billing Address
+                    Địa chỉ
                   </label>
                   <textarea
                     id="address"
@@ -450,7 +450,7 @@ export default function CheckoutPageClient() {
           </div>
 
           <div className="rounded-card border border-keyshop-line bg-white/[0.03] p-7 backdrop-blur-xl">
-            <h2 className="text-[22px] font-bold text-white">Payment Method</h2>
+            <h2 className="text-[22px] font-bold text-white">Phương thức thanh toán</h2>
             <div className="mt-5 space-y-4">
               <div
                 className={cn(
@@ -462,8 +462,8 @@ export default function CheckoutPageClient() {
               >
                 <p className="font-bold text-white">
                   {hasDigitalItems
-                    ? "VNPay required for this cart"
-                    : "COD and VNPay are available"}
+                    ? "Giỏ hàng yêu cầu thanh toán VNPay"
+                    : "Hỗ trợ COD và VNPay"}
                 </p>
                 <p
                   className={cn(
@@ -472,8 +472,8 @@ export default function CheckoutPageClient() {
                   )}
                 >
                   {hasDigitalItems
-                    ? "Keys and digital products are delivered only after successful online payment."
-                    : "This cart contains only physical products, so COD or VNPay can be used."}
+                    ? "Key và sản phẩm số chỉ giao sau khi thanh toán online thành công."
+                    : "Giỏ hàng chỉ có sản phẩm vật lý — có thể chọn COD hoặc VNPay."}
                 </p>
               </div>
 
@@ -488,9 +488,9 @@ export default function CheckoutPageClient() {
                       onChange={() => setPaymentMethod("cod")}
                     />
                     <div>
-                      <p className="font-bold text-white">Manual Confirmation (COD)</p>
+                      <p className="font-bold text-white">Thanh toán COD</p>
                       <p className="mt-1 text-sm text-keyshop-muted">
-                        Pay after receiving eligible physical products.
+                        Thanh toán khi nhận hàng (sản phẩm vật lý).
                       </p>
                     </div>
                   </label>
@@ -507,7 +507,7 @@ export default function CheckoutPageClient() {
                   <div>
                     <p className="font-bold text-white">VNPay</p>
                     <p className="mt-1 text-sm text-keyshop-muted">
-                      Pay securely through the VNPay gateway.
+                      Thanh toán an toàn qua cổng VNPay.
                     </p>
                   </div>
                 </label>
@@ -515,8 +515,7 @@ export default function CheckoutPageClient() {
 
               {hasDigitalItems ? (
                 <p className="text-[13px] leading-relaxed text-sky-300">
-                  License keys and redeem codes are delivered instantly to your account
-                  after payment is confirmed.
+                  Key và mã nạp sẽ hiển thị trong tài khoản ngay sau khi thanh toán được xác nhận.
                 </p>
               ) : null}
             </div>
@@ -524,7 +523,7 @@ export default function CheckoutPageClient() {
         </div>
 
         <div className="h-fit rounded-card border border-keyshop-line bg-white/[0.03] p-7 backdrop-blur-xl lg:sticky lg:top-24">
-          <h2 className="text-xl font-bold text-white">Order Summary</h2>
+          <h2 className="text-xl font-bold text-white">Tóm tắt đơn hàng</h2>
           <div className="mt-5 space-y-4">
             {cartItems.map((item) => (
               <div
@@ -544,7 +543,7 @@ export default function CheckoutPageClient() {
                   <p className="font-bold text-white">{getProductDisplayName(item.product)}</p>
                   <div className="mt-2 flex flex-wrap gap-2">
                     <span className="rounded-full bg-white/5 px-2.5 py-1 text-xs font-extrabold text-keyshop-muted">
-                      Qty: {item.quantity}
+                      SL: {item.quantity}
                     </span>
                     {item.variant ? (
                       <span className="rounded-full bg-keyshop-blue/15 px-2.5 py-1 text-xs font-extrabold text-sky-200">
@@ -563,36 +562,11 @@ export default function CheckoutPageClient() {
             ))}
 
             <div className="space-y-2 border-t border-keyshop-line pt-5 text-sm">
-              <div className="flex justify-between">
-                <span className="text-keyshop-muted">Subtotal</span>
-                <span className="text-white">{formatPrice(cartSummary.subtotal)}</span>
-              </div>
-              {cartSummary.savings > 0 ? (
-                <div className="flex justify-between">
-                  <span className="text-keyshop-muted">Discount</span>
-                  <span className="text-keyshop-green">
-                    -{formatPrice(cartSummary.savings)}
-                  </span>
-                </div>
-              ) : null}
-              {effectiveCoupon?.discount ? (
-                <div className="flex justify-between">
-                  <span className="text-keyshop-muted">
-                    Coupon ({effectiveCoupon.code})
-                  </span>
-                  <span className="text-keyshop-green">
-                    -{formatPrice(effectiveCoupon.discount)}
-                  </span>
-                </div>
-              ) : null}
-              <div className="flex justify-between">
-                <span className="text-keyshop-muted">Tax</span>
-                <span className="text-white">{formatPrice(cartSummary.tax)}</span>
-              </div>
-              <div className="flex justify-between pt-3 text-[22px] font-bold text-white">
-                <span>Total</span>
-                <span>{formatPrice(displayTotal)}</span>
-              </div>
+              <OrderSummaryTotals
+                cartSummary={cartSummary}
+                effectiveCoupon={effectiveCoupon}
+                totalClassName="text-[22px] font-bold text-white"
+              />
             </div>
 
             <button
@@ -601,7 +575,7 @@ export default function CheckoutPageClient() {
               onClick={handlePlaceOrder}
               disabled={loading || cartItems.length === 0}
             >
-              {loading ? "Processing..." : "Place Order"}
+              {loading ? "Đang xử lý..." : "Đặt hàng"}
             </button>
           </div>
         </div>

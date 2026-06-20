@@ -23,7 +23,7 @@ export default function StorefrontChromeClient({
   return (
     <>
       <SiteHeader categories={categories} />
-      <main className="flex-1">{children}</main>
+      <main className="flex-1 bg-keyshop-bg">{children}</main>
       <SiteFooter />
     </>
   );

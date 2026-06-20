@@ -6,15 +6,15 @@ import Providers from "@/components/providers";
 
 import "./globals.css";
 
-const inter = Inter({ subsets: ["latin"] });
+const inter = Inter({ subsets: ["latin", "vietnamese"] });
 
 export const metadata: Metadata = {
   title: {
-    default: "KEYSHOP | Premium Digital Keys",
+    default: "KEYSHOP | Key phần mềm & bản quyền số",
     template: "%s | KEYSHOP",
   },
   description:
-    "Buy premium game and software license keys with instant delivery.",
+    "Mua key game, phần mềm và bản quyền số với giao hàng tức thì sau thanh toán.",
 };
 
 export default function RootLayout({
@@ -23,7 +23,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="dark">
+    <html lang="vi" className="dark">
       <body className={`${inter.className} min-h-screen flex flex-col`}>
         <Providers>
           <StorefrontChrome>{children}</StorefrontChrome>

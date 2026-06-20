@@ -267,11 +267,11 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
             variant,
           );
           setCartItems(items);
-          toast.success("Added to cart");
+          toast.success("Đã thêm vào giỏ");
           return true;
         } catch (error) {
           toast.error(
-            error instanceof Error ? error.message : "Failed to add to cart",
+            error instanceof Error ? error.message : "Không thể thêm vào giỏ",
           );
           return false;
         }
@@ -308,7 +308,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         ];
       });
 
-      toast.success("Added to cart");
+      toast.success("Đã thêm vào giỏ");
       return true;
     },
     [],
@@ -329,11 +329,11 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
             : await wishlistService.addToWishlist(productId);
           setWishlist(items);
           toast.success(
-            exists ? "Removed from wishlist" : "Added to wishlist",
+            exists ? "Đã bỏ khỏi yêu thích" : "Đã thêm vào yêu thích",
           );
         } catch (error) {
           toast.error(
-            error instanceof Error ? error.message : "Failed to update wishlist",
+            error instanceof Error ? error.message : "Không thể cập nhật yêu thích",
           );
         }
         return;
@@ -343,11 +343,11 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         const inList = prev.some((item) => String(item.id) === productId);
 
         if (inList) {
-          toast.success("Removed from wishlist");
+          toast.success("Đã bỏ khỏi yêu thích");
           return prev.filter((item) => String(item.id) !== productId);
         }
 
-        toast.success("Added to wishlist");
+        toast.success("Đã thêm vào yêu thích");
         return [...prev, normalizedProduct];
       });
     },
@@ -371,18 +371,18 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         );
 
         if (exists) {
-          toast.success("Removed from compare");
+          toast.success("Đã bỏ khỏi so sánh");
           return prev.filter(
             (item) => String(item.id) !== String(normalizedProduct.id),
           );
         }
 
         if (prev.length >= MAX_COMPARE_ITEMS) {
-          toast.error(`Compare up to ${MAX_COMPARE_ITEMS} products`);
+          toast.error(`So sánh tối đa ${MAX_COMPARE_ITEMS} sản phẩm`);
           return prev;
         }
 
-        toast.success("Added to compare");
+        toast.success("Đã thêm vào so sánh");
         return [...prev, normalizedProduct];
       });
     },
@@ -403,7 +403,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
 
   const clearCompare = useCallback(() => {
     setCompareItems([]);
-    toast.success("Compare list cleared");
+    toast.success("Đã xóa danh sách so sánh");
   }, []);
 
   const removeFromCart = useCallback(
@@ -414,7 +414,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
           setCartItems(items);
         } catch (error) {
           toast.error(
-            error instanceof Error ? error.message : "Failed to update cart",
+            error instanceof Error ? error.message : "Không thể cập nhật giỏ hàng",
           );
         }
         return;
@@ -451,7 +451,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
           setCartItems(items);
         } catch (error) {
           toast.error(
-            error instanceof Error ? error.message : "Failed to update cart",
+            error instanceof Error ? error.message : "Không thể cập nhật giỏ hàng",
           );
         }
         return;

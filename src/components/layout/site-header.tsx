@@ -11,7 +11,7 @@ import {
   Shuffle,
   User,
 } from "lucide-react";
-import { useState } from "react";
+import { Suspense, useState } from "react";
 
 import CategoryPanel from "@/components/layout/category-panel";
 import SearchBox from "@/components/layout/search-box";
@@ -42,25 +42,25 @@ export default function SiteHeader({ categories }: SiteHeaderProps) {
 
   return (
     <header className="sticky top-0 z-[999] w-full bg-keyshop-bg/95 backdrop-blur-[14px]">
-      <div className="border-b border-white/[0.05] bg-white/[0.02]">
-        <div className="container flex min-h-[34px] items-center justify-between gap-5 text-xs text-keyshop-muted">
-          <p className="truncate">Verified software keys. Instant digital delivery.</p>
+      <div className="keyshop-topbar">
+        <div className="container flex min-h-[34px] items-center justify-between gap-5">
+          <p className="truncate">Key phần mềm chính hãng — giao hàng số tức thì.</p>
           <div className="flex shrink-0 items-center gap-5">
-            <Link href="/support/help-center" className="hover:text-white">
-              Help Center
+            <Link href="/support/help-center" className="transition-colors hover:text-white">
+              Trung tâm trợ giúp
             </Link>
-            <Link href="/track-order" className="hover:text-white">
-              Order Tracking
+            <Link href="/track-order" className="transition-colors hover:text-white">
+              Tra cứu đơn
             </Link>
             <span className="inline-flex items-center gap-1">
               <Globe className="h-3.5 w-3.5" />
-              EN
+              VI
             </span>
           </div>
         </div>
       </div>
 
-      <div className="border-b border-white/[0.05] py-3.5">
+      <div className="keyshop-header-main">
         <div className="container grid items-center gap-6 lg:grid-cols-[minmax(190px,250px)_1fr_auto]">
           <div className="flex items-center gap-3">
             <button
@@ -71,10 +71,10 @@ export default function SiteHeader({ categories }: SiteHeaderProps) {
               <Menu className="h-5 w-5" />
             </button>
             <Link href="/" className="flex flex-col">
-              <span className="text-[32px] font-extrabold leading-none text-white hover:text-keyshop-blue">
+              <span className="text-3xl font-extrabold leading-none text-white transition-colors hover:text-keyshop-blue">
                 KEYSHOP
               </span>
-              <span className="text-xs text-keyshop-muted">Digital licenses</span>
+              <span className="text-xs text-keyshop-muted">Bản quyền số</span>
             </Link>
           </div>
 
@@ -92,7 +92,7 @@ export default function SiteHeader({ categories }: SiteHeaderProps) {
                       className="flex items-center gap-2 rounded-control px-3 py-2 text-sm text-white hover:bg-white/5"
                     >
                       <User className="h-4 w-4" />
-                      <span className="max-w-[120px] truncate">Hello, {userName}</span>
+                      <span className="max-w-[120px] truncate">Xin chào, {userName}</span>
                     </button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent
@@ -101,19 +101,19 @@ export default function SiteHeader({ categories }: SiteHeaderProps) {
                     className="z-[1300] min-w-[200px] rounded-card border border-keyshop-line bg-keyshop-soft p-1.5 text-white shadow-glow"
                   >
                     <DropdownMenuItem asChild className="rounded-control text-white/90 focus:bg-white/10 focus:text-white">
-                      <Link href="/account">My Account</Link>
+                      <Link href="/account">Tài khoản</Link>
                     </DropdownMenuItem>
                     <DropdownMenuItem asChild className="rounded-control text-white/90 focus:bg-white/10 focus:text-white">
-                      <Link href="/account/orders">Orders</Link>
+                      <Link href="/account/orders">Đơn hàng</Link>
                     </DropdownMenuItem>
                     <DropdownMenuItem asChild className="rounded-control text-white/90 focus:bg-white/10 focus:text-white">
-                      <Link href="/account/wishlist">My Wishlist</Link>
+                      <Link href="/account/wishlist">Yêu thích</Link>
                     </DropdownMenuItem>
                     <DropdownMenuItem
                       className="rounded-control text-red-400 focus:bg-red-500/10 focus:text-red-400"
                       onClick={() => performLogout("/")}
                     >
-                      Logout
+                      Đăng xuất
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
@@ -124,13 +124,13 @@ export default function SiteHeader({ categories }: SiteHeaderProps) {
                     className="flex items-center gap-2 rounded-control px-3 py-2 text-sm text-white hover:bg-white/5"
                   >
                     <LogIn className="h-4 w-4" />
-                    Login
+                    Đăng nhập
                   </Link>
                   <Link
                     href="/auth/register"
                     className="rounded-control bg-keyshop-blue px-4 py-2 text-sm font-semibold text-white hover:bg-keyshop-blue-hover"
                   >
-                    Register
+                    Đăng ký
                   </Link>
                 </>
               )}
@@ -164,7 +164,9 @@ export default function SiteHeader({ categories }: SiteHeaderProps) {
         </div>
       </div>
 
-      <SiteNavigation categories={categories} />
+      <Suspense fallback={null}>
+        <SiteNavigation categories={categories} />
+      </Suspense>
 
       <SideDrawer open={openCategory} onClose={() => setOpenCategory(false)} anchor="left">
         <CategoryPanel

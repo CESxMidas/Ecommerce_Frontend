@@ -5,7 +5,7 @@ import { cn } from "@/lib/utils";
 
 export function CommercePage({ children }: { children: ReactNode }) {
   return (
-    <main className="min-h-screen bg-[radial-gradient(circle_at_20%_0%,rgba(59,130,246,0.14),transparent_30%),linear-gradient(135deg,#020817,#0f172a)] py-12 pb-[72px] md:py-[48px]">
+    <main className="keyshop-page-bg min-h-screen py-12 pb-[72px] md:py-[48px]">
       <div className="container">
         <div className="mx-auto max-w-[1120px]">{children}</div>
       </div>
@@ -24,13 +24,13 @@ export function CommerceHero({
 }) {
   return (
     <header className="mb-7">
-      <span className="mb-3 inline-flex items-center gap-2 text-[13px] font-extrabold uppercase tracking-wide text-sky-300">
+      <span className="mb-3 inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-keyshop-blue">
         {kicker}
       </span>
-      <h1 className="max-w-[780px] text-[42px] font-extrabold leading-[1.12] text-white">
+      <h1 className="max-w-[780px] text-3xl font-extrabold leading-tight text-white md:text-4xl">
         {title}
       </h1>
-      <p className="mt-3 max-w-[720px] text-base leading-7 text-slate-400">{description}</p>
+      <p className="mt-3 max-w-[720px] text-base leading-7 text-keyshop-muted">{description}</p>
     </header>
   );
 }
@@ -45,7 +45,7 @@ export function CommercePanel({
   return (
     <section
       className={cn(
-        "rounded-card border border-slate-400/20 bg-keyshop-surface p-6 backdrop-blur-xl md:p-[26px]",
+        "keyshop-panel p-6 md:p-[26px]",
         className,
       )}
     >

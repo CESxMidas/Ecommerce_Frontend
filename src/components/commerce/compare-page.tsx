@@ -23,14 +23,14 @@ import {
 import type { NormalizedProduct } from "@/types/cart";
 
 const rows: [string, (item: NormalizedProduct) => string | number][] = [
-  ["Vendor", (item) => item.vendor || item.brand || "-"],
-  ["Category", (item) => item.categoryName || "-"],
-  ["Price", (item) => formatPrice(getSalePrice(item))],
-  ["Rating", (item) => `${Number(item.rating || 0).toFixed(1)} / 5`],
-  ["Reviews", (item) => item.reviewsCount || 0],
-  ["Stock", (item) => (item.stock > 0 ? `${item.stock} available` : "Out of stock")],
-  ["Type", (item) => getProductTypeLabel(item)],
-  ["Delivery", (item) => getDeliveryLabel(item)],
+  ["Nhà cung cấp", (item) => item.vendor || item.brand || "-"],
+  ["Danh mục", (item) => item.categoryName || "-"],
+  ["Giá", (item) => formatPrice(getSalePrice(item))],
+  ["Đánh giá", (item) => `${Number(item.rating || 0).toFixed(1)} / 5`],
+  ["Nhận xét", (item) => item.reviewsCount || 0],
+  ["Tồn kho", (item) => (item.stock > 0 ? `Còn ${item.stock}` : "Hết hàng")],
+  ["Loại", (item) => getProductTypeLabel(item)],
+  ["Giao hàng", (item) => getDeliveryLabel(item)],
   ["SKU", (item) => item.sku || "-"],
 ];
 
@@ -40,28 +40,28 @@ export default function ComparePageClient() {
   return (
     <CommercePage>
       <CommerceHero
-        kicker="Compare"
-        title="Compare Products"
-        description="Compare up to four products side by side before adding the right license to your cart."
+        kicker="So sánh"
+        title="So sánh sản phẩm"
+        description="So sánh tối đa bốn sản phẩm cạnh nhau trước khi thêm bản quyền phù hợp vào giỏ hàng."
       />
 
       {compareItems.length === 0 ? (
         <CommercePanel>
-          <h2 className="text-xl font-extrabold text-white">No products selected</h2>
+          <h2 className="text-xl font-extrabold text-white">Chưa chọn sản phẩm</h2>
           <p className="mt-2 text-slate-300">
-            Use the compare icon on product cards to add items here.
+            Bấm biểu tượng so sánh trên thẻ sản phẩm để thêm vào đây.
           </p>
           <CommerceActions>
-            <CommerceBtn href="/products">Browse products</CommerceBtn>
+            <CommerceBtn href="/products">Xem sản phẩm</CommerceBtn>
           </CommerceActions>
         </CommercePanel>
       ) : (
         <CommercePanel>
           <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
             <CommerceBtn href="/products" variant="ghost">
-              Add more products
+              Thêm sản phẩm
             </CommerceBtn>
-            <CommerceBtn onClick={clearCompare}>Clear compare</CommerceBtn>
+            <CommerceBtn onClick={clearCompare}>Xóa danh sách so sánh</CommerceBtn>
           </div>
 
           <div className="overflow-x-auto">
@@ -69,7 +69,7 @@ export default function ComparePageClient() {
               <thead>
                 <tr>
                   <th className="border-b border-keyshop-line px-4 py-3 text-left font-extrabold text-slate-400">
-                    Product
+                    Sản phẩm
                   </th>
                   {compareItems.map((item) => (
                     <th
@@ -114,19 +114,19 @@ export default function ComparePageClient() {
                   </tr>
                 ))}
                 <tr>
-                  <td className="px-4 py-4 font-bold text-slate-400">Action</td>
+                  <td className="px-4 py-4 font-bold text-slate-400">Thao tác</td>
                   {compareItems.map((item) => (
                     <td key={`${item.id}-action`} className="px-4 py-4">
                       <div className="flex flex-wrap items-center gap-2">
                         <CommerceBtn onClick={() => addToCart(item)}>
                           <ShoppingCart className="h-4 w-4" />
-                          Add
+                          Thêm
                         </CommerceBtn>
                         <button
                           type="button"
                           className="inline-flex h-[42px] w-[42px] items-center justify-center rounded-control border border-sky-400/35 text-sky-200 transition hover:border-red-400/40 hover:bg-red-500/10 hover:text-red-300"
                           onClick={() => removeFromCompare(item.id)}
-                          aria-label="Remove from compare"
+                          aria-label="Xóa khỏi danh sách so sánh"
                         >
                           <Trash2 className="h-4 w-4" />
                         </button>

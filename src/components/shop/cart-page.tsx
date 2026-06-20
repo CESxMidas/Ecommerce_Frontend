@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 
 import { useCart } from "@/components/providers/cart-provider";
+import { OrderSummaryTotals } from "@/components/shop/order-summary-totals";
 import { validateCoupon } from "@/lib/services/cms-service";
 import { cn } from "@/lib/utils";
 import { formatPrice } from "@/lib/utils/format";
@@ -65,12 +66,12 @@ export default function CartPageClient() {
 
   const applyCoupon = async () => {
     if (!couponCode.trim()) {
-      toast.error("Enter a coupon code");
+      toast.error("Vui lòng nhập mã giảm giá");
       return;
     }
 
     if (!isAuthenticated) {
-      toast.error("Please login to apply a coupon");
+      toast.error("Vui lòng đăng nhập để áp dụng mã");
       return;
     }
 
@@ -79,39 +80,38 @@ export default function CartPageClient() {
 
       localStorage.setItem("appliedCoupon", JSON.stringify(result));
       setAppliedCoupon(result);
-      toast.success("Coupon applied");
+      toast.success("Đã áp dụng mã giảm giá");
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : "Invalid coupon");
+      toast.error(error instanceof Error ? error.message : "Mã giảm giá không hợp lệ");
     }
   };
 
-  const displayTotal = effectiveCoupon
-    ? effectiveCoupon.total + (cartSummary.subtotal > 0 ? 2 : 0)
-    : cartSummary.total;
+  const itemCountLabel =
+    cartSummary.count === 1
+      ? "1 sản phẩm trong giỏ"
+      : `${cartSummary.count} sản phẩm trong giỏ`;
 
   return (
     <section className="container py-10 pb-16 md:py-[50px]">
       <div className="mb-8 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <div>
-          <h1 className="text-4xl font-extrabold text-white md:text-[42px]">Shopping Cart</h1>
-          <p className="mt-1 text-[15px] text-keyshop-muted">
-            You have {cartSummary.count} item{cartSummary.count !== 1 ? "s" : ""} in your cart
-          </p>
+          <h1 className="text-4xl font-extrabold text-white md:text-[42px]">Giỏ hàng</h1>
+          <p className="mt-1 text-[15px] text-keyshop-muted">{itemCountLabel}</p>
         </div>
         <Link
           href="/products"
           className="inline-flex h-[52px] items-center gap-2.5 rounded-control border border-keyshop-line bg-white/[0.04] px-6 text-sm font-semibold text-white transition hover:-translate-y-0.5 hover:bg-keyshop-blue-hover"
         >
           <ArrowLeft className="h-4 w-4" />
-          Continue Shopping
+          Tiếp tục mua sắm
         </Link>
       </div>
 
       {isEmpty ? (
         <div className="rounded-card border border-dashed border-keyshop-line py-16 text-center">
-          <p className="text-keyshop-muted">Your cart is empty.</p>
+          <p className="text-keyshop-muted">Giỏ hàng trống.</p>
           <Link href="/products" className={cn(checkoutCtaClass, "mx-auto mt-4 max-w-xs")}>
-            Start Shopping
+            Bắt đầu mua sắm
           </Link>
         </div>
       ) : (
@@ -153,8 +153,8 @@ export default function CartPageClient() {
                           <span>{getDeliveryLabel(item.product)}</span>
                           <span>
                             {isPhysicalProduct(item.product)
-                              ? "COD eligible"
-                              : "VNPay required"}
+                              ? "Hỗ trợ COD"
+                              : "Yêu cầu VNPay"}
                           </span>
                         </div>
                       </div>
@@ -162,7 +162,7 @@ export default function CartPageClient() {
                       {variants.length > 0 ? (
                         <div className="space-y-2">
                           <p className="text-sm text-keyshop-muted">
-                            {isPhysicalProduct(item.product) ? "Option" : "Key type"}
+                            {isPhysicalProduct(item.product) ? "Tùy chọn" : "Loại key"}
                           </p>
                           <div className="flex flex-wrap gap-2">
                             {variants.map((variant) => {
@@ -229,6 +229,7 @@ export default function CartPageClient() {
                               item.variant,
                             )
                           }
+                          aria-label="Giảm số lượng"
                         >
                           <Minus className="h-4 w-4" />
                         </button>
@@ -245,6 +246,7 @@ export default function CartPageClient() {
                               item.variant,
                             )
                           }
+                          aria-label="Tăng số lượng"
                         >
                           <Plus className="h-4 w-4" />
                         </button>
@@ -258,7 +260,7 @@ export default function CartPageClient() {
                         type="button"
                         className="flex h-11 w-11 items-center justify-center rounded-full bg-red-500/15 text-red-400 transition hover:bg-red-500 hover:text-white"
                         onClick={() => removeFromCart(item.productId, item.variant)}
-                        aria-label="Remove item"
+                        aria-label="Xóa sản phẩm"
                       >
                         <Trash2 className="h-4 w-4" />
                       </button>
@@ -270,70 +272,33 @@ export default function CartPageClient() {
           </div>
 
           <div className="h-fit rounded-card border border-keyshop-line bg-white/[0.03] p-7 backdrop-blur-md lg:sticky lg:top-24">
-            <h2 className="text-xl font-bold text-white">Order Summary</h2>
+            <h2 className="text-xl font-bold text-white">Tóm tắt đơn hàng</h2>
             <div className="mt-5 space-y-4 text-sm">
-              <div className="flex justify-between">
-                <span className="text-keyshop-muted">Subtotal</span>
-                <span className="text-white">{formatPrice(cartSummary.subtotal)}</span>
-              </div>
-
-              {cartSummary.savings > 0 ? (
-                <div className="flex justify-between">
-                  <span className="text-keyshop-muted">Discount</span>
-                  <span className="text-keyshop-green">
-                    -{formatPrice(cartSummary.savings)}
-                  </span>
-                </div>
-              ) : null}
-
-              <div className="flex justify-between">
-                <span className="text-keyshop-muted">Delivery</span>
-                <span className="text-white">Included</span>
-              </div>
-
-              {cartSummary.tax > 0 ? (
-                <div className="flex justify-between">
-                  <span className="text-keyshop-muted">Tax</span>
-                  <span className="text-white">{formatPrice(cartSummary.tax)}</span>
-                </div>
-              ) : null}
-
-              {effectiveCoupon?.discount ? (
-                <div className="flex justify-between">
-                  <span className="text-keyshop-muted">
-                    Coupon ({effectiveCoupon.code})
-                  </span>
-                  <span className="text-keyshop-green">
-                    -{formatPrice(effectiveCoupon.discount)}
-                  </span>
-                </div>
-              ) : null}
+              <OrderSummaryTotals
+                cartSummary={cartSummary}
+                effectiveCoupon={effectiveCoupon}
+              />
 
               <div className="my-6 h-px bg-keyshop-line" />
 
-              <div className="flex justify-between text-2xl font-extrabold text-white">
-                <span>Total</span>
-                <span>{formatPrice(displayTotal)}</span>
-              </div>
-
-              <div className="flex flex-col gap-2 sm:flex-row">
+              <div className="flex items-center gap-2">
                 <input
-                  placeholder="Coupon code"
+                  placeholder="Mã giảm giá"
                   value={couponCode}
                   onChange={(event) => setCouponCode(event.target.value)}
-                  className="h-14 flex-1 rounded-2xl border border-keyshop-line bg-white/[0.03] px-4 text-sm text-white outline-none placeholder:text-white/30 focus:border-keyshop-blue focus:ring-4 focus:ring-keyshop-blue/15"
+                  className="h-12 min-w-0 flex-1 rounded-2xl border border-keyshop-line bg-white/[0.03] px-4 text-sm text-white outline-none placeholder:text-white/30 focus:border-keyshop-blue focus:ring-4 focus:ring-keyshop-blue/15"
                 />
                 <button
                   type="button"
                   onClick={applyCoupon}
-                  className="h-14 min-w-24 rounded-2xl bg-keyshop-blue-hover px-5 text-sm font-bold text-white transition hover:bg-keyshop-blue"
+                  className="h-12 shrink-0 whitespace-nowrap rounded-2xl bg-keyshop-blue-hover px-4 text-sm font-bold text-white transition hover:bg-keyshop-blue"
                 >
-                  Apply
+                  Áp dụng
                 </button>
               </div>
 
               <Link href="/checkout" className={checkoutCtaClass}>
-                Proceed to secure checkout
+                Thanh toán an toàn
               </Link>
 
               <div className="rounded-[14px] border border-sky-400/20 bg-keyshop-blue/10 px-3 py-2.5 text-center text-[13px] text-keyshop-muted">
@@ -341,8 +306,8 @@ export default function CartPageClient() {
                   <Lock className="mt-0.5 h-4 w-4 shrink-0 text-sky-400" />
                   <span>
                     {hasDigitalItems
-                      ? "Digital products require online payment before delivery"
-                      : "VNPay or COD available for physical products"}
+                      ? "Sản phẩm số yêu cầu thanh toán online trước khi giao"
+                      : "Sản phẩm vật lý hỗ trợ VNPay hoặc COD"}
                   </span>
                 </div>
               </div>

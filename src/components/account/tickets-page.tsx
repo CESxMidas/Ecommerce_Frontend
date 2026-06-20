@@ -69,7 +69,7 @@ export default function TicketsPageClient() {
     event.preventDefault();
 
     if (!form.subject.trim() || !form.message.trim()) {
-      toast.error("Subject and message are required");
+      toast.error("Tiêu đề và nội dung là bắt buộc");
       return;
     }
 
@@ -77,10 +77,10 @@ export default function TicketsPageClient() {
       setSaving(true);
       await createTicket(form);
       setForm(emptyTicket);
-      toast.success("Ticket created");
+      toast.success("Đã tạo yêu cầu hỗ trợ");
       await load();
     } catch (error) {
-      toast.error(getApiErrorMessage(error, "Failed to create ticket"));
+      toast.error(getApiErrorMessage(error, "Không thể tạo yêu cầu hỗ trợ"));
     } finally {
       setSaving(false);
     }
@@ -89,7 +89,7 @@ export default function TicketsPageClient() {
   const submitReply = async (ticketId: string) => {
     const message = replyText[ticketId]?.trim();
     if (!message) {
-      toast.error("Reply message is required");
+      toast.error("Nội dung phản hồi là bắt buộc");
       return;
     }
 
@@ -98,19 +98,19 @@ export default function TicketsPageClient() {
       setReplyText({ ...replyText, [ticketId]: "" });
       await load();
     } catch (error) {
-      toast.error(getApiErrorMessage(error, "Failed to add reply"));
+      toast.error(getApiErrorMessage(error, "Không thể gửi phản hồi"));
     }
   };
 
   return (
     <div className="space-y-6">
       <AccountCard>
-        <AccountCardHeader title="Support Tickets" />
+        <AccountCardHeader title="Yêu cầu hỗ trợ" />
 
         <form onSubmit={submitTicket} className="space-y-4">
           <div className="grid gap-4 md:grid-cols-2">
             <input
-              placeholder="Order ID (optional)"
+              placeholder="Mã đơn (tùy chọn)"
               value={form.orderId}
               onChange={(event) => setForm({ ...form, orderId: event.target.value })}
               className={accountFieldClass}
@@ -121,50 +121,50 @@ export default function TicketsPageClient() {
               className={accountSelectClass}
             >
               <option value="low" className="bg-keyshop-bg">
-                Low
+                Thấp
               </option>
               <option value="normal" className="bg-keyshop-bg">
-                Normal
+                Bình thường
               </option>
               <option value="high" className="bg-keyshop-bg">
-                High
+                Cao
               </option>
             </select>
           </div>
           <input
-            placeholder="Subject"
+            placeholder="Tiêu đề"
             value={form.subject}
             onChange={(event) => setForm({ ...form, subject: event.target.value })}
             className={accountFieldClass}
           />
           <textarea
-            placeholder="Message"
+            placeholder="Nội dung"
             rows={4}
             value={form.message}
             onChange={(event) => setForm({ ...form, message: event.target.value })}
             className={accountFieldClass}
           />
           <AccountActionButton type="submit" disabled={saving}>
-            {saving ? "Creating..." : "Create ticket"}
+            {saving ? "Đang tạo..." : "Tạo yêu cầu"}
           </AccountActionButton>
         </form>
       </AccountCard>
 
       <AccountCard>
         {loading ? (
-          <AccountLoading label="Loading tickets..." />
+          <AccountLoading label="Đang tải yêu cầu..." />
         ) : tickets.length === 0 ? (
-          <p className="text-sm text-keyshop-muted">No support tickets yet.</p>
+          <p className="text-sm text-keyshop-muted">Chưa có yêu cầu hỗ trợ.</p>
         ) : (
           <div className="space-y-4">
             {tickets.map((ticket) => (
               <AccountListItem key={ticket.id}>
                 <h3 className="text-lg font-bold text-white">{ticket.subject}</h3>
                 <p className="text-sm text-keyshop-muted">
-                  Status: {ticket.status} | Priority: {ticket.priority}
+                  Trạng thái: {ticket.status} | Ưu tiên: {ticket.priority}
                 </p>
                 {ticket.orderId ? (
-                  <p className="text-sm text-keyshop-muted">Order #{ticket.orderId}</p>
+                  <p className="text-sm text-keyshop-muted">Đơn hàng #{ticket.orderId}</p>
                 ) : null}
                 <p className="text-sm text-white/80">{ticket.message}</p>
                 {(ticket.replies || []).map((reply) => (
@@ -175,7 +175,7 @@ export default function TicketsPageClient() {
                 ))}
                 <div className="flex flex-col gap-2 pt-2 sm:flex-row">
                   <input
-                    placeholder="Reply"
+                    placeholder="Phản hồi"
                     value={replyText[ticket.id] || ""}
                     onChange={(event) =>
                       setReplyText({ ...replyText, [ticket.id]: event.target.value })
@@ -183,7 +183,7 @@ export default function TicketsPageClient() {
                     className={accountFieldClass}
                   />
                   <AccountActionButton onClick={() => submitReply(ticket.id)}>
-                    Send
+                    Gửi
                   </AccountActionButton>
                 </div>
               </AccountListItem>

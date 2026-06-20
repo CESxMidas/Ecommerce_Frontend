@@ -15,9 +15,9 @@ import type { Banner } from "@/types/api";
 const fallbackSlides = [
   {
     id: "fallback-1",
-    title: "Premium Software Collection",
+    title: "Bộ sưu tập phần mềm cao cấp",
     subtitle:
-      "Discover powerful applications, productivity tools and premium utilities for your PC.",
+      "Khám phá ứng dụng mạnh mẽ, công cụ năng suất và tiện ích cao cấp cho máy tính của bạn.",
     image: resolveMediaUrl(
       null,
       "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?q=80&w=1920&auto=format&fit=crop",
@@ -26,9 +26,9 @@ const fallbackSlides = [
   },
   {
     id: "fallback-2",
-    title: "Next Generation Gaming",
+    title: "Trải nghiệm game thế hệ mới",
     subtitle:
-      "Explore trending games, ultra graphics experiences and gaming essentials.",
+      "Khám phá game thịnh hành, đồ họa đỉnh cao và phụ kiện gaming thiết yếu.",
     image: resolveMediaUrl(
       null,
       "https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=1920&auto=format&fit=crop",
@@ -82,7 +82,7 @@ export default function HomeHeroSlider({ banners }: HomeHeroSliderProps) {
               <div className="absolute inset-0 flex items-center px-5 sm:px-8 md:px-16 lg:px-20">
                 <div className="hero-slide-content relative z-10 max-w-xl text-white">
                   <span className="inline-flex rounded-full bg-keyshop-blue px-3 py-1 text-[11px] font-bold uppercase tracking-wider">
-                    Featured
+                    Nổi bật
                   </span>
                   <h1 className="mt-4 text-2xl font-extrabold leading-tight sm:mt-6 sm:text-4xl md:text-5xl lg:text-6xl">
                     {slide.title}
@@ -97,13 +97,13 @@ export default function HomeHeroSlider({ banners }: HomeHeroSliderProps) {
                       href={slide.link}
                       className="keyshop-interactive rounded-control bg-keyshop-blue px-5 py-2.5 text-sm font-semibold hover:bg-keyshop-blue-hover sm:py-3"
                     >
-                      Explore Now
+                      Khám phá ngay
                     </Link>
                     <Link
                       href="/deals"
                       className="keyshop-interactive rounded-control border border-white/25 px-5 py-2.5 text-sm font-semibold hover:bg-white/10 sm:py-3"
                     >
-                      Learn More
+                      Tìm hiểu thêm
                     </Link>
                   </div>
                 </div>

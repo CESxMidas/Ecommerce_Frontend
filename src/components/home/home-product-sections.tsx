@@ -10,16 +10,16 @@ import { cn } from "@/lib/utils";
 import type { Banner, Product } from "@/types/api";
 
 const TAB_LABELS = [
-  "Games",
-  "Software",
+  "Game",
+  "Phần mềm",
   "Antivirus",
   "Windows",
   "Office",
-  "Development",
+  "Lập trình",
   "Cloud",
-  "Mobile Apps",
-  "Design",
-  "AI Tools",
+  "Di động",
+  "Thiết kế",
+  "AI",
 ];
 
 type HomeProductSectionsProps = {
@@ -34,8 +34,8 @@ export default function HomeProductSections({
   return (
     <>
       <ProductSectionBlock
-        title="Popular Products"
-        subtitle="Do not miss the current offers until the end of March"
+        title="Sản phẩm nổi bật"
+        subtitle="Ưu đãi hot — đừng bỏ lỡ trong tháng này"
         showTabs
         ads={3}
         products={products}
@@ -44,16 +44,16 @@ export default function HomeProductSections({
       />
       <InstantDeliveryBanner />
       <ProductSectionBlock
-        title="Latest Products"
-        subtitle="Newest software and digital products"
+        title="Sản phẩm mới"
+        subtitle="Phần mềm và bản quyền số mới cập nhật"
         ads={2}
         products={products}
         banners={banners}
         revealDelay={80}
       />
       <ProductSectionBlock
-        title="Featured Products"
-        subtitle="Top featured premium collections"
+        title="Sản phẩm đề xuất"
+        subtitle="Bộ sưu tập premium được chọn lọc"
         products={products}
         banners={banners}
         revealDelay={160}
@@ -127,12 +127,12 @@ function InstantDeliveryBanner() {
             <div className="flex h-14 w-14 items-center justify-center rounded-full bg-keyshop-blue/20 text-keyshop-blue motion-safe:animate-pulse">
               <Zap className="h-6 w-6" />
             </div>
-            <h3 className="text-2xl font-extrabold text-white">INSTANT DELIVERY</h3>
+            <h3 className="text-2xl font-extrabold text-white">GIAO NGAY</h3>
           </div>
           <p className="max-w-2xl text-keyshop-muted">
-            License keys are delivered digitally after payment confirmation.
+            Key bản quyền được giao số ngay sau khi xác nhận thanh toán.
           </p>
-          <p className="text-xl font-bold text-keyshop-blue">24/7 access</p>
+          <p className="text-xl font-bold text-keyshop-blue">Hỗ trợ 24/7</p>
         </div>
       </div>
     </Reveal>

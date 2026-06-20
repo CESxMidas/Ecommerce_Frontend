@@ -7,7 +7,6 @@ import {
   Filter,
   Grid2x2,
   Grid3x3,
-  Key,
   LayoutList,
   X,
 } from "lucide-react";
@@ -130,20 +129,20 @@ export default function ProductListing({
   };
 
   const pageTitle = query
-    ? `Search: "${query}"`
+    ? `Tìm kiếm: "${query}"`
     : mode === "deals"
-      ? "Special Deals"
+      ? "Ưu đãi đặc biệt"
       : activeCategory
         ? activeCategory.name
-        : "All Products";
+        : "Tất cả sản phẩm";
 
   const pageSubtitle =
     mode === "deals"
-      ? "Best offers on software keys and digital products"
+      ? "Ưu đãi tốt cho key phần mềm và sản phẩm số"
       : query
-        ? `${pagination.totalItems} matching licenses & keys`
+        ? `${pagination.totalItems} key & bản quyền phù hợp`
         : activeCategory?.description ||
-          "Browse genuine software keys with instant digital delivery";
+          "Duyệt key phần mềm chính hãng với giao hàng số tức thì";
 
   const sidebarProps = {
     categories,
@@ -165,45 +164,40 @@ export default function ProductListing({
         : "grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4";
 
   return (
-    <section className="pb-16 pt-4">
-      <div className="border-b border-keyshop-line bg-white/[0.02] py-4">
-        <div className="container flex flex-wrap items-center gap-2 text-sm text-keyshop-muted">
+    <section className="pb-16">
+      <div className="container py-6 md:py-8">
+        <nav
+          aria-label="Breadcrumb"
+          className="mb-4 flex flex-wrap items-center gap-2 text-sm text-keyshop-muted"
+        >
           <Link href="/" className="hover:text-white">
-            Home
+            Trang chủ
           </Link>
-          <span>›</span>
+          <span aria-hidden>›</span>
           <Link href="/products" className="hover:text-white">
-            Products
+            Sản phẩm
           </Link>
           {activeCategory ? (
             <>
-              <span>›</span>
+              <span aria-hidden>›</span>
               <span className="text-white">{activeCategory.name}</span>
             </>
           ) : null}
           {query && !activeCategory ? (
             <>
-              <span>›</span>
-              <span className="text-white">Search</span>
+              <span aria-hidden>›</span>
+              <span className="text-white">Tìm kiếm</span>
             </>
           ) : null}
-        </div>
-      </div>
+        </nav>
 
-      <div className="container py-8">
         <header className="mb-8 flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
           <div>
-            <span className="inline-flex items-center gap-2 text-sm font-semibold text-keyshop-blue">
-              <Key className="h-4 w-4" />
-              Digital licenses
-            </span>
-            <h1 className="mt-2 text-3xl font-extrabold text-white md:text-4xl">
-              {pageTitle}
-            </h1>
+            <h1 className="text-3xl font-extrabold text-white md:text-4xl">{pageTitle}</h1>
             <p className="mt-2 max-w-2xl text-keyshop-muted">{pageSubtitle}</p>
           </div>
           <div className="text-sm text-keyshop-muted">
-            <strong className="text-white">{pagination.totalItems}</strong> products
+            <strong className="text-white">{pagination.totalItems}</strong> sản phẩm
           </div>
         </header>
 
@@ -220,7 +214,7 @@ export default function ProductListing({
                 onClick={() => setFilterOpen(true)}
               >
                 <Filter className="h-4 w-4" />
-                Filters
+                Bộ lọc
               </button>
 
               <div className="relative">
@@ -229,7 +223,7 @@ export default function ProductListing({
                   onClick={() => setSortOpen((value) => !value)}
                   className="inline-flex items-center gap-2 rounded-control border border-keyshop-line px-3 py-2 text-sm text-white"
                 >
-                  Sort: {SORT_LABELS[sortBy] || SORT_LABELS.latest}
+                  Sắp xếp: {SORT_LABELS[sortBy] || SORT_LABELS.latest}
                   <ChevronDown className="h-4 w-4" />
                 </button>
                 {sortOpen ? (
@@ -278,14 +272,14 @@ export default function ProductListing({
             </div>
 
             {pagination.items.length > 0 ? (
-              <div className={cn("grid gap-5", gridClass)}>
+              <div className={cn("grid items-stretch gap-5", gridClass)}>
                 {pagination.items.map((product, index) => (
                   <ProductItem key={product.id} item={product} index={index} />
                 ))}
               </div>
             ) : (
               <div className="rounded-card border border-dashed border-keyshop-line py-16 text-center text-keyshop-muted">
-                No products match your filters.
+                Không có sản phẩm phù hợp với bộ lọc.
               </div>
             )}
 
@@ -321,7 +315,7 @@ export default function ProductListing({
 
       <SideDrawer open={filterOpen} onClose={() => setFilterOpen(false)} anchor="left">
         <div className="flex items-center justify-between border-b border-keyshop-line p-4 text-white">
-          <h3 className="font-semibold">Filters</h3>
+          <h3 className="font-semibold">Bộ lọc</h3>
           <button type="button" onClick={() => setFilterOpen(false)}>
             <X className="h-5 w-5" />
           </button>
@@ -333,7 +327,7 @@ export default function ProductListing({
             onClick={clearFilters}
             className="mt-4 w-full rounded-control border border-keyshop-line py-2 text-sm text-white hover:bg-white/5"
           >
-            Clear filters
+            Xóa bộ lọc
           </button>
         </div>
       </SideDrawer>

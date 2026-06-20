@@ -25,7 +25,7 @@ function collectLicenseKeys(order: PlacedOrder | null) {
   return order.items.flatMap((item) =>
     (item.licenseKeys || []).map((key) => ({
       key,
-      productName: item.product?.name || item.product?.title || "Product",
+      productName: item.product?.name || item.product?.title || "Sản phẩm",
     })),
   );
 }
@@ -58,9 +58,9 @@ export default function LicenseKeyModal({
   const copyKey = async (key: string) => {
     try {
       await navigator.clipboard.writeText(key);
-      toast.success("Copied to clipboard");
+      toast.success("Đã sao chép");
     } catch {
-      toast.error("Could not copy key");
+      toast.error("Không thể sao chép key");
     }
   };
 
@@ -70,19 +70,19 @@ export default function LicenseKeyModal({
       onClose={onClose}
       variant="dialog"
       panelClassName="max-w-lg p-6 md:p-7"
-      ariaLabel="Your license keys"
+      ariaLabel="Key bản quyền của bạn"
     >
       <div className="mb-5 flex items-start justify-between gap-4">
         <div>
-          <h2 className="text-2xl font-extrabold text-white">Your license keys</h2>
+          <h2 className="text-2xl font-extrabold text-white">Key bản quyền</h2>
           <p className="mt-1 text-sm text-keyshop-muted">
-            Order #{displayOrder.id} — copy each key below.
+            Đơn #{displayOrder.id} — sao chép từng key bên dưới.
           </p>
         </div>
         <button
           type="button"
           onClick={onClose}
-          aria-label="Close"
+          aria-label="Đóng"
           className="rounded-control p-2 text-keyshop-muted transition hover:bg-white/5 hover:text-white"
         >
           <X className="h-5 w-5" />
@@ -90,7 +90,7 @@ export default function LicenseKeyModal({
       </div>
 
       {keys.length === 0 ? (
-        <p className="text-sm text-keyshop-muted">No keys found for this order.</p>
+        <p className="text-sm text-keyshop-muted">Không tìm thấy key cho đơn này.</p>
       ) : (
         <ul className="space-y-3">
           {keys.map((entry) => (
@@ -111,7 +111,7 @@ export default function LicenseKeyModal({
                 onClick={() => copyKey(entry.key)}
               >
                 <Copy className="h-4 w-4" />
-                Copy
+                Sao chép
               </button>
             </li>
           ))}
@@ -126,7 +126,7 @@ export default function LicenseKeyModal({
         )}
         onClick={onClose}
       >
-        Done
+        Hoàn tất
       </button>
     </OverlayModal>
   );

@@ -55,6 +55,7 @@ export interface CartItem {
 
 export interface CartSummary {
   count: number;
+  listSubtotal: number;
   subtotal: number;
   savings: number;
   tax: number;

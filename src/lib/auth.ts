@@ -71,7 +71,7 @@ async function loginWithGoogle(idToken: string, clientId: string) {
   const data = await response.json();
 
   if (!response.ok) {
-    throw new Error(data?.message || "Google login failed");
+    throw new Error(data?.message || "Đăng nhập Google thất bại");
   }
 
   return data as AuthUser;
@@ -89,8 +89,41 @@ export const authOptions: NextAuthOptions = {
         email: { label: "Email", type: "email" },
         password: { label: "Password", type: "password" },
         rememberMe: { label: "Remember Me", type: "text" },
+        googleCredential: { label: "Google Credential", type: "text" },
+        googleClientId: { label: "Google Client ID", type: "text" },
       },
       async authorize(credentials) {
+        if (credentials?.googleCredential?.trim()) {
+          try {
+            const clientId =
+              credentials.googleClientId?.trim() ||
+              process.env.GOOGLE_CLIENT_ID ||
+              process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID ||
+              "";
+            const user = await loginWithGoogle(
+              credentials.googleCredential.trim(),
+              clientId,
+            );
+
+            return {
+              id: user._id,
+              name: user.name,
+              email: user.email,
+              image: user.avatar || null,
+              accessToken: user.token,
+              role: user.role,
+              verifyEmail: user.verify_email,
+              rememberMe: true,
+            };
+          } catch (error) {
+            throw new Error(
+              error instanceof Error
+                ? error.message
+                : "Đăng nhập Google thất bại",
+            );
+          }
+        }
+
         if (!credentials?.email || !credentials?.password) {
           return null;
         }

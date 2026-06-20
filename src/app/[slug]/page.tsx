@@ -5,8 +5,8 @@ import StaticPageView from "@/components/commerce/static-page-view";
 import { getStaticPage } from "@/lib/content/static-pages";
 
 const titles: Record<string, string> = {
-  about: "About Us",
-  contact: "Contact",
+  about: "Giới thiệu",
+  contact: "Liên hệ",
 };
 
 const allowedSlugs = Object.keys(titles);
@@ -22,7 +22,7 @@ export function generateStaticParams() {
 export function generateMetadata({ params }: Props): Metadata {
   const content = getStaticPage(params.slug);
   return {
-    title: content?.title || titles[params.slug] || "Page",
+    title: content?.title || titles[params.slug] || "Trang",
     description: content?.intro,
   };
 }

@@ -3,8 +3,8 @@ import type { Metadata } from "next";
 import AccountProfilePage from "@/components/account/profile-page";
 
 export const metadata: Metadata = {
-  title: "Profile",
-  description: "Update your KEYSHOP account profile and contact details.",
+  title: "Hồ sơ",
+  description: "Cập nhật hồ sơ và thông tin liên hệ tài khoản KEYSHOP.",
 };
 
 export default function AccountPage() {

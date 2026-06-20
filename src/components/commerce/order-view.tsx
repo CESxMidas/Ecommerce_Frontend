@@ -12,34 +12,34 @@ export default function OrderView({ order }: { order: Order }) {
     <CommercePanel className="mt-6">
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <div>
-          <span className="text-xs uppercase tracking-wide text-slate-400">Order</span>
+          <span className="text-xs uppercase tracking-wide text-slate-400">Đơn hàng</span>
           <p className="mt-1 text-lg font-extrabold text-white">#{orderId}</p>
         </div>
         <div>
-          <span className="text-xs uppercase tracking-wide text-slate-400">Status</span>
-          <p className="mt-1 text-lg font-extrabold text-white">{order.status || "Pending"}</p>
+          <span className="text-xs uppercase tracking-wide text-slate-400">Trạng thái</span>
+          <p className="mt-1 text-lg font-extrabold text-white">{order.status || "Chờ xử lý"}</p>
         </div>
         <div>
-          <span className="text-xs uppercase tracking-wide text-slate-400">Payment</span>
+          <span className="text-xs uppercase tracking-wide text-slate-400">Thanh toán</span>
           <p className="mt-1 text-lg font-extrabold text-white">
-            {order.paymentStatus || order.paymentMethod || "Pending"}
+            {order.paymentStatus || order.paymentMethod || "Chờ xử lý"}
           </p>
         </div>
         <div>
-          <span className="text-xs uppercase tracking-wide text-slate-400">Total</span>
+          <span className="text-xs uppercase tracking-wide text-slate-400">Tổng tiền</span>
           <p className="mt-1 text-lg font-extrabold text-keyshop-blue">
             {formatPrice(order.total || 0)}
           </p>
         </div>
       </div>
 
-      <h2 className="mt-8 text-[22px] font-extrabold text-white">Customer</h2>
+      <h2 className="mt-8 text-[22px] font-extrabold text-white">Khách hàng</h2>
       <p className="mt-2 text-slate-300">
         {order.name} - {order.phone} - {order.email}
       </p>
       <p className="text-slate-400">{order.address}</p>
 
-      <h2 className="mt-8 text-[22px] font-extrabold text-white">Items</h2>
+      <h2 className="mt-8 text-[22px] font-extrabold text-white">Sản phẩm</h2>
       <div className="mt-4 space-y-4">
         {(order.items || []).map((item) => (
           <article
@@ -53,7 +53,7 @@ export default function OrderView({ order }: { order: Order }) {
                   item.product?.image ||
                   "/images/bypass/cerberus-banner.png"
                 }
-                alt={item.product?.name || item.product?.title || "Product"}
+                alt={item.product?.name || item.product?.title || "Sản phẩm"}
                 fill
                 className="object-cover"
                 sizes="80px"
@@ -61,12 +61,12 @@ export default function OrderView({ order }: { order: Order }) {
             </div>
             <div className="min-w-0 flex-1">
               <h3 className="font-bold text-white">
-                {item.product?.name || item.product?.title || `Product ${item.productId}`}
+                {item.product?.name || item.product?.title || `Sản phẩm ${item.productId}`}
               </h3>
-              <p className="mt-1 text-sm text-slate-400">Quantity: {item.quantity}</p>
+              <p className="mt-1 text-sm text-slate-400">Số lượng: {item.quantity}</p>
               {item.licenseKeys?.length ? (
                 <p className="mt-1 text-sm text-sky-300">
-                  License keys: {item.licenseKeys.join(", ")}
+                  Mã bản quyền: {item.licenseKeys.join(", ")}
                 </p>
               ) : null}
             </div>
@@ -82,7 +82,7 @@ export default function OrderView({ order }: { order: Order }) {
           href="/account/orders"
           className="text-sm font-semibold text-keyshop-blue hover:text-sky-300"
         >
-          View in My Orders
+          Xem trong Đơn hàng của tôi
         </Link>
       </div>
     </CommercePanel>

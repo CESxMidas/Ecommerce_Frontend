@@ -11,8 +11,8 @@ import { getBlogs } from "@/lib/api/server";
 import { resolveMediaUrl } from "@/lib/utils/image";
 
 export const metadata: Metadata = {
-  title: "Blog",
-  description: "News, guides, and updates from KEYSHOP.",
+  title: "Tin tức",
+  description: "Tin tức, hướng dẫn và cập nhật từ KEYSHOP.",
 };
 
 export const revalidate = 300;
@@ -23,14 +23,14 @@ export default async function BlogListPage() {
   return (
     <CommercePage>
       <CommerceHero
-        kicker="Articles"
-        title="Latest Articles"
-        description="Guides, product updates and digital software tips from KEYSHOP."
+        kicker="Tin tức"
+        title="Bài viết mới nhất"
+        description="Hướng dẫn, cập nhật sản phẩm và mẹo phần mềm số từ KEYSHOP."
       />
 
       {blogs.length === 0 ? (
         <CommercePanel>
-          <p className="text-slate-300">No articles available.</p>
+          <p className="text-slate-300">Chưa có bài viết.</p>
         </CommercePanel>
       ) : (
         <section className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
@@ -51,7 +51,7 @@ export default async function BlogListPage() {
               </div>
               <div className="flex flex-1 flex-col p-5">
                 <span className="text-[11px] font-bold uppercase tracking-wide text-keyshop-blue">
-                  {blog.category || "Article"}
+                  {blog.category || "Bài viết"}
                 </span>
                 <h3 className="mt-2 text-lg font-extrabold text-white group-hover:text-keyshop-blue">
                   {blog.title}

@@ -3,8 +3,8 @@ import type { Metadata } from "next";
 import LicensesPageClient from "@/components/account/licenses-page";
 
 export const metadata: Metadata = {
-  title: "Licenses",
-  description: "Access and resend your purchased KEYSHOP license keys.",
+  title: "License",
+  description: "Truy cập và gửi lại key license KEYSHOP đã mua.",
 };
 
 export default function LicensesPage() {

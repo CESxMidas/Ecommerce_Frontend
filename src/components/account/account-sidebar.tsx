@@ -20,21 +20,21 @@ import { cn } from "@/lib/utils";
 import { performLogout } from "@/lib/auth/logout";
 
 const links = [
-  { href: "/account", label: "My Profile", icon: User },
-  { href: "/account/addresses", label: "Addresses", icon: MapPin },
-  { href: "/account/wishlist", label: "Wishlist", icon: Heart },
-  { href: "/account/orders", label: "My Orders", icon: ShoppingBag },
-  { href: "/account/licenses", label: "License Keys", icon: Key },
-  { href: "/account/notifications", label: "Notifications", icon: Bell },
-  { href: "/account/tickets", label: "Support", icon: MessageCircle },
-  { href: "/account/security", label: "Security", icon: Shield },
+  { href: "/account", label: "Hồ sơ", icon: User },
+  { href: "/account/addresses", label: "Địa chỉ", icon: MapPin },
+  { href: "/account/wishlist", label: "Yêu thích", icon: Heart },
+  { href: "/account/orders", label: "Đơn hàng", icon: ShoppingBag },
+  { href: "/account/licenses", label: "Key bản quyền", icon: Key },
+  { href: "/account/notifications", label: "Thông báo", icon: Bell },
+  { href: "/account/tickets", label: "Hỗ trợ", icon: MessageCircle },
+  { href: "/account/security", label: "Bảo mật", icon: Shield },
 ];
 
 export default function AccountSidebar() {
   const pathname = usePathname();
   const { data: session } = useSession();
 
-  const displayName = session?.user?.name || "Account";
+  const displayName = session?.user?.name || "Tài khoản";
   const displayEmail = session?.user?.email || "";
   const avatar = session?.user?.image || "";
 
@@ -60,7 +60,7 @@ export default function AccountSidebar() {
         <p className="truncate text-xs text-slate-400">{displayEmail}</p>
         <div className="accountSidebar__badge">
           <span className="inline-flex min-h-6 items-center rounded-full bg-emerald-500/15 px-2.5 text-[11px] font-extrabold text-emerald-300">
-            Member
+            Thành viên
           </span>
         </div>
       </div>
@@ -95,7 +95,7 @@ export default function AccountSidebar() {
           onClick={() => performLogout("/")}
         >
           <LogOut className="h-4 w-4 shrink-0" />
-          Logout
+          Đăng xuất
         </button>
       </nav>
     </aside>

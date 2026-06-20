@@ -40,22 +40,22 @@ export default function CartPanel() {
       <div className="flex h-full flex-col text-white">
         <div className="flex items-center justify-between border-b border-keyshop-line px-5 py-4">
           <h4 className="text-lg font-extrabold">
-            Shopping Cart ({cartSummary.count})
+            Giỏ hàng ({cartSummary.count})
           </h4>
           <button
             type="button"
             onClick={() => setOpenCartPanel(false)}
             className="rounded-lg p-2 hover:bg-white/5"
-            aria-label="Close cart"
+            aria-label="Đóng giỏ hàng"
           >
             <X className="h-5 w-5" />
           </button>
         </div>
 
-        <div className="flex-1 overflow-y-auto px-5 py-4">
+        <div className="keyshop-scrollbar flex-1 overflow-y-auto px-5 py-4">
           {cartItems.length === 0 ? (
             <p className="py-10 text-center text-sm text-keyshop-muted">
-              Your cart is empty.
+              Giỏ hàng trống.
             </p>
           ) : (
             <div className="space-y-4">
@@ -95,7 +95,7 @@ export default function CartPanel() {
                         {variants.length > 0 ? (
                           <div className="mt-2">
                             <p className="text-[11px] text-keyshop-muted">
-                              {isPhysicalProduct(item.product) ? "Option" : "Key type"}
+                              {isPhysicalProduct(item.product) ? "Tùy chọn" : "Loại key"}
                             </p>
                             <div className="mt-1 flex flex-wrap gap-1.5">
                               {variants.map((variant) => (
@@ -132,7 +132,7 @@ export default function CartPanel() {
                                   item.variant,
                                 )
                               }
-                              aria-label="Decrease quantity"
+                              aria-label="Giảm số lượng"
                             >
                               <Minus className="h-3.5 w-3.5" />
                             </button>
@@ -149,7 +149,7 @@ export default function CartPanel() {
                                   item.variant,
                                 )
                               }
-                              aria-label="Increase quantity"
+                              aria-label="Tăng số lượng"
                             >
                               <Plus className="h-3.5 w-3.5" />
                             </button>
@@ -162,7 +162,7 @@ export default function CartPanel() {
                       type="button"
                       className="absolute right-3 top-3 text-keyshop-muted hover:text-red-400"
                       onClick={() => removeFromCart(item.productId, item.variant)}
-                      aria-label="Remove item"
+                      aria-label="Xóa sản phẩm"
                     >
                       <Trash2 className="h-4 w-4" />
                     </button>
@@ -175,26 +175,33 @@ export default function CartPanel() {
 
         {cartItems.length > 0 ? (
           <div className="border-t border-keyshop-line p-5">
-            <div className="mb-4 flex items-center justify-between text-sm">
-              <span className="text-keyshop-muted">Subtotal</span>
+            <div className="mb-1 flex items-center justify-between text-sm">
+              <span className="text-keyshop-muted">Tạm tính</span>
               <span className="text-xl font-extrabold">
                 {formatPrice(cartSummary.subtotal)}
               </span>
             </div>
+            {cartSummary.savings > 0 ? (
+              <p className="mb-4 text-right text-xs font-semibold text-keyshop-green">
+                Tiết kiệm {formatPrice(cartSummary.savings)}
+              </p>
+            ) : (
+              <div className="mb-4" />
+            )}
             <div className="space-y-2">
               <Link
                 href="/checkout"
                 onClick={() => setOpenCartPanel(false)}
                 className={checkoutCtaClass}
               >
-                Proceed to checkout
+                Thanh toán
               </Link>
               <Link
                 href="/cart"
                 onClick={() => setOpenCartPanel(false)}
                 className="flex h-[52px] w-full items-center justify-center rounded-[18px] border border-keyshop-line text-sm font-bold text-white transition hover:bg-white/5"
               >
-                View full cart
+                Xem giỏ đầy đủ
               </Link>
             </div>
           </div>

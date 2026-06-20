@@ -32,24 +32,24 @@ export default function RegisterPageClient() {
     event.preventDefault();
 
     if (!formFields.name.trim()) {
-      toast.error("Full name is required");
+      toast.error("Vui lòng nhập họ tên");
       return;
     }
 
     if (!formFields.email.trim() || !/\S+@\S+\.\S+/.test(formFields.email)) {
-      toast.error("Valid email is required");
+      toast.error("Vui lòng nhập email hợp lệ");
       return;
     }
 
     if (formFields.password.length < 6) {
-      toast.error("Password must be at least 6 characters");
+      toast.error("Mật khẩu phải có ít nhất 6 ký tự");
       return;
     }
 
     try {
       setLoading(true);
       const result = await registerRequest(formFields);
-      toast.success(result.message || "Register successful");
+      toast.success(result.message || "Đăng ký thành công");
       router.push(
         `/auth/verify?email=${encodeURIComponent(formFields.email)}`,
       );
@@ -63,24 +63,24 @@ export default function RegisterPageClient() {
   return (
     <AuthSplitLayout
       heroImage="/images/bypass/snake-app.png"
-      badge="Join the community"
-      title="Create your gaming account"
-      description="Unlock premium digital products, exclusive deals and member rewards."
+      badge="Tham gia cộng đồng"
+      title="Tạo tài khoản game của bạn"
+      description="Mở khóa sản phẩm số cao cấp, ưu đãi độc quyền và quyền lợi thành viên."
     >
       <AuthGlassCard>
         <AuthCardTop
-          title="Create account"
-          description="Register now and start your journey."
+          title="Tạo tài khoản"
+          description="Đăng ký ngay để bắt đầu hành trình của bạn."
         />
 
         <form onSubmit={onSubmit}>
-          <AuthField label="Full name">
+          <AuthField label="Họ và tên">
             <AuthInput
               id="name"
               icon={User}
               value={formFields.name}
               onChange={(name) => setFormFields({ ...formFields, name })}
-              placeholder="Your full name"
+              placeholder="Họ và tên của bạn"
             />
           </AuthField>
 
@@ -95,28 +95,28 @@ export default function RegisterPageClient() {
             />
           </AuthField>
 
-          <AuthField label="Password">
+          <AuthField label="Mật khẩu">
             <AuthInput
               id="password"
               type="password"
               icon={Lock}
               value={formFields.password}
               onChange={(password) => setFormFields({ ...formFields, password })}
-              placeholder="At least 6 characters"
+              placeholder="Ít nhất 6 ký tự"
             />
           </AuthField>
 
           <AuthSubmitButton disabled={loading}>
-            {loading ? "Creating..." : "Create account"}
+            {loading ? "Đang tạo..." : "Tạo tài khoản"}
           </AuthSubmitButton>
         </form>
 
         <SocialAuthButtons callbackUrl="/" />
 
         <AuthBottomText>
-          Already have an account?{" "}
+          Đã có tài khoản?{" "}
           <Link href="/auth/login" className="font-semibold text-keyshop-blue hover:text-sky-300">
-            Sign in
+            Đăng nhập
           </Link>
         </AuthBottomText>
       </AuthGlassCard>

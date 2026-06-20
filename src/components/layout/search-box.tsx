@@ -32,7 +32,7 @@ export default function SearchBox({ className }: SearchBoxProps) {
     >
       <input
         type="text"
-        placeholder="Search products..."
+        placeholder="Tìm sản phẩm..."
         value={query}
         onChange={(event) => setQuery(event.target.value)}
         className="min-w-0 flex-1 bg-transparent px-4 text-sm text-white placeholder:text-keyshop-muted outline-none"
@@ -42,7 +42,7 @@ export default function SearchBox({ className }: SearchBoxProps) {
         className="flex items-center gap-2 bg-keyshop-blue px-5 text-sm font-semibold text-white transition-colors hover:bg-keyshop-blue-hover"
       >
         <Search className="h-4 w-4" />
-        <span className="hidden sm:inline">Search</span>
+        <span className="hidden sm:inline">Tìm kiếm</span>
       </button>
     </form>
   );

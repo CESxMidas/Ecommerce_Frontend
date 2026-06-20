@@ -31,11 +31,17 @@
   }
 
   body {
-    background-color: #020817;
-    color: hsl(var(--foreground));
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
+    @apply bg-keyshop-bg text-white antialiased;
+    font-size: 0.9375rem;
+    line-height: 1.6;
     overflow-x: hidden;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    @apply font-semibold tracking-tight text-white;
   }
 
   a {
@@ -65,6 +71,42 @@
   .page-shell {
     @apply container py-8 md:py-10;
   }
+
+  .keyshop-topbar {
+    @apply border-b border-keyshop-line bg-keyshop-soft/40 text-xs text-keyshop-muted;
+  }
+
+  .keyshop-header-main {
+    @apply border-b border-keyshop-line bg-keyshop-bg/95 py-3.5;
+  }
+
+  .keyshop-nav-bar {
+    @apply border-b border-keyshop-line bg-keyshop-soft/55;
+  }
+
+  .keyshop-nav-link {
+    @apply flex items-center gap-2.5 rounded-control px-3.5 py-2.5 text-sm font-medium text-white/80 transition-colors hover:bg-white/5 hover:text-white lg:px-4;
+  }
+
+  .keyshop-nav-link-active {
+    @apply bg-white/10 text-white;
+  }
+
+  .keyshop-nav-utility {
+    @apply inline-flex shrink-0 items-center gap-2 rounded-control px-3.5 py-2.5 text-sm font-medium text-keyshop-blue transition-colors hover:bg-keyshop-blue/10 hover:text-keyshop-blue-hover lg:px-4;
+  }
+
+  .keyshop-nav-utility-active {
+    @apply bg-white/10 text-white hover:bg-white/10 hover:text-white;
+  }
+
+  .keyshop-panel {
+    @apply rounded-card border border-keyshop-line bg-keyshop-surface backdrop-blur-xl;
+  }
+
+  .keyshop-page-bg {
+    @apply bg-[radial-gradient(circle_at_20%_0%,rgba(59,130,246,0.12),transparent_32%),linear-gradient(180deg,#020817_0%,#0b1730_100%)];
+  }
 }
 
 @layer utilities {
@@ -75,6 +117,37 @@
 
   .scrollbar-hide::-webkit-scrollbar {
     display: none;
+  }
+
+  .keyshop-scrollbar {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(59, 130, 246, 0.45) rgba(255, 255, 255, 0.06);
+  }
+
+  .keyshop-scrollbar::-webkit-scrollbar {
+    width: 7px;
+    height: 7px;
+  }
+
+  .keyshop-scrollbar::-webkit-scrollbar-track {
+    margin: 4px 0;
+    background: transparent;
+  }
+
+  .keyshop-scrollbar::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, rgba(96, 165, 250, 0.55), rgba(59, 130, 246, 0.45));
+    border: 2px solid transparent;
+    border-radius: 999px;
+    background-clip: padding-box;
+  }
+
+  .keyshop-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(180deg, rgba(147, 197, 253, 0.75), rgba(59, 130, 246, 0.65));
+    background-clip: padding-box;
+  }
+
+  .keyshop-scrollbar::-webkit-scrollbar-corner {
+    background: transparent;
   }
 
   .keyshop-card-hover {
@@ -100,6 +173,21 @@
 
   .keyshop-swiper {
     @apply overflow-hidden;
+  }
+
+  .keyshop-swiper .swiper-wrapper {
+    align-items: stretch;
+  }
+
+  .keyshop-swiper .swiper-slide {
+    height: auto;
+    display: flex;
+  }
+
+  .keyshop-swiper .swiper-slide > * {
+    width: 100%;
+    flex: 1 1 auto;
+    min-height: 100%;
   }
 
   .keyshop-swiper .swiper-button-prev,

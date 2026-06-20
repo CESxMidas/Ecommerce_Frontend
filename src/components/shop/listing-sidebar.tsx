@@ -88,7 +88,7 @@ export default function ListingSidebar({
   return (
     <aside className="space-y-4">
       <FilterSection
-        title="Categories"
+        title="Danh mục"
         open={openSections.categories}
         onToggle={() =>
           setOpenSections((prev) => ({ ...prev, categories: !prev.categories }))
@@ -96,7 +96,7 @@ export default function ListingSidebar({
       >
         <div className="space-y-1">
           {categories.length === 0 ? (
-            <p className="text-sm text-keyshop-muted">No categories</p>
+            <p className="text-sm text-keyshop-muted">Chưa có danh mục</p>
           ) : (
             renderCategoryOptions(categories)
           )}
@@ -104,13 +104,13 @@ export default function ListingSidebar({
       </FilterSection>
 
       <FilterSection
-        title="Brands"
+        title="Thương hiệu"
         open={openSections.brands}
         onToggle={() => setOpenSections((prev) => ({ ...prev, brands: !prev.brands }))}
       >
         <div className="space-y-1">
           {brands.length === 0 ? (
-            <p className="text-sm text-keyshop-muted">No brands</p>
+            <p className="text-sm text-keyshop-muted">Chưa có thương hiệu</p>
           ) : (
             brands.map((brand) => (
               <label
@@ -136,7 +136,7 @@ export default function ListingSidebar({
       </FilterSection>
 
       <FilterSection
-        title="Price"
+        title="Giá"
         open={openSections.price}
         onToggle={() => setOpenSections((prev) => ({ ...prev, price: !prev.price }))}
       >

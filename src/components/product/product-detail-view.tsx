@@ -124,17 +124,17 @@ export default function ProductDetailView({ product: rawProduct }: ProductDetail
 
     return [
       ["SKU", product.sku],
-      ["Product type", getProductTypeLabel(product)],
-      ["Delivery", getDeliveryLabel(product)],
-      ["Category", product.categoryName],
-      ["Stock", product.stock > 0 ? `${product.stock} available` : "Out of stock"],
+      ["Loại sản phẩm", getProductTypeLabel(product)],
+      ["Hình thức giao", getDeliveryLabel(product)],
+      ["Danh mục", product.categoryName],
+      ["Tồn kho", product.stock > 0 ? `Còn ${product.stock} sản phẩm` : "Hết hàng"],
     ] as const;
   }, [product]);
 
   if (!product) {
     return (
       <div className="container py-16 text-center text-keyshop-muted">
-        Product not found.
+        Không tìm thấy sản phẩm.
       </div>
     );
   }
@@ -146,18 +146,18 @@ export default function ProductDetailView({ product: rawProduct }: ProductDetail
 
   const handleSubmitReview = async () => {
     if (!session?.user) {
-      toast.error("Please login to write a review");
+      toast.error("Vui lòng đăng nhập để viết đánh giá");
       router.push("/auth/login");
       return;
     }
 
     if (rating < 1) {
-      toast.error("Please select a rating");
+      toast.error("Vui lòng chọn số sao");
       return;
     }
 
     if (!reviewComment.trim()) {
-      toast.error("Please write a review");
+      toast.error("Vui lòng viết đánh giá");
       return;
     }
 
@@ -171,9 +171,9 @@ export default function ProductDetailView({ product: rawProduct }: ProductDetail
       setReviews(data);
       setReviewComment("");
       setRating(0);
-      toast.success("Review submitted");
+      toast.success("Đánh giá đã được gửi");
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : "Failed to submit review");
+      toast.error(error instanceof Error ? error.message : "Gửi đánh giá không thành công");
     } finally {
       setSubmittingReview(false);
     }
@@ -184,11 +184,11 @@ export default function ProductDetailView({ product: rawProduct }: ProductDetail
       <section className="border-b border-keyshop-line bg-white/[0.02] py-4">
         <div className="container text-sm text-keyshop-muted">
           <Link href="/" className="hover:text-white">
-            Home
+            Trang chủ
           </Link>
           <span className="mx-2">{">"}</span>
           <Link href="/products" className="hover:text-white">
-            Products
+            Sản phẩm
           </Link>
           <span className="mx-2">{">"}</span>
           <span className="text-white">{displayName}</span>
@@ -210,7 +210,7 @@ export default function ProductDetailView({ product: rawProduct }: ProductDetail
             <div className="mt-4 flex flex-wrap items-center gap-4">
               <div className="flex items-center gap-1">{renderStars(product.rating)}</div>
               <span className="text-sm text-keyshop-muted">
-                {writtenReviewCount} written reviews
+                {writtenReviewCount} đánh giá
               </span>
               <span className="text-sm font-bold text-green-400">{product.categoryName}</span>
             </div>
@@ -225,7 +225,7 @@ export default function ProductDetailView({ product: rawProduct }: ProductDetail
                 </span>
               ) : null}
               {discount ? (
-                <span className="rounded-full bg-[#ff4d4f] px-3 py-1 text-xs font-bold">
+                <span className="rounded-full bg-keyshop-danger px-3 py-1 text-xs font-bold">
                   {discount}
                 </span>
               ) : null}
@@ -239,7 +239,7 @@ export default function ProductDetailView({ product: rawProduct }: ProductDetail
             <div className="mt-6 flex flex-wrap items-center gap-3">
               <span className="h-2.5 w-2.5 rounded-full bg-green-400" />
               <span className="font-bold text-green-400">
-                {product.stock > 0 ? "In Stock" : "Out of Stock"}
+                {product.stock > 0 ? "Còn hàng" : "Hết hàng"}
               </span>
               <span className="text-sm text-keyshop-muted">{getDeliveryLabel(product)}</span>
             </div>
@@ -247,7 +247,7 @@ export default function ProductDetailView({ product: rawProduct }: ProductDetail
             {purchaseVariants.length > 0 ? (
               <div className="mt-7">
                 <h4 className="mb-3 font-semibold">
-                  {isPhysicalProduct(product) ? "Options" : "Key type"}
+                  {isPhysicalProduct(product) ? "Tùy chọn" : "Loại key"}
                 </h4>
                 <div className="flex flex-wrap gap-3">
                   {purchaseVariants.map((variant) => (
@@ -281,7 +281,7 @@ export default function ProductDetailView({ product: rawProduct }: ProductDetail
             ) : null}
 
             <div className="mt-7">
-              <h4 className="mb-3 font-semibold">Quantity</h4>
+              <h4 className="mb-3 font-semibold">Số lượng</h4>
               <div className="inline-flex items-center rounded-control border border-keyshop-line">
                 <button
                   type="button"
@@ -308,21 +308,21 @@ export default function ProductDetailView({ product: rawProduct }: ProductDetail
                 onClick={() => addToCart(product, quantity, selectedVariant)}
                 className="rounded-control bg-keyshop-blue px-6 py-3 font-semibold hover:bg-keyshop-blue-hover"
               >
-                Add To Cart
+                Thêm vào giỏ
               </button>
               <button
                 type="button"
                 onClick={handleBuyNow}
                 className="rounded-control border border-keyshop-blue px-6 py-3 font-semibold text-keyshop-blue hover:bg-keyshop-blue/10"
               >
-                {isInstantCodeProduct(product) ? "Buy & Get Code" : "Buy Now"}
+                {isInstantCodeProduct(product) ? "Mua và nhận mã" : "Mua ngay"}
               </button>
               <button
                 type="button"
                 onClick={() => toggleCompare(product)}
                 className="rounded-control border border-keyshop-line px-6 py-3 font-semibold hover:bg-white/5"
               >
-                {isInCompare(String(product.id)) ? "Remove Compare" : "Compare"}
+                {isInCompare(String(product.id)) ? "Bỏ so sánh" : "So sánh"}
               </button>
               <button
                 type="button"
@@ -335,19 +335,19 @@ export default function ProductDetailView({ product: rawProduct }: ProductDetail
                     isInWishlist(String(product.id)) && "fill-red-400 text-red-400",
                   )}
                 />
-                Wishlist
+                Yêu thích
               </button>
             </div>
 
             <div className="mt-8 flex flex-wrap gap-3">
               {isLicenseKeyProduct(product) ? (
                 <FeaturePill>
-                  Key format: {product.keyPrefix || "KEY"}-#####
+                  Định dạng key: {product.keyPrefix || "KEY"}-#####
                 </FeaturePill>
               ) : null}
               <FeaturePill>{getDeliveryLabel(product)}</FeaturePill>
               <FeaturePill>
-                {isPhysicalProduct(product) ? "COD available" : "VNPay required"}
+                {isPhysicalProduct(product) ? "Hỗ trợ COD" : "Thanh toán VNPay"}
               </FeaturePill>
             </div>
           </div>
@@ -358,9 +358,9 @@ export default function ProductDetailView({ product: rawProduct }: ProductDetail
         <div className="border-b border-white/10">
           <div className="flex flex-wrap gap-6">
             {[
-              ["description", "Description"],
-              ["specifications", "Specifications"],
-              ["reviews", `Reviews (${writtenReviewCount})`],
+              ["description", "Mô tả"],
+              ["specifications", "Thông số"],
+              ["reviews", `Đánh giá (${writtenReviewCount})`],
             ].map(([id, label]) => (
               <button
                 key={id}
@@ -382,7 +382,7 @@ export default function ProductDetailView({ product: rawProduct }: ProductDetail
         <div className="mt-8">
           {activeTab === "description" ? (
             <div className="max-w-3xl text-white/75 leading-7">
-              {product.description || "No description available."}
+              {product.description || "Chưa có mô tả sản phẩm."}
             </div>
           ) : null}
 
@@ -408,13 +408,13 @@ export default function ProductDetailView({ product: rawProduct }: ProductDetail
                   {renderStars(reviewSummaryRating)}
                 </div>
                 <p className="mt-2 text-sm text-keyshop-muted">
-                  Based on {writtenReviewCount} written reviews
+                  Dựa trên {writtenReviewCount} đánh giá
                 </p>
               </div>
 
               {session?.user ? (
                 <div className="rounded-card border border-keyshop-line bg-white/[0.03] p-6">
-                  <h3 className="font-semibold">Write a review</h3>
+                  <h3 className="font-semibold">Viết đánh giá</h3>
                   <div className="mt-3 flex gap-1">
                     {Array.from({ length: 5 }).map((_, index) => (
                       <button key={index} type="button" onClick={() => setRating(index + 1)}>
@@ -434,7 +434,7 @@ export default function ProductDetailView({ product: rawProduct }: ProductDetail
                     onChange={(event) => setReviewComment(event.target.value)}
                     maxLength={500}
                     rows={4}
-                    placeholder="Share your experience..."
+                    placeholder="Chia sẻ trải nghiệm của bạn..."
                     className="mt-4 w-full rounded-control border border-keyshop-line bg-transparent px-4 py-3 text-sm outline-none focus:border-keyshop-blue"
                   />
                   <button
@@ -443,23 +443,23 @@ export default function ProductDetailView({ product: rawProduct }: ProductDetail
                     onClick={handleSubmitReview}
                     className="mt-4 rounded-control bg-keyshop-blue px-5 py-2.5 text-sm font-semibold hover:bg-keyshop-blue-hover disabled:opacity-60"
                   >
-                    Submit Review
+                    Gửi đánh giá
                   </button>
                 </div>
               ) : (
                 <p className="text-keyshop-muted">
                   <Link href="/auth/login" className="text-keyshop-blue hover:underline">
-                    Login
+                    Đăng nhập
                   </Link>{" "}
-                  to write a review.
+                  để viết đánh giá.
                 </p>
               )}
 
               <div className="space-y-4">
                 {reviewsLoading ? (
-                  <p className="text-keyshop-muted">Loading reviews...</p>
+                  <p className="text-keyshop-muted">Đang tải đánh giá...</p>
                 ) : reviews.length === 0 ? (
-                  <p className="text-keyshop-muted">No written reviews yet.</p>
+                  <p className="text-keyshop-muted">Chưa có đánh giá nào.</p>
                 ) : (
                   reviews.map((review) => (
                     <div
@@ -469,7 +469,7 @@ export default function ProductDetailView({ product: rawProduct }: ProductDetail
                       <div className="flex items-center gap-2">
                         {renderStars(Number(review.rating || 0))}
                         <span className="text-sm text-keyshop-muted">
-                          {review.userName || "Customer"}
+                          {review.userName || "Khách hàng"}
                         </span>
                       </div>
                       <p className="mt-3 text-sm text-white/80">{review.comment}</p>

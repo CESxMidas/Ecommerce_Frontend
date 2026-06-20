@@ -70,11 +70,11 @@ export default function OrdersPageClient() {
 
     if (paymentResult === "success") {
       completeCheckout();
-      toast.success("Payment completed");
+      toast.success("Thanh toán thành công");
     } else if (paymentResult === "failed") {
-      toast.error("Payment was not completed");
+      toast.error("Thanh toán chưa hoàn tất");
     } else if (paymentResult === "invalid_signature") {
-      toast.error("Payment verification failed");
+      toast.error("Xác minh thanh toán thất bại");
     }
 
     router.replace("/account/orders");
@@ -90,7 +90,7 @@ export default function OrdersPageClient() {
         return;
       }
 
-      toast.error("Could not create payment link");
+      toast.error("Không thể tạo liên kết thanh toán");
     } catch (error) {
       toast.error(getApiErrorMessage(error));
       const data = await fetchOrders().catch(() => []);
@@ -104,7 +104,7 @@ export default function OrdersPageClient() {
   async function handleCancel(orderId: string) {
     try {
       await cancelOrder(orderId);
-      toast.success("Order cancelled");
+      toast.success("Đã hủy đơn hàng");
       setOrders(await fetchOrders());
       setCurrentPage(1);
     } catch (error) {
@@ -114,7 +114,7 @@ export default function OrdersPageClient() {
 
   async function handleHideOrder(orderId: string) {
     const ok = window.confirm(
-      "Remove this order from your order history? Admin records will remain unchanged.",
+      "Xóa đơn hàng này khỏi lịch sử? Dữ liệu quản trị vẫn được giữ nguyên.",
     );
 
     if (!ok) return;
@@ -126,7 +126,7 @@ export default function OrdersPageClient() {
           (order) => String(order.id || order.orderId) !== String(orderId),
         ),
       );
-      toast.success("Order removed from your history");
+      toast.success("Đã xóa đơn hàng khỏi lịch sử");
     } catch (error) {
       toast.error(getApiErrorMessage(error));
     }
@@ -139,33 +139,33 @@ export default function OrdersPageClient() {
   return (
     <AccountCard>
       <AccountCardHeader
-        title="My Orders"
-        description={`${orders.length} order${orders.length !== 1 ? "s" : ""}`}
+        title="Đơn hàng của tôi"
+        description={`${orders.length} đơn hàng`}
         action={
           !loading && orders.length > 0 ? (
             <span className="text-sm text-keyshop-muted">
-              Page {currentPage} of {totalPages}
+              Trang {currentPage} / {totalPages}
             </span>
           ) : null
         }
       />
 
       {loading ? (
-        <AccountLoading label="Loading orders..." />
+        <AccountLoading label="Đang tải đơn hàng..." />
       ) : orders.length === 0 ? (
-        <p className="text-sm text-keyshop-muted">No orders yet.</p>
+        <p className="text-sm text-keyshop-muted">Chưa có đơn hàng nào.</p>
       ) : (
         <div className="space-y-4">
           <div className="overflow-x-auto">
             <table className="w-full min-w-[720px] text-left text-sm">
               <thead className="border-b border-keyshop-line text-keyshop-muted">
                   <tr>
-                    <th className="py-3 pr-4">Order ID</th>
-                    <th className="py-3 pr-4">Total</th>
-                    <th className="py-3 pr-4">Status</th>
-                    <th className="py-3 pr-4">Payment</th>
-                    <th className="py-3 pr-4">Date</th>
-                    <th className="py-3">Action</th>
+                    <th className="py-3 pr-4">Mã đơn</th>
+                    <th className="py-3 pr-4">Tổng tiền</th>
+                    <th className="py-3 pr-4">Trạng thái</th>
+                    <th className="py-3 pr-4">Thanh toán</th>
+                    <th className="py-3 pr-4">Ngày</th>
+                    <th className="py-3">Thao tác</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -182,12 +182,12 @@ export default function OrdersPageClient() {
 
                     const statusLabel =
                       order.paymentStatus === "failed"
-                        ? "Payment Failed"
+                        ? "Thanh toán thất bại"
                         : order.status === "PendingPayment"
-                          ? "Pending Payment"
+                          ? "Chờ thanh toán"
                           : order.paymentStatus === "pending" &&
                               order.paymentMethod === "vnpay"
-                            ? "Awaiting Payment"
+                            ? "Đang chờ thanh toán"
                             : order.paymentStatus === "paid"
                               ? order.status
                               : order.paymentStatus || order.status;
@@ -205,7 +205,7 @@ export default function OrdersPageClient() {
                               {order.paymentMethod === "vnpay"
                                 ? "VNPay"
                                 : order.paymentMethod === "cod"
-                                  ? "Manual"
+                                  ? "Thủ công"
                                   : order.paymentMethod || "-"}
                             </p>
                             <p className="text-xs text-keyshop-muted">
@@ -224,7 +224,7 @@ export default function OrdersPageClient() {
                               href={`/account/orders/${currentOrderId}`}
                               className="inline-flex min-h-[42px] items-center justify-center rounded-control border border-keyshop-line bg-white/[0.03] px-4 text-xs font-extrabold uppercase tracking-wide text-white transition hover:border-keyshop-blue/40"
                             >
-                              View
+                              Xem
                             </Link>
                             {canPayOnline ? (
                               <AccountActionButton
@@ -232,10 +232,10 @@ export default function OrdersPageClient() {
                                 disabled={payingId === currentOrderId}
                               >
                                 {payingId === currentOrderId
-                                  ? "Processing..."
+                                  ? "Đang xử lý..."
                                   : order.paymentStatus === "failed"
-                                    ? "Pay again"
-                                    : "Continue payment"}
+                                    ? "Thanh toán lại"
+                                    : "Tiếp tục thanh toán"}
                               </AccountActionButton>
                             ) : null}
                             {canCancel ? (
@@ -243,14 +243,14 @@ export default function OrdersPageClient() {
                                 variant="outline"
                                 onClick={() => handleCancel(currentOrderId)}
                               >
-                                Cancel
+                                Hủy
                               </AccountActionButton>
                             ) : null}
                             <AccountActionButton
                               variant="outline"
                               onClick={() => handleHideOrder(currentOrderId)}
                             >
-                              Remove
+                              Xóa
                             </AccountActionButton>
                           </div>
                         </td>
@@ -268,7 +268,7 @@ export default function OrdersPageClient() {
                   disabled={currentPage === 1}
                   onClick={() => setCurrentPage((page) => Math.max(1, page - 1))}
                 >
-                  Prev
+                  Trước
                 </AccountActionButton>
                 <span className="text-sm text-keyshop-muted">
                   {currentPage} / {totalPages}
@@ -280,7 +280,7 @@ export default function OrdersPageClient() {
                     setCurrentPage((page) => Math.min(totalPages, page + 1))
                   }
                 >
-                  Next
+                  Sau
                 </AccountActionButton>
               </div>
             ) : null}

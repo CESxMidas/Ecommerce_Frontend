@@ -8,15 +8,15 @@ type Props = {
 };
 
 export const metadata: Metadata = {
-  title: "Order Details",
-  description: "View order items, payment status, and license keys.",
+  title: "Chi tiết đơn hàng",
+  description: "Xem sản phẩm, trạng thái thanh toán và key license.",
 };
 
 export default function OrderDetailPage({ params }: Props) {
   const { id } = params;
 
   return (
-    <Suspense fallback={<p className="text-sm text-keyshop-muted">Loading order...</p>}>
+    <Suspense fallback={<p className="text-sm text-keyshop-muted">Đang tải đơn hàng...</p>}>
       <OrderDetailPageClient orderId={id} />
     </Suspense>
   );

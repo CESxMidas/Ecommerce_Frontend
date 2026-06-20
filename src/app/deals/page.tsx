@@ -5,8 +5,8 @@ import ProductListing from "@/components/shop/product-listing";
 import { getCategories, getProducts } from "@/lib/api/server";
 
 export const metadata: Metadata = {
-  title: "Deals",
-  description: "Special deals on digital products and license keys.",
+  title: "Ưu đãi",
+  description: "Ưu đãi đặc biệt cho sản phẩm số và key bản quyền.",
 };
 
 export const revalidate = 300;
@@ -23,7 +23,7 @@ export default async function DealsPage() {
     categoriesRes.status === "fulfilled" ? categoriesRes.value.categories : [];
 
   return (
-    <Suspense fallback={<div className="container py-16 text-keyshop-muted">Loading...</div>}>
+    <Suspense fallback={<div className="container py-16 text-keyshop-muted">Đang tải...</div>}>
       <ProductListing products={products} categories={categories} mode="deals" />
     </Suspense>
   );

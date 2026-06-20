@@ -23,9 +23,9 @@ export default function StaticPageView({ content }: { content: StaticPageContent
         ))}
 
         <CommerceActions>
-          <CommerceBtn href="/products">Browse products</CommerceBtn>
+          <CommerceBtn href="/products">Xem sản phẩm</CommerceBtn>
           <CommerceBtn href="/contact" variant="ghost">
-            Contact support
+            Liên hệ hỗ trợ
           </CommerceBtn>
         </CommerceActions>
       </CommercePanel>

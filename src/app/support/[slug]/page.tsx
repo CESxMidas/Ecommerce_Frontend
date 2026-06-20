@@ -5,9 +5,9 @@ import StaticPageView from "@/components/commerce/static-page-view";
 import { getStaticPage } from "@/lib/content/static-pages";
 
 const titles: Record<string, string> = {
-  "help-center": "Help Center",
-  returns: "Returns",
-  shipping: "Shipping",
+  "help-center": "Trung tâm trợ giúp",
+  returns: "Đổi trả",
+  shipping: "Vận chuyển",
 };
 
 type Props = {
