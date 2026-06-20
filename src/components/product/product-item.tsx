@@ -16,6 +16,8 @@ import {
   getProductThumbnail,
   getPurchaseVariants,
   getSalePrice,
+  getStockStatusLabel,
+  isOutOfStock,
   isPhysicalProduct,
   normalizeProduct,
 } from "@/lib/utils/product-schema";
@@ -54,8 +56,11 @@ export default function ProductItem({ item, index }: ProductItemProps) {
   const colorVariants = variants.filter((variant) => variant.color);
   const href = `/products/${product.slug || product.id}`;
   const hasMultipleOptions = variants.length > 1;
+  const outOfStock = isOutOfStock(product);
+  const stockStatusLabel = getStockStatusLabel(product);
 
   const handleAddToCart = () => {
+    if (outOfStock) return;
     addToCart(product, 1, defaultVariant);
   };
 
@@ -209,11 +214,12 @@ export default function ProductItem({ item, index }: ProductItemProps) {
           <div className="flex gap-2">
             <button
               type="button"
+              disabled={outOfStock}
               onClick={handleAddToCart}
-              className="keyshop-interactive inline-flex min-h-10 flex-1 items-center justify-center gap-2 rounded-control bg-keyshop-blue px-3 text-xs font-bold uppercase tracking-wide text-white hover:bg-keyshop-blue-hover"
+              className="keyshop-interactive inline-flex min-h-10 flex-1 items-center justify-center gap-2 rounded-control bg-keyshop-blue px-3 text-xs font-bold uppercase tracking-wide text-white hover:bg-keyshop-blue-hover disabled:cursor-not-allowed disabled:opacity-50"
             >
               <ShoppingCart className="h-3.5 w-3.5" />
-              Thêm vào giỏ
+              {outOfStock ? stockStatusLabel : "Thêm vào giỏ"}
             </button>
             <Link
               href={href}

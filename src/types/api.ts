@@ -38,6 +38,7 @@ export interface Product {
   images: string[];
   categoryId: string;
   categoryName: string;
+  usesKeyPool?: boolean;
   stock: number;
   rating: number;
   reviewsCount: number;

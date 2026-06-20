@@ -19,6 +19,9 @@ import {
   getProductImages,
   getPurchaseVariants,
   getSalePrice,
+  getStockDetailLabel,
+  getStockStatusLabel,
+  isOutOfStock,
   isPhysicalProduct,
   normalizeProduct,
   resolvePurchaseVariant,
@@ -125,6 +128,10 @@ export default function ProductQuickViewModal({
   const images = getProductImages(product).map((image) => resolveMediaUrl(image));
   const mainImage = resolveMediaUrl(images[0] || product.thumbnail);
   const href = `/products/${product.slug || product.id}`;
+  const outOfStock = isOutOfStock(product);
+  const maxQuantity = Math.max(1, Number(product.stock ?? 0));
+  const stockStatusLabel = getStockStatusLabel(product);
+  const stockDetailLabel = getStockDetailLabel(product);
 
   const handleAddToCart = async () => {
     await addToCart(product, quantity, selectedVariant);
@@ -218,10 +225,21 @@ export default function ProductQuickViewModal({
             </p>
 
             <div className="mt-4 flex flex-wrap items-center gap-3 text-sm">
-              <span className="h-2 w-2 rounded-full bg-green-400" />
-              <span className="font-semibold text-green-400">
-                {product.stock > 0 ? "Còn hàng" : "Hết hàng"}
+              <span
+                className={cn(
+                  "h-2 w-2 rounded-full",
+                  outOfStock ? "bg-red-400" : "bg-green-400",
+                )}
+              />
+              <span
+                className={cn(
+                  "font-semibold",
+                  outOfStock ? "text-red-400" : "text-green-400",
+                )}
+              >
+                {stockStatusLabel}
               </span>
+              <span className="text-keyshop-muted">{stockDetailLabel}</span>
               <span className="text-keyshop-muted">{getDeliveryLabel(product)}</span>
             </div>
 
@@ -275,8 +293,9 @@ export default function ProductQuickViewModal({
                 <span className="min-w-10 text-center text-sm">{quantity}</span>
                 <button
                   type="button"
-                  className="px-3 py-2"
-                  onClick={() => setQuantity((value) => value + 1)}
+                  className="px-3 py-2 disabled:opacity-40"
+                  disabled={outOfStock || quantity >= maxQuantity}
+                  onClick={() => setQuantity((value) => Math.min(maxQuantity, value + 1))}
                 >
                   <Plus className="h-4 w-4" />
                 </button>
@@ -286,10 +305,11 @@ export default function ProductQuickViewModal({
             <div className="mt-6 flex flex-col gap-3 sm:flex-row">
               <button
                 type="button"
+                disabled={outOfStock}
                 onClick={handleAddToCart}
-                className="keyshop-interactive rounded-control bg-keyshop-blue px-5 py-3 text-sm font-semibold hover:bg-keyshop-blue-hover"
+                className="keyshop-interactive rounded-control bg-keyshop-blue px-5 py-3 text-sm font-semibold hover:bg-keyshop-blue-hover disabled:cursor-not-allowed disabled:opacity-50"
               >
-                Thêm vào giỏ
+                {outOfStock ? stockStatusLabel : "Thêm vào giỏ"}
               </button>
               <Link
                 href={href}

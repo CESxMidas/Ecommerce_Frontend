@@ -122,6 +122,7 @@ export function normalizeProduct(raw: Record<string, unknown> | null) {
     tags: Array.isArray(raw.tags) ? (raw.tags as string[]) : [],
     attributes: (raw.attributes as Record<string, unknown>) || {},
     variants: rawVariants as PurchaseVariant[],
+    usesKeyPool: Boolean(raw.usesKeyPool) || undefined,
     stock: Number(raw.stock ?? 0),
     rating: Number(raw.rating ?? 0),
     reviewsCount: Number(raw.reviewsCount ?? 0),
@@ -163,6 +164,46 @@ export function isLicenseKeyProduct(product: Partial<NormalizedProduct> | null) 
 
 export function isInstantCodeProduct(product: Partial<NormalizedProduct> | null) {
   return ["license_key", "redeem_code"].includes(product?.productType || "");
+}
+
+export function usesKeyPool(product: Partial<NormalizedProduct> | null) {
+  return Boolean(
+    (product as { usesKeyPool?: boolean })?.usesKeyPool || isInstantCodeProduct(product),
+  );
+}
+
+export function isOutOfStock(product: Partial<NormalizedProduct> | null) {
+  return Number(product?.stock ?? 0) <= 0;
+}
+
+export function getStockStatusLabel(product: Partial<NormalizedProduct> | null) {
+  if (isOutOfStock(product)) {
+    return usesKeyPool(product) ? "Hết key" : "Hết hàng";
+  }
+
+  return usesKeyPool(product) ? "Còn key" : "Còn hàng";
+}
+
+export function getStockDetailLabel(product: Partial<NormalizedProduct> | null) {
+  const stock = Number(product?.stock ?? 0);
+
+  if (stock <= 0) {
+    return usesKeyPool(product)
+      ? "Hết key trong kho"
+      : "Hết hàng";
+  }
+
+  return usesKeyPool(product)
+    ? `Còn ${stock} key`
+    : `Còn ${stock} sản phẩm`;
+}
+
+export function getMaxPurchasableQuantity(
+  product: Partial<NormalizedProduct> | null,
+  currentQuantity = 0,
+) {
+  const stock = Number(product?.stock ?? 0);
+  return Math.max(0, stock - currentQuantity);
 }
 
 function normalizePurchaseVariant(

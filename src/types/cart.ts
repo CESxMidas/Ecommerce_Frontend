@@ -25,6 +25,7 @@ export interface NormalizedProduct {
   tags: string[];
   attributes: Record<string, unknown>;
   variants: PurchaseVariant[];
+  usesKeyPool?: boolean;
   stock: number;
   rating: number;
   reviewsCount: number;
