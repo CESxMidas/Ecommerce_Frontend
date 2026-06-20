@@ -26,7 +26,5 @@ yarn-error.log*
 *.pem
 
 # Typescript
+*.tsbuildinfo
 next-env.d.ts
-
-# Legacy Vite (reference only)
-legacy/node_modules
