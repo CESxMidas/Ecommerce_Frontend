@@ -5,7 +5,6 @@ import { Zap } from "lucide-react";
 
 import AdsCarousel from "@/components/home/ads-carousel";
 import ProductCarousel from "@/components/home/product-carousel";
-import Reveal from "@/components/ui/reveal";
 import { cn } from "@/lib/utils";
 import type { Banner, Product } from "@/types/api";
 
@@ -82,7 +81,7 @@ function ProductSectionBlock({
   const [activeTab, setActiveTab] = useState(0);
 
   return (
-    <Reveal as="section" className="mt-16 lg:mt-20" delay={revealDelay}>
+    <section className="mt-16 lg:mt-20">
       <div className="container">
         <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
           <div>
@@ -114,13 +113,13 @@ function ProductSectionBlock({
         <ProductCarousel products={products} />
         {ads > 0 ? <AdsCarousel banners={banners} items={ads} /> : null}
       </div>
-    </Reveal>
+    </section>
   );
 }
 
 function InstantDeliveryBanner() {
   return (
-    <Reveal as="section" className="mt-16 lg:mt-20" delay={120}>
+    <section className="mt-16 lg:mt-20">
       <div className="container">
         <div className="flex flex-col items-start justify-between gap-6 rounded-card border border-keyshop-line bg-white/[0.03] p-6 transition-all duration-300 hover:border-keyshop-blue/25 md:flex-row md:items-center">
           <div className="flex items-center gap-4">
@@ -135,6 +134,6 @@ function InstantDeliveryBanner() {
           <p className="text-xl font-bold text-keyshop-blue">Hỗ trợ 24/7</p>
         </div>
       </div>
-    </Reveal>
+    </section>
   );
 }

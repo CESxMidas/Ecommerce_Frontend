@@ -2,11 +2,12 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { Expand, Heart, ShoppingCart, Shuffle, Star } from "lucide-react";
+import { Expand, Heart, ShoppingCart, Shuffle } from "lucide-react";
 import { useState } from "react";
 
 import ProductQuickViewModal from "@/components/product/product-quick-view-modal";
 import { useCart } from "@/components/providers/cart-provider";
+import { StarRating } from "@/components/ui/star-rating";
 import { formatPrice } from "@/lib/utils/format";
 import {
   computeDiscountLabel,
@@ -26,10 +27,9 @@ import type { Product } from "@/types/api";
 
 type ProductItemProps = {
   item: Product | Record<string, unknown>;
-  index?: number;
 };
 
-export default function ProductItem({ item, index }: ProductItemProps) {
+export default function ProductItem({ item }: ProductItemProps) {
   const { addToCart, toggleWishlist, toggleCompare, isInWishlist, isInCompare } =
     useCart();
   const [quickViewOpen, setQuickViewOpen] = useState(false);
@@ -65,17 +65,7 @@ export default function ProductItem({ item, index }: ProductItemProps) {
   };
 
   return (
-    <article
-      className={cn(
-        "group keyshop-card-hover flex h-full min-w-0 flex-col overflow-hidden rounded-card border border-keyshop-line bg-product-card shadow-card backdrop-blur-[14px]",
-        typeof index === "number" && "animate-fade-in-up motion-reduce:animate-none",
-      )}
-      style={
-        typeof index === "number"
-          ? { animationDelay: `${Math.min(index, 8) * 70}ms` }
-          : undefined
-      }
-    >
+    <article className="group keyshop-card-hover flex h-full min-w-0 flex-col overflow-hidden rounded-card border border-keyshop-line bg-product-card shadow-card backdrop-blur-[14px]">
       <div className="relative aspect-square overflow-hidden bg-gray-100">
         <div className="absolute left-3 top-3 z-20 flex max-w-[calc(100%-4.5rem)] flex-wrap gap-1.5">
           {discount ? (
@@ -139,23 +129,8 @@ export default function ProductItem({ item, index }: ProductItemProps) {
           {displayName}
         </Link>
 
-        <div className="mt-2 flex min-h-[1.125rem] items-center gap-0.5 text-keyshop-muted">
-          {Array.from({ length: 5 }).map((_, index) => (
-            <Star
-              key={index}
-              className={cn(
-                "h-3.5 w-3.5",
-                index < Math.round(product.rating || 0)
-                  ? "fill-yellow-400 text-yellow-400"
-                  : "text-white/20",
-              )}
-            />
-          ))}
-          {product.reviewsCount > 0 ? (
-            <span className="ml-1 text-[11px] text-keyshop-muted">
-              ({product.reviewsCount})
-            </span>
-          ) : null}
+        <div className="mt-2 flex min-h-[1.125rem] items-center">
+          <StarRating rating={product.rating || 0} reviewCount={product.reviewsCount} />
         </div>
 
         <div className="mt-2.5 flex min-h-6 flex-nowrap items-center gap-1.5 overflow-hidden">
@@ -196,11 +171,6 @@ export default function ProductItem({ item, index }: ProductItemProps) {
 
         <div className="mt-auto flex flex-col gap-3 pt-4">
           <div className="flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
-            {hasMultipleOptions ? (
-              <span className="text-[11px] font-medium uppercase tracking-wide text-keyshop-muted">
-             
-              </span>
-            ) : null}
             <span className="text-lg font-bold text-keyshop-blue">
               {formatPrice(displaySalePrice)}
             </span>
@@ -216,14 +186,14 @@ export default function ProductItem({ item, index }: ProductItemProps) {
               type="button"
               disabled={outOfStock}
               onClick={handleAddToCart}
-              className="keyshop-interactive inline-flex min-h-10 flex-1 items-center justify-center gap-2 rounded-control bg-keyshop-blue px-3 text-xs font-bold uppercase tracking-wide text-white hover:bg-keyshop-blue-hover disabled:cursor-not-allowed disabled:opacity-50"
+              className="keyshop-interactive inline-flex min-h-10 flex-1 cursor-pointer items-center justify-center gap-2 rounded-control bg-keyshop-blue px-3 text-xs font-bold uppercase tracking-wide text-white hover:bg-keyshop-blue-hover focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-keyshop-blue/25 disabled:cursor-not-allowed disabled:opacity-50"
             >
               <ShoppingCart className="h-3.5 w-3.5" />
               {outOfStock ? stockStatusLabel : "Thêm vào giỏ"}
             </button>
             <Link
               href={href}
-              className="inline-flex min-h-10 items-center justify-center rounded-control border border-keyshop-line px-3 text-xs font-semibold text-white transition hover:border-keyshop-blue/50 hover:text-keyshop-blue"
+              className="keyshop-interactive inline-flex min-h-10 cursor-pointer items-center justify-center rounded-control border border-keyshop-line px-3 text-xs font-semibold text-white transition hover:border-keyshop-blue/50 hover:text-keyshop-blue focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-keyshop-blue/25"
             >
               Xem
             </Link>
@@ -254,7 +224,7 @@ function IconActionButton({
   label: string;
 }) {
   const className = cn(
-    "flex h-8 w-8 items-center justify-center rounded-full border border-keyshop-line bg-keyshop-bg/90 text-white transition-colors hover:bg-keyshop-blue",
+    "keyshop-interactive flex h-8 w-8 cursor-pointer items-center justify-center rounded-full border border-keyshop-line bg-keyshop-bg/90 text-white transition-colors hover:bg-keyshop-blue focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-keyshop-blue/40",
     active && "bg-keyshop-blue",
   );
 

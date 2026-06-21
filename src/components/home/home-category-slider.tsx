@@ -7,7 +7,6 @@ import { SwiperSlide } from "swiper/react";
 
 import KeyshopSwiper from "@/components/ui/keyshop-swiper";
 
-import Reveal from "@/components/ui/reveal";
 import { flattenLeafCategories } from "@/lib/utils/category-utils";
 import type { Category } from "@/types/api";
 
@@ -25,7 +24,7 @@ export default function HomeCategorySlider({ categories }: HomeCategorySliderPro
   if (displayCategories.length === 0) return null;
 
   return (
-    <Reveal className="mt-8">
+    <div className="mt-8">
       <div className="mb-6">
         <h2 className="text-3xl font-bold text-white">Browse Categories</h2>
         <p className="mt-1 text-keyshop-muted">
@@ -34,6 +33,7 @@ export default function HomeCategorySlider({ categories }: HomeCategorySliderPro
       </div>
 
       <KeyshopSwiper
+        className="keyshop-category-carousel"
         modules={[Autoplay]}
         autoplay={{ delay: 3500, disableOnInteraction: false }}
         loop={displayCategories.length > 5}
@@ -79,6 +79,6 @@ export default function HomeCategorySlider({ categories }: HomeCategorySliderPro
           );
         })}
       </KeyshopSwiper>
-    </Reveal>
+    </div>
   );
 }

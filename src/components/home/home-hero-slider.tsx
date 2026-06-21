@@ -5,8 +5,6 @@ import Link from "next/link";
 import { Autoplay, Pagination } from "swiper/modules";
 import { SwiperSlide } from "swiper/react";
 
-import "swiper/css/pagination";
-
 import KeyshopSwiper from "@/components/ui/keyshop-swiper";
 
 import { normalizeCommerceLink, resolveMediaUrl } from "@/lib/utils/image";

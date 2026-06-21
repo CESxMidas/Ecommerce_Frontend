@@ -1,15 +1,27 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { SessionProvider } from "next-auth/react";
+import { Suspense } from "react";
 import { Toaster } from "react-hot-toast";
 
-import LicenseKeyModal from "@/components/shop/license-key-modal";
-import CartPanel from "@/components/layout/cart-panel";
+import ScrollToTop from "@/components/layout/scroll-to-top";
 import { AuthTokenSync } from "@/components/providers/auth-token-sync";
-import { CartProvider, useCart } from "@/components/providers/cart-provider";
+import { CartProvider, useCartCore } from "@/components/providers/cart-provider";
+import { CartUiProvider } from "@/components/providers/cart-ui-provider";
+import { WishlistCompareProvider } from "@/components/providers/wishlist-compare-provider";
+
+const CartPanel = dynamic(() => import("@/components/layout/cart-panel"), {
+  ssr: false,
+});
+
+const LicenseKeyModal = dynamic(
+  () => import("@/components/shop/license-key-modal"),
+  { ssr: false },
+);
 
 function GlobalLicenseKeyModal() {
-  const { licenseKeyOrder, closeLicenseKeyModal } = useCart();
+  const { licenseKeyOrder, closeLicenseKeyModal } = useCartCore();
 
   return (
     <LicenseKeyModal
@@ -23,12 +35,17 @@ function GlobalLicenseKeyModal() {
 export default function Providers({ children }: { children: React.ReactNode }) {
   return (
     <SessionProvider basePath="/api/next-auth">
-      <CartProvider>
-        <AuthTokenSync />
-        {children}
-        <CartPanel />
-        <GlobalLicenseKeyModal />
-        <Toaster
+      <CartUiProvider>
+        <WishlistCompareProvider>
+          <CartProvider>
+            <AuthTokenSync />
+            <Suspense fallback={null}>
+              <ScrollToTop />
+            </Suspense>
+            {children}
+            <CartPanel />
+            <GlobalLicenseKeyModal />
+            <Toaster
           position="top-right"
           toastOptions={{
             duration: 2500,
@@ -39,7 +56,9 @@ export default function Providers({ children }: { children: React.ReactNode }) {
             },
           }}
         />
-      </CartProvider>
+          </CartProvider>
+        </WishlistCompareProvider>
+      </CartUiProvider>
     </SessionProvider>
   );
 }

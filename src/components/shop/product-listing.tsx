@@ -8,12 +8,14 @@ import {
   Grid2x2,
   Grid3x3,
   LayoutList,
+  PackageSearch,
   X,
 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 
 import ProductItem from "@/components/product/product-item";
 import ListingSidebar from "@/components/shop/listing-sidebar";
+import { EmptyState } from "@/components/ui/empty-state";
 import SideDrawer from "@/components/ui/side-drawer";
 import {
   collectCategoryIds,
@@ -32,16 +34,25 @@ import type { Category, Product } from "@/types/api";
 
 const PER_PAGE = 12;
 
+type ListingPagination = {
+  page: number;
+  totalPages: number;
+  totalItems: number;
+  limit: number;
+};
+
 type ProductListingProps = {
   products: Product[];
   categories: Category[];
   mode?: "default" | "deals";
+  pagination?: ListingPagination;
 };
 
 export default function ProductListing({
   products,
   categories,
   mode = "default",
+  pagination: serverPagination,
 }: ProductListingProps) {
   const router = useRouter();
   const pathname = usePathname();
@@ -52,17 +63,19 @@ export default function ProductListing({
   const sortBy = searchParams.get("sort") || (mode === "deals" ? "popular" : "latest");
   const page = Number(searchParams.get("page") || "1");
 
+  const priceBounds = useMemo(() => getProductPriceBounds(products), [products]);
+  const activeCategory = useMemo(
+    () => findCategoryBySlug(categories, categorySlug),
+    [categories, categorySlug],
+  );
+
   const [gridCols, setGridCols] = useState<1 | 2 | 4>(4);
   const [sortOpen, setSortOpen] = useState(false);
   const [filterOpen, setFilterOpen] = useState(false);
   const [selectedCategoryIds, setSelectedCategoryIds] = useState<string[]>([]);
   const [selectedBrands, setSelectedBrands] = useState<string[]>([]);
-  const [priceRange, setPriceRange] = useState<[number, number]>([0, 100]);
-
-  const priceBounds = useMemo(() => getProductPriceBounds(products), [products]);
-  const activeCategory = useMemo(
-    () => findCategoryBySlug(categories, categorySlug),
-    [categories, categorySlug],
+  const [priceRange, setPriceRange] = useState<[number, number]>(() =>
+    getProductPriceBounds(products),
   );
 
   useEffect(() => {
@@ -77,31 +90,41 @@ export default function ProductListing({
     }
   }, [categorySlug, categories]);
 
-  useEffect(() => {
-    if (products.length > 0) {
-      setPriceRange(getProductPriceBounds(products));
-    }
-  }, [products]);
-
   const brands = useMemo(() => getUniqueBrands(products), [products]);
 
-  const filtered = useMemo(
-    () =>
-      filterProducts(products, {
-        search: query,
-        categoryIds: selectedCategoryIds,
-        brands: selectedBrands,
-        priceRange,
-        dealsOnly: mode === "deals",
-      }),
-    [products, query, selectedCategoryIds, selectedBrands, priceRange, mode],
-  );
+  const filtered = useMemo(() => {
+    if (serverPagination) {
+      return products;
+    }
 
-  const sorted = useMemo(() => sortProducts(filtered, sortBy), [filtered, sortBy]);
-  const pagination = useMemo(
-    () => paginateProducts(sorted, page, PER_PAGE),
-    [sorted, page],
-  );
+    return filterProducts(products, {
+      search: query,
+      categoryIds: selectedCategoryIds,
+      brands: selectedBrands,
+      priceRange,
+      dealsOnly: mode === "deals",
+    });
+  }, [products, query, selectedCategoryIds, selectedBrands, priceRange, mode, serverPagination]);
+
+  const sorted = useMemo(() => {
+    if (serverPagination) {
+      return filtered;
+    }
+    return sortProducts(filtered, sortBy);
+  }, [filtered, sortBy, serverPagination]);
+
+  const pagination = useMemo(() => {
+    if (serverPagination) {
+      return {
+        items: mode === "deals" ? sorted.filter((p) => p.salePrice != null && p.salePrice < p.price) : sorted,
+        page: serverPagination.page,
+        totalPages: serverPagination.totalPages,
+        totalItems: serverPagination.totalItems,
+      };
+    }
+
+    return paginateProducts(sorted, page, PER_PAGE);
+  }, [serverPagination, sorted, page, mode]);
 
   const updateParams = (updates: Record<string, string | number | null>) => {
     const next = new URLSearchParams(searchParams.toString());
@@ -210,8 +233,9 @@ export default function ProductListing({
             <div className="mb-6 flex flex-wrap items-center justify-between gap-3 rounded-card border border-keyshop-line bg-white/[0.03] p-3">
               <button
                 type="button"
-                className="inline-flex items-center gap-2 rounded-control border border-keyshop-line px-3 py-2 text-sm text-white lg:hidden"
+                className="keyshop-interactive inline-flex cursor-pointer items-center gap-2 rounded-control border border-keyshop-line px-3 py-2 text-sm text-white lg:hidden focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-keyshop-blue/30"
                 onClick={() => setFilterOpen(true)}
+                aria-expanded={filterOpen}
               >
                 <Filter className="h-4 w-4" />
                 Bộ lọc
@@ -221,7 +245,9 @@ export default function ProductListing({
                 <button
                   type="button"
                   onClick={() => setSortOpen((value) => !value)}
-                  className="inline-flex items-center gap-2 rounded-control border border-keyshop-line px-3 py-2 text-sm text-white"
+                  aria-expanded={sortOpen}
+                  aria-haspopup="listbox"
+                  className="keyshop-interactive inline-flex cursor-pointer items-center gap-2 rounded-control border border-keyshop-line px-3 py-2 text-sm text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-keyshop-blue/30"
                 >
                   Sắp xếp: {SORT_LABELS[sortBy] || SORT_LABELS.latest}
                   <ChevronDown className="h-4 w-4" />
@@ -248,18 +274,20 @@ export default function ProductListing({
                 ) : null}
               </div>
 
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2" role="group" aria-label="Bố cục lưới">
                 {[
-                  { cols: 4 as const, icon: Grid3x3 },
-                  { cols: 2 as const, icon: Grid2x2 },
-                  { cols: 1 as const, icon: LayoutList },
-                ].map(({ cols, icon: Icon }) => (
+                  { cols: 4 as const, icon: Grid3x3, label: "4 cột" },
+                  { cols: 2 as const, icon: Grid2x2, label: "2 cột" },
+                  { cols: 1 as const, icon: LayoutList, label: "Danh sách" },
+                ].map(({ cols, icon: Icon, label }) => (
                   <button
                     key={cols}
                     type="button"
+                    aria-label={label}
+                    aria-pressed={gridCols === cols}
                     onClick={() => setGridCols(cols)}
                     className={cn(
-                      "rounded-control border p-2",
+                      "keyshop-interactive cursor-pointer rounded-control border p-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-keyshop-blue/30",
                       gridCols === cols
                         ? "border-keyshop-blue bg-keyshop-blue/20 text-white"
                         : "border-keyshop-line text-keyshop-muted hover:text-white",
@@ -274,13 +302,17 @@ export default function ProductListing({
             {pagination.items.length > 0 ? (
               <div className={cn("grid items-stretch gap-5", gridClass)}>
                 {pagination.items.map((product, index) => (
-                  <ProductItem key={product.id} item={product} index={index} />
+                  <ProductItem key={product.id} item={product} />
                 ))}
               </div>
             ) : (
-              <div className="rounded-card border border-dashed border-keyshop-line py-16 text-center text-keyshop-muted">
-                Không có sản phẩm phù hợp với bộ lọc.
-              </div>
+              <EmptyState
+                icon={PackageSearch}
+                title="Không tìm thấy sản phẩm"
+                description="Thử đổi bộ lọc hoặc từ khóa tìm kiếm để xem thêm key và bản quyền số."
+                actionLabel="Xóa bộ lọc"
+                onAction={clearFilters}
+              />
             )}
 
             {pagination.totalPages > 1 ? (
@@ -316,7 +348,7 @@ export default function ProductListing({
       <SideDrawer open={filterOpen} onClose={() => setFilterOpen(false)} anchor="left">
         <div className="flex items-center justify-between border-b border-keyshop-line p-4 text-white">
           <h3 className="font-semibold">Bộ lọc</h3>
-          <button type="button" onClick={() => setFilterOpen(false)}>
+          <button type="button" onClick={() => setFilterOpen(false)} aria-label="Đóng bộ lọc">
             <X className="h-5 w-5" />
           </button>
         </div>

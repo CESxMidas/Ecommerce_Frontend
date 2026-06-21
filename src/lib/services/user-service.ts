@@ -118,6 +118,8 @@ export type UserNotification = {
   message: string;
   createdAt?: string;
   readAt?: string | null;
+  type?: string;
+  data?: Record<string, unknown>;
 };
 
 export type TicketReply = {

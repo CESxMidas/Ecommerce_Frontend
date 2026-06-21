@@ -1,7 +1,7 @@
 "use client";
 
 import { MapPin, User } from "lucide-react";
-import { FormEvent, useEffect, useState } from "react";
+import { FormEvent, useCallback, useState } from "react";
 import { useSession } from "next-auth/react";
 import toast from "react-hot-toast";
 
@@ -13,6 +13,7 @@ import {
   accountFieldClass,
   accountLabelClass,
 } from "@/components/account/account-ui";
+import { useSessionQuery } from "@/lib/hooks/use-session-query";
 import {
   createAddress,
   deleteAddress,
@@ -35,33 +36,23 @@ const emptyForm = {
 
 export default function AddressesPageClient() {
   const { data: session } = useSession();
-  const [addresses, setAddresses] = useState<UserAddress[]>([]);
-  const [loading, setLoading] = useState(true);
+  const loadAddresses = useCallback(async () => {
+    const data = await fetchAddresses();
+    if (Array.isArray(data)) return data;
+    if (Array.isArray(data?.addresses)) return data.addresses;
+    return [];
+  }, []);
+  const {
+    data: addresses,
+    loading,
+    reload: loadAddressesPage,
+  } = useSessionQuery<UserAddress[]>(loadAddresses, []);
   const [saving, setSaving] = useState(false);
   const [formFields, setFormFields] = useState(emptyForm);
 
-  async function loadAddresses() {
-    try {
-      setLoading(true);
-      const data = await fetchAddresses();
-
-      if (Array.isArray(data)) {
-        setAddresses(data);
-      } else if (Array.isArray(data?.addresses)) {
-        setAddresses(data.addresses);
-      } else {
-        setAddresses([]);
-      }
-    } catch {
-      setAddresses([]);
-    } finally {
-      setLoading(false);
-    }
+  async function reloadAddresses() {
+    await loadAddressesPage();
   }
-
-  useEffect(() => {
-    loadAddresses();
-  }, []);
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -92,7 +83,7 @@ export default function AddressesPageClient() {
       });
       setFormFields(emptyForm);
       toast.success("Đã thêm địa chỉ");
-      await loadAddresses();
+      await reloadAddresses();
     } catch (error) {
       toast.error(getApiErrorMessage(error));
     } finally {
@@ -104,7 +95,7 @@ export default function AddressesPageClient() {
     try {
       await setDefaultAddress(addressId);
       toast.success("Đã cập nhật địa chỉ mặc định");
-      await loadAddresses();
+      await reloadAddresses();
     } catch (error) {
       toast.error(getApiErrorMessage(error));
     }
@@ -114,7 +105,7 @@ export default function AddressesPageClient() {
     try {
       await deleteAddress(addressId);
       toast.success("Đã xóa địa chỉ");
-      await loadAddresses();
+      await reloadAddresses();
     } catch (error) {
       toast.error(getApiErrorMessage(error));
     }

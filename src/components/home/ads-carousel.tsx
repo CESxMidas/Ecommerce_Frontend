@@ -53,6 +53,7 @@ export default function AdsCarousel({ banners, items = 3 }: AdsCarouselProps) {
   return (
     <section className="mt-10">
       <KeyshopSwiper
+        className="keyshop-ads-carousel"
         modules={[Autoplay]}
         autoplay={{ delay: 3000, disableOnInteraction: false }}
         loop={ads.length > items}

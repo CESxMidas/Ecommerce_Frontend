@@ -31,6 +31,10 @@ function createBackendRewrites(apiBase) {
 }
 
 const nextConfig = {
+  experimental: {
+    optimizePackageImports: ["lucide-react", "react-icons"],
+  },
+
   images: {
     remotePatterns: [
       { protocol: "https", hostname: "images.unsplash.com" },
@@ -51,6 +55,7 @@ const nextConfig = {
 
   async redirects() {
     return [
+      { source: "/favicon.ico", destination: "/favicon.svg", permanent: false },
       { source: "/productListing", destination: "/products", permanent: true },
       { source: "/product/:id", destination: "/products/:id", permanent: true },
       { source: "/login", destination: "/auth/login", permanent: true },
@@ -93,9 +98,20 @@ const nextConfig = {
       { source: "/security", destination: "/account/security", permanent: true },
       {
         source: "/help-center",
-        destination: "/support/help-center",
+        destination: "/help",
         permanent: true,
       },
+      {
+        source: "/support/help-center",
+        destination: "/help",
+        permanent: true,
+      },
+      { source: "/order-tracking", destination: "/track-order", permanent: true },
+      { source: "/order-tracking/:path*", destination: "/track-order", permanent: true },
+      { source: "/payment", destination: "/legal/payment-policy", permanent: true },
+      { source: "/refund-policy", destination: "/support/returns", permanent: true },
+      { source: "/terms-of-service", destination: "/legal/terms", permanent: true },
+      { source: "/cookie-policy", destination: "/legal/cookie-policy", permanent: true },
       {
         source: "/payment-policy",
         destination: "/legal/payment-policy",

@@ -8,10 +8,10 @@ import {
   AccountEmptyState,
 } from "@/components/account/account-ui";
 import ProductItem from "@/components/product/product-item";
-import { useCart } from "@/components/providers/cart-provider";
+import { useWishlistCompare } from "@/components/providers/wishlist-compare-provider";
 
 export default function WishlistPageClient() {
-  const { wishlist } = useCart();
+  const { wishlist } = useWishlistCompare();
   const isEmpty = wishlist.length === 0;
 
   return (
@@ -46,7 +46,7 @@ export default function WishlistPageClient() {
       ) : (
         <div className="grid grid-cols-[repeat(auto-fill,minmax(220px,1fr))] items-stretch gap-5">
           {wishlist.map((item, index) => (
-            <ProductItem key={item.id} item={item} index={index} />
+            <ProductItem key={item.id} item={item} />
           ))}
         </div>
       )}

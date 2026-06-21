@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useEffect, useState } from "react";
+import { FormEvent, useCallback, useState } from "react";
 import toast from "react-hot-toast";
 
 import {
@@ -12,11 +12,11 @@ import {
   accountFieldClass,
   accountSelectClass,
 } from "@/components/account/account-ui";
+import { useSessionQuery } from "@/lib/hooks/use-session-query";
 import {
   addTicketReply,
   createTicket,
   fetchTickets,
-  type SupportTicket,
 } from "@/lib/services/user-service";
 import { getApiErrorMessage } from "@/lib/utils/api-error";
 
@@ -28,42 +28,11 @@ const emptyTicket = {
 };
 
 export default function TicketsPageClient() {
-  const [tickets, setTickets] = useState<SupportTicket[]>([]);
+  const loadTickets = useCallback(() => fetchTickets(), []);
+  const { data: tickets, loading, reload } = useSessionQuery(loadTickets, []);
   const [form, setForm] = useState(emptyTicket);
   const [replyText, setReplyText] = useState<Record<string, string>>({});
-  const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
-
-  async function load() {
-    try {
-      setLoading(true);
-      setTickets(await fetchTickets());
-    } catch {
-      setTickets([]);
-    } finally {
-      setLoading(false);
-    }
-  }
-
-  useEffect(() => {
-    let cancelled = false;
-
-    async function loadInitial() {
-      try {
-        const data = await fetchTickets();
-        if (!cancelled) setTickets(data);
-      } catch {
-        if (!cancelled) setTickets([]);
-      } finally {
-        if (!cancelled) setLoading(false);
-      }
-    }
-
-    loadInitial();
-    return () => {
-      cancelled = true;
-    };
-  }, []);
 
   const submitTicket = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -78,7 +47,7 @@ export default function TicketsPageClient() {
       await createTicket(form);
       setForm(emptyTicket);
       toast.success("Đã tạo yêu cầu hỗ trợ");
-      await load();
+      await reload();
     } catch (error) {
       toast.error(getApiErrorMessage(error, "Không thể tạo yêu cầu hỗ trợ"));
     } finally {
@@ -96,7 +65,7 @@ export default function TicketsPageClient() {
     try {
       await addTicketReply(ticketId, message);
       setReplyText({ ...replyText, [ticketId]: "" });
-      await load();
+      await reload();
     } catch (error) {
       toast.error(getApiErrorMessage(error, "Không thể gửi phản hồi"));
     }

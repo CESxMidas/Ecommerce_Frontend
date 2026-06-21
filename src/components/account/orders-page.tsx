@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import toast from "react-hot-toast";
 
 import {
@@ -12,7 +12,8 @@ import {
   AccountCardHeader,
   AccountLoading,
 } from "@/components/account/account-ui";
-import { useCart } from "@/components/providers/cart-provider";
+import { useCartCore } from "@/components/providers/cart-provider";
+import { useSessionQuery } from "@/lib/hooks/use-session-query";
 import {
   cancelOrder,
   fetchOrders,
@@ -28,40 +29,15 @@ const ORDERS_PER_PAGE = 5;
 export default function OrdersPageClient() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { completeCheckout } = useCart();
+  const { completeCheckout } = useCartCore();
 
-  const [orders, setOrders] = useState<Order[]>([]);
-  const [loading, setLoading] = useState(true);
+  const loadOrders = useCallback(() => fetchOrders(), []);
+  const { data: orders, loading, reload, setData } = useSessionQuery<Order[]>(
+    loadOrders,
+    [],
+  );
   const [payingId, setPayingId] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
-
-  useEffect(() => {
-    let cancelled = false;
-
-    async function loadOrders() {
-      try {
-        const data = await fetchOrders();
-        if (!cancelled) {
-          setOrders(data);
-          setCurrentPage(1);
-        }
-      } catch {
-        if (!cancelled) {
-          setOrders([]);
-        }
-      } finally {
-        if (!cancelled) {
-          setLoading(false);
-        }
-      }
-    }
-
-    loadOrders();
-
-    return () => {
-      cancelled = true;
-    };
-  }, []);
 
   useEffect(() => {
     const paymentResult = searchParams.get("payment");
@@ -93,8 +69,7 @@ export default function OrdersPageClient() {
       toast.error("Không thể tạo liên kết thanh toán");
     } catch (error) {
       toast.error(getApiErrorMessage(error));
-      const data = await fetchOrders().catch(() => []);
-      setOrders(data);
+      await reload();
       setCurrentPage(1);
     } finally {
       setPayingId(null);
@@ -105,7 +80,7 @@ export default function OrdersPageClient() {
     try {
       await cancelOrder(orderId);
       toast.success("Đã hủy đơn hàng");
-      setOrders(await fetchOrders());
+      await reload();
       setCurrentPage(1);
     } catch (error) {
       toast.error(getApiErrorMessage(error));
@@ -121,7 +96,7 @@ export default function OrdersPageClient() {
 
     try {
       await hideOrder(orderId);
-      setOrders((prev) =>
+      setData((prev) =>
         prev.filter(
           (order) => String(order.id || order.orderId) !== String(orderId),
         ),

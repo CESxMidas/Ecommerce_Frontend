@@ -6,8 +6,6 @@ import { Navigation } from "swiper/modules";
 
 import { cn } from "@/lib/utils";
 
-import "swiper/css";
-
 type KeyshopSwiperProps = Omit<SwiperProps, "navigation"> & {
   children: ReactNode;
   className?: string;
@@ -38,6 +36,8 @@ export default function KeyshopSwiper({
   navClassName,
   showNavigation = true,
   modules = [],
+  autoHeight = false,
+  onInit,
   ...swiperProps
 }: KeyshopSwiperProps) {
   const uid = useId().replace(/:/g, "");
@@ -74,7 +74,11 @@ export default function KeyshopSwiper({
 
       <Swiper
         {...swiperProps}
+        autoHeight={autoHeight}
         modules={mergedModules}
+        observer
+        observeParents
+        onInit={onInit}
         navigation={
           showNavigation
             ? {

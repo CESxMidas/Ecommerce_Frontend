@@ -1,3 +1,5 @@
+import { cache } from "react";
+
 import { API_ENDPOINTS } from "@/constants/apiEndpoints";
 import { resolveMediaUrl } from "@/lib/utils/image";
 import type { Banner, BlogPost, Category, Product } from "@/types/api";
@@ -83,6 +85,9 @@ function normalizeProduct(raw: Record<string, unknown>): Product {
 function normalizeProductsPayload(data: unknown): {
   products: Product[];
   total?: number;
+  page?: number;
+  limit?: number;
+  totalPages?: number;
 } {
   if (Array.isArray(data)) {
     return {
@@ -106,6 +111,9 @@ function normalizeProductsPayload(data: unknown): {
   return {
     products: list.map(normalizeProduct),
     total: typeof obj.total === "number" ? obj.total : list.length,
+    page: typeof obj.page === "number" ? obj.page : undefined,
+    limit: typeof obj.limit === "number" ? obj.limit : undefined,
+    totalPages: typeof obj.totalPages === "number" ? obj.totalPages : undefined,
   };
 }
 
@@ -225,9 +233,12 @@ function normalizeBlogsPayload(data: unknown): { blogs: BlogPost[] } {
 }
 
 export async function getProducts(params?: Record<string, string>) {
-  const query = params
-    ? `?${new URLSearchParams(params).toString()}`
-    : "";
+  const queryParams = {
+    page: "1",
+    limit: "12",
+    ...params,
+  };
+  const query = `?${new URLSearchParams(queryParams).toString()}`;
 
   const data = await serverFetch<unknown>(
     `${API_ENDPOINTS.products.list}${query}`,
@@ -247,13 +258,16 @@ export async function getProductById(id: string) {
   return normalizeProduct(raw);
 }
 
-export async function getCategories() {
+async function fetchCategoriesFromApi() {
   const data = await serverFetch<unknown>(API_ENDPOINTS.categories.list, {
     revalidate: 600,
   });
 
   return normalizeCategoriesPayload(data);
 }
+
+/** Dedupe categories fetch trong cùng request (home + products + …) */
+export const getCategories = cache(fetchCategoriesFromApi);
 
 export async function getBanners() {
   const data = await serverFetch<unknown>(API_ENDPOINTS.banners.list, {

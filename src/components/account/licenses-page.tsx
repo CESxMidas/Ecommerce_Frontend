@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import toast from "react-hot-toast";
 
 import {
@@ -11,6 +11,7 @@ import {
   AccountLoading,
   accountSelectClass,
 } from "@/components/account/account-ui";
+import { useSessionQuery } from "@/lib/hooks/use-session-query";
 import {
   fetchLicenses,
   resendLicenseKeys,
@@ -19,30 +20,10 @@ import {
 import { getApiErrorMessage } from "@/lib/utils/api-error";
 
 export default function LicensesPageClient() {
-  const [licenses, setLicenses] = useState<LicenseEntry[]>([]);
-  const [loading, setLoading] = useState(true);
+  const loadLicenses = useCallback(() => fetchLicenses(), []);
+  const { data: licenses, loading, reload } = useSessionQuery(loadLicenses, []);
   const [visible, setVisible] = useState<Record<string, boolean>>({});
   const [productFilter, setProductFilter] = useState("all");
-
-  useEffect(() => {
-    let cancelled = false;
-
-    async function load() {
-      try {
-        const data = await fetchLicenses();
-        if (!cancelled) setLicenses(data);
-      } catch {
-        if (!cancelled) setLicenses([]);
-      } finally {
-        if (!cancelled) setLoading(false);
-      }
-    }
-
-    load();
-    return () => {
-      cancelled = true;
-    };
-  }, []);
 
   const productOptions = useMemo(
     () => Array.from(new Set(licenses.map((item) => item.productName).filter(Boolean))).sort(),

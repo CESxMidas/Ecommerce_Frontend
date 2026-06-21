@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback } from "react";
 import toast from "react-hot-toast";
 
 import {
@@ -11,6 +11,7 @@ import {
   AccountLoading,
 } from "@/components/account/account-ui";
 import { performLogout } from "@/lib/auth/logout";
+import { useSessionQuery } from "@/lib/hooks/use-session-query";
 import {
   deleteAllSessions,
   deleteSession,
@@ -20,45 +21,21 @@ import {
 import { getApiErrorMessage } from "@/lib/utils/api-error";
 
 export default function SecurityPageClient() {
-  const [sessions, setSessions] = useState<UserSession[]>([]);
-  const [loading, setLoading] = useState(true);
+  const loadSessions = useCallback(() => fetchSessions(), []);
+  const { data: sessions, loading, reload } = useSessionQuery<UserSession[]>(
+    loadSessions,
+    [],
+  );
 
-  async function loadSessions() {
-    try {
-      setLoading(true);
-      setSessions(await fetchSessions());
-    } catch {
-      setSessions([]);
-    } finally {
-      setLoading(false);
-    }
+  async function loadSessionsPage() {
+    await reload();
   }
-
-  useEffect(() => {
-    let cancelled = false;
-
-    async function loadInitial() {
-      try {
-        const data = await fetchSessions();
-        if (!cancelled) setSessions(data);
-      } catch {
-        if (!cancelled) setSessions([]);
-      } finally {
-        if (!cancelled) setLoading(false);
-      }
-    }
-
-    loadInitial();
-    return () => {
-      cancelled = true;
-    };
-  }, []);
 
   const removeSession = async (id: string) => {
     try {
       await deleteSession(id);
       toast.success("Đã đăng xuất phiên");
-      await loadSessions();
+      await loadSessionsPage();
     } catch (error) {
       toast.error(getApiErrorMessage(error, "Không thể đăng xuất phiên"));
     }

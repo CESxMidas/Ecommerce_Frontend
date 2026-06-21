@@ -8,7 +8,9 @@ import { useEffect, useMemo, useState } from "react";
 import toast from "react-hot-toast";
 
 import ProductGallery from "@/components/product/product-gallery";
+import { TrustSignals } from "@/components/commerce/trust-signals";
 import { useCart } from "@/components/providers/cart-provider";
+import { StarRating } from "@/components/ui/star-rating";
 import {
   fetchProductReviews,
   submitProductReview,
@@ -40,16 +42,8 @@ type ProductDetailViewProps = {
   product: Product;
 };
 
-function renderStars(rating: number) {
-  return Array.from({ length: 5 }).map((_, index) => (
-    <Star
-      key={index}
-      className={cn(
-        "h-4 w-4",
-        index < Math.round(rating) ? "fill-yellow-400 text-yellow-400" : "text-white/20",
-      )}
-    />
-  ));
+function renderStars(rating: number, size: "md" | "lg" = "md") {
+  return <StarRating rating={rating} size={size} />;
 }
 
 export default function ProductDetailView({ product: rawProduct }: ProductDetailViewProps) {
@@ -189,17 +183,23 @@ export default function ProductDetailView({ product: rawProduct }: ProductDetail
   return (
     <div className="pb-20">
       <section className="border-b border-keyshop-line bg-white/[0.02] py-4">
-        <div className="container text-sm text-keyshop-muted">
+        <nav aria-label="Breadcrumb" className="container text-sm text-keyshop-muted">
           <Link href="/" className="hover:text-white">
             Trang chủ
           </Link>
-          <span className="mx-2">{">"}</span>
+          <span className="mx-2" aria-hidden>
+            ›
+          </span>
           <Link href="/products" className="hover:text-white">
             Sản phẩm
           </Link>
-          <span className="mx-2">{">"}</span>
-          <span className="text-white">{displayName}</span>
-        </div>
+          <span className="mx-2" aria-hidden>
+            ›
+          </span>
+          <span className="text-white" aria-current="page">
+            {displayName}
+          </span>
+        </nav>
       </section>
 
       <section className="container py-10">
@@ -303,18 +303,22 @@ export default function ProductDetailView({ product: rawProduct }: ProductDetail
               <div className="inline-flex items-center rounded-control border border-keyshop-line">
                 <button
                   type="button"
-                  className="px-4 py-2 disabled:opacity-40"
+                  className="px-4 py-2 disabled:opacity-40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-keyshop-blue/30"
                   disabled={quantity === 1}
                   onClick={() => setQuantity((value) => Math.max(1, value - 1))}
+                  aria-label="Giảm số lượng"
                 >
                   <Minus className="h-4 w-4" />
                 </button>
-                <span className="min-w-12 text-center">{quantity}</span>
+                <span className="min-w-12 text-center" aria-live="polite">
+                  {quantity}
+                </span>
                 <button
                   type="button"
-                  className="px-4 py-2 disabled:opacity-40"
+                  className="px-4 py-2 disabled:opacity-40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-keyshop-blue/30"
                   disabled={outOfStock || quantity >= maxQuantity}
                   onClick={() => setQuantity((value) => Math.min(maxQuantity, value + 1))}
+                  aria-label="Tăng số lượng"
                 >
                   <Plus className="h-4 w-4" />
                 </button>
@@ -375,6 +379,8 @@ export default function ProductDetailView({ product: rawProduct }: ProductDetail
                 {isPhysicalProduct(product) ? "Hỗ trợ COD" : "Thanh toán VNPay"}
               </FeaturePill>
             </div>
+
+            <TrustSignals className="mt-6" />
           </div>
         </div>
       </section>
@@ -430,7 +436,7 @@ export default function ProductDetailView({ product: rawProduct }: ProductDetail
               <div className="rounded-card border border-keyshop-line bg-white/[0.03] p-6">
                 <h2 className="text-4xl font-extrabold">{reviewSummaryRating.toFixed(1)}</h2>
                 <div className="mt-2 flex items-center gap-1">
-                  {renderStars(reviewSummaryRating)}
+                  {renderStars(reviewSummaryRating, "lg")}
                 </div>
                 <p className="mt-2 text-sm text-keyshop-muted">
                   Dựa trên {writtenReviewCount} đánh giá
@@ -442,7 +448,13 @@ export default function ProductDetailView({ product: rawProduct }: ProductDetail
                   <h3 className="font-semibold">Viết đánh giá</h3>
                   <div className="mt-3 flex gap-1">
                     {Array.from({ length: 5 }).map((_, index) => (
-                      <button key={index} type="button" onClick={() => setRating(index + 1)}>
+                      <button
+                        key={index}
+                        type="button"
+                        onClick={() => setRating(index + 1)}
+                        aria-label={`Chọn ${index + 1} sao`}
+                        className="rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-keyshop-blue/40"
+                      >
                         <Star
                           className={cn(
                             "h-5 w-5",

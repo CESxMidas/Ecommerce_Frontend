@@ -1,7 +1,15 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
 
+import {
+  checkoutCtaClass,
+  fieldClass,
+  ghostBtnClass,
+  labelClass,
+} from "@/lib/ui/tokens";
 import { cn } from "@/lib/utils";
+
+export { checkoutCtaClass, fieldClass as commerceFieldClass, labelClass };
 
 export function CommercePage({ children }: { children: ReactNode }) {
   return (
@@ -74,10 +82,11 @@ export function CommerceBtn({
   variant?: "primary" | "ghost";
 }) {
   const className = cn(
-    "inline-flex min-h-[42px] items-center justify-center gap-2 rounded-control px-[18px] text-sm font-extrabold transition disabled:opacity-60",
+    "keyshop-interactive inline-flex min-h-[42px] cursor-pointer items-center justify-center gap-2 rounded-control px-[18px] text-sm font-extrabold transition focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-keyshop-blue/25 disabled:cursor-not-allowed disabled:opacity-60",
     variant === "primary"
       ? "bg-keyshop-blue-hover text-white hover:bg-keyshop-blue"
-      : "border border-sky-400/35 text-sky-200 hover:border-keyshop-blue/50 hover:bg-keyshop-blue/10",
+      : ghostBtnClass,
+    variant === "ghost" && "min-h-[42px] border border-sky-400/35 px-[18px] text-sky-200",
   );
 
   if (href) {
@@ -95,19 +104,20 @@ export function CommerceBtn({
   );
 }
 
-export const commerceFieldClass =
-  "h-auto w-full rounded-control border border-keyshop-line bg-white/[0.03] px-[18px] py-4 text-[15px] text-white outline-none placeholder:text-white/30 focus:border-keyshop-blue focus:ring-4 focus:ring-keyshop-blue/15";
-
 export function CommerceField({
   label,
   children,
+  htmlFor,
 }: {
   label: string;
   children: ReactNode;
+  htmlFor?: string;
 }) {
   return (
     <div>
-      <label className="mb-2 block text-sm font-bold text-white">{label}</label>
+      <label htmlFor={htmlFor} className={labelClass}>
+        {label}
+      </label>
       {children}
     </div>
   );

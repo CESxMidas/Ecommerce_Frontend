@@ -2,12 +2,15 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowLeft, Lock, Minus, Plus, Trash2 } from "lucide-react";
+import { ArrowLeft, Lock, Minus, Plus, ShoppingBag, Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 
 import { useCart } from "@/components/providers/cart-provider";
+import { TrustSignals } from "@/components/commerce/trust-signals";
+import { EmptyState } from "@/components/ui/empty-state";
 import { OrderSummaryTotals } from "@/components/shop/order-summary-totals";
+import { checkoutCtaClass, fieldClass } from "@/lib/ui/tokens";
 import { validateCoupon } from "@/lib/services/cms-service";
 import { cn } from "@/lib/utils";
 import { formatPrice } from "@/lib/utils/format";
@@ -22,9 +25,6 @@ import {
   isPhysicalProduct,
 } from "@/lib/utils/product-schema";
 import type { AppliedCoupon } from "@/types/cart";
-
-const checkoutCtaClass =
-  "flex h-[58px] w-full items-center justify-center rounded-[18px] bg-gradient-to-br from-keyshop-blue-hover to-keyshop-blue text-sm font-bold text-white transition hover:-translate-y-0.5 hover:shadow-glow";
 
 export default function CartPageClient() {
   const {
@@ -108,12 +108,13 @@ export default function CartPageClient() {
       </div>
 
       {isEmpty ? (
-        <div className="rounded-card border border-dashed border-keyshop-line py-16 text-center">
-          <p className="text-keyshop-muted">Giỏ hàng trống.</p>
-          <Link href="/products" className={cn(checkoutCtaClass, "mx-auto mt-4 max-w-xs")}>
-            Bắt đầu mua sắm
-          </Link>
-        </div>
+        <EmptyState
+          icon={ShoppingBag}
+          title="Giỏ hàng trống"
+          description="Thêm key phần mềm hoặc sản phẩm số vào giỏ để tiếp tục thanh toán."
+          actionLabel="Khám phá sản phẩm"
+          actionHref="/products"
+        />
       ) : (
         <div className="grid gap-6 lg:grid-cols-[1fr_360px]">
           <div className="space-y-4">
@@ -286,12 +287,13 @@ export default function CartPageClient() {
                   placeholder="Mã giảm giá"
                   value={couponCode}
                   onChange={(event) => setCouponCode(event.target.value)}
-                  className="h-12 min-w-0 flex-1 rounded-2xl border border-keyshop-line bg-white/[0.03] px-4 text-sm text-white outline-none placeholder:text-white/30 focus:border-keyshop-blue focus:ring-4 focus:ring-keyshop-blue/15"
+                  aria-label="Mã giảm giá"
+                  className={cn(fieldClass, "h-12 rounded-2xl px-4 py-0")}
                 />
                 <button
                   type="button"
                   onClick={applyCoupon}
-                  className="h-12 shrink-0 whitespace-nowrap rounded-2xl bg-keyshop-blue-hover px-4 text-sm font-bold text-white transition hover:bg-keyshop-blue"
+                  className="keyshop-interactive h-12 shrink-0 cursor-pointer whitespace-nowrap rounded-2xl bg-keyshop-blue-hover px-4 text-sm font-bold text-white transition hover:bg-keyshop-blue focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-keyshop-blue/25"
                 >
                   Áp dụng
                 </button>
@@ -300,6 +302,8 @@ export default function CartPageClient() {
               <Link href="/checkout" className={checkoutCtaClass}>
                 Thanh toán an toàn
               </Link>
+
+              <TrustSignals compact className="mt-2" />
 
               <div className="rounded-[14px] border border-sky-400/20 bg-keyshop-blue/10 px-3 py-2.5 text-center text-[13px] text-keyshop-muted">
                 <div className="flex items-start justify-center gap-2">

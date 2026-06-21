@@ -12,6 +12,7 @@ import {
   MessageCircle,
   Shield,
   ShoppingBag,
+  Star,
   User,
   Bell,
 } from "lucide-react";
@@ -24,6 +25,7 @@ const links = [
   { href: "/account/addresses", label: "Địa chỉ", icon: MapPin },
   { href: "/account/wishlist", label: "Yêu thích", icon: Heart },
   { href: "/account/orders", label: "Đơn hàng", icon: ShoppingBag },
+  { href: "/account/reviews", label: "Đánh giá", icon: Star },
   { href: "/account/licenses", label: "Key bản quyền", icon: Key },
   { href: "/account/notifications", label: "Thông báo", icon: Bell },
   { href: "/account/tickets", label: "Hỗ trợ", icon: MessageCircle },

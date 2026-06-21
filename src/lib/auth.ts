@@ -8,6 +8,7 @@ import {
   EMAIL_NOT_VERIFIED_PREFIX,
   REMEMBER_ME_MAX_AGE_SECONDS,
 } from "@/lib/auth/constants";
+import { authCookies } from "@/lib/auth/cookies";
 import type { AuthUser } from "@/types/api";
 
 function getServerApiUrl() {
@@ -227,5 +228,6 @@ export const authOptions: NextAuthOptions = {
       return session;
     },
   },
+  cookies: authCookies,
   secret: process.env.NEXTAUTH_SECRET,
 };

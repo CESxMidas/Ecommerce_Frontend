@@ -25,21 +25,27 @@ export default function SearchBox({ className }: SearchBoxProps) {
   return (
     <form
       onSubmit={handleSubmit}
+      role="search"
       className={cn(
         "flex h-12 w-full items-stretch overflow-hidden rounded-control border border-keyshop-line bg-white/[0.04]",
         className,
       )}
     >
+      <label htmlFor="storefront-search" className="sr-only">
+        Tìm kiếm sản phẩm
+      </label>
       <input
-        type="text"
+        id="storefront-search"
+        type="search"
         placeholder="Tìm sản phẩm..."
         value={query}
         onChange={(event) => setQuery(event.target.value)}
-        className="min-w-0 flex-1 bg-transparent px-4 text-sm text-white placeholder:text-keyshop-muted outline-none"
+        className="min-w-0 flex-1 bg-transparent px-4 text-sm text-white placeholder:text-keyshop-muted outline-none focus-visible:ring-0"
+        autoComplete="off"
       />
       <button
         type="submit"
-        className="flex items-center gap-2 bg-keyshop-blue px-5 text-sm font-semibold text-white transition-colors hover:bg-keyshop-blue-hover"
+        className="keyshop-interactive flex cursor-pointer items-center gap-2 bg-keyshop-blue px-5 text-sm font-semibold text-white transition-colors hover:bg-keyshop-blue-hover focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-keyshop-blue/30"
       >
         <Search className="h-4 w-4" />
         <span className="hidden sm:inline">Tìm kiếm</span>

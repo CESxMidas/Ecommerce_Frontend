@@ -3,6 +3,10 @@
 @tailwind utilities;
 
 @layer base {
+  html {
+    scrollbar-gutter: stable;
+  }
+
   :root {
     --background: 222 47% 5%;
     --foreground: 0 0% 100%;
@@ -24,10 +28,51 @@
     --input: 217 33% 17%;
     --ring: 217 91% 60%;
     --radius: 0.75rem;
+    --keyshop-scrollbar-size: 8px;
+    --keyshop-scrollbar-thumb: rgba(59, 130, 246, 0.5);
+    --keyshop-scrollbar-thumb-hover: rgba(96, 165, 250, 0.75);
+    --keyshop-scrollbar-track: rgba(255, 255, 255, 0.04);
   }
 
   * {
     border-color: hsl(var(--border));
+    scrollbar-width: thin;
+    scrollbar-color: var(--keyshop-scrollbar-thumb) var(--keyshop-scrollbar-track);
+  }
+
+  *::-webkit-scrollbar {
+    width: var(--keyshop-scrollbar-size);
+    height: var(--keyshop-scrollbar-size);
+  }
+
+  *::-webkit-scrollbar-track {
+    margin: 3px;
+    background: var(--keyshop-scrollbar-track);
+    border-radius: 999px;
+  }
+
+  *::-webkit-scrollbar-thumb {
+    background: linear-gradient(
+      180deg,
+      rgba(96, 165, 250, 0.6),
+      var(--keyshop-scrollbar-thumb)
+    );
+    border: 2px solid transparent;
+    border-radius: 999px;
+    background-clip: padding-box;
+  }
+
+  *::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(
+      180deg,
+      rgba(147, 197, 253, 0.85),
+      var(--keyshop-scrollbar-thumb-hover)
+    );
+    background-clip: padding-box;
+  }
+
+  *::-webkit-scrollbar-corner {
+    background: transparent;
   }
 
   body {
@@ -47,6 +92,19 @@
   a {
     color: inherit;
     text-decoration: none;
+  }
+
+  :focus-visible {
+    outline: none;
+  }
+
+  button:focus-visible,
+  a:focus-visible,
+  input:focus-visible,
+  select:focus-visible,
+  textarea:focus-visible,
+  [tabindex]:focus-visible {
+    outline: none;
   }
 
   ::selection {
@@ -110,6 +168,18 @@
 }
 
 @layer utilities {
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+  }
+
   .scrollbar-hide {
     -ms-overflow-style: none;
     scrollbar-width: none;
@@ -121,28 +191,37 @@
 
   .keyshop-scrollbar {
     scrollbar-width: thin;
-    scrollbar-color: rgba(59, 130, 246, 0.45) rgba(255, 255, 255, 0.06);
+    scrollbar-color: var(--keyshop-scrollbar-thumb) var(--keyshop-scrollbar-track);
   }
 
   .keyshop-scrollbar::-webkit-scrollbar {
-    width: 7px;
-    height: 7px;
+    width: var(--keyshop-scrollbar-size);
+    height: var(--keyshop-scrollbar-size);
   }
 
   .keyshop-scrollbar::-webkit-scrollbar-track {
-    margin: 4px 0;
-    background: transparent;
+    margin: 3px;
+    background: var(--keyshop-scrollbar-track);
+    border-radius: 999px;
   }
 
   .keyshop-scrollbar::-webkit-scrollbar-thumb {
-    background: linear-gradient(180deg, rgba(96, 165, 250, 0.55), rgba(59, 130, 246, 0.45));
+    background: linear-gradient(
+      180deg,
+      rgba(96, 165, 250, 0.6),
+      var(--keyshop-scrollbar-thumb)
+    );
     border: 2px solid transparent;
     border-radius: 999px;
     background-clip: padding-box;
   }
 
   .keyshop-scrollbar::-webkit-scrollbar-thumb:hover {
-    background: linear-gradient(180deg, rgba(147, 197, 253, 0.75), rgba(59, 130, 246, 0.65));
+    background: linear-gradient(
+      180deg,
+      rgba(147, 197, 253, 0.85),
+      var(--keyshop-scrollbar-thumb-hover)
+    );
     background-clip: padding-box;
   }
 
@@ -186,8 +265,7 @@
 
   .keyshop-swiper .swiper-slide > * {
     width: 100%;
-    flex: 1 1 auto;
-    min-height: 100%;
+    min-width: 0;
   }
 
   .keyshop-swiper .swiper-button-prev,
@@ -248,39 +326,155 @@
   }
 
   .hero-slide-content > * {
-    @apply opacity-0 motion-reduce:opacity-100;
+    opacity: 1;
   }
 
-  /* Hero text visible + animated before Swiper adds .swiper-slide-active */
-  .swiper:not(.swiper-initialized) .swiper-slide:first-child .hero-slide-content > * {
-    animation: fade-in-up 0.55s ease-out both;
-  }
+  @media (prefers-reduced-motion: no-preference) {
+    .home-hero-swiper .swiper-slide-active .hero-slide-content > * {
+      animation: fade-in-up 0.55s ease-out both;
+    }
 
-  .swiper-slide-active .hero-slide-content > * {
-    animation: fade-in-up 0.55s ease-out both;
-  }
+    .home-hero-swiper .swiper-slide-active .hero-slide-content > *:nth-child(1) {
+      animation-delay: 0.05s;
+    }
 
-  .swiper-slide-active .hero-slide-content > *:nth-child(1) {
-    animation-delay: 0.05s;
-  }
+    .home-hero-swiper .swiper-slide-active .hero-slide-content > *:nth-child(2) {
+      animation-delay: 0.12s;
+    }
 
-  .swiper-slide-active .hero-slide-content > *:nth-child(2) {
-    animation-delay: 0.12s;
-  }
+    .home-hero-swiper .swiper-slide-active .hero-slide-content > *:nth-child(3) {
+      animation-delay: 0.2s;
+    }
 
-  .swiper-slide-active .hero-slide-content > *:nth-child(3) {
-    animation-delay: 0.2s;
-  }
-
-  .swiper-slide-active .hero-slide-content > *:nth-child(4) {
-    animation-delay: 0.28s;
+    .home-hero-swiper .swiper-slide-active .hero-slide-content > *:nth-child(4) {
+      animation-delay: 0.28s;
+    }
   }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .swiper-slide-active .hero-slide-content > *,
-  .swiper:not(.swiper-initialized) .swiper-slide:first-child .hero-slide-content > * {
-    animation: none;
-    opacity: 1;
+/* Swiper pre-init: partial slide width + flex-start (không ẩn slide — tránh Swiper đo sai width) */
+.keyshop-swiper:not(.home-hero-swiper) .swiper:not(.swiper-initialized) .swiper-wrapper {
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+}
+
+.keyshop-swiper:not(.home-hero-swiper) .swiper:not(.swiper-initialized) {
+  overflow: hidden;
+}
+
+.keyshop-swiper.home-hero-swiper .swiper:not(.swiper-initialized) .swiper-wrapper {
+  display: flex;
+}
+
+.keyshop-swiper.home-hero-swiper .swiper:not(.swiper-initialized) .swiper-slide {
+  flex-shrink: 0;
+  width: 100%;
+}
+
+.keyshop-swiper:not(.home-hero-swiper) .swiper:not(.swiper-initialized) .swiper-slide {
+  flex-shrink: 0;
+  width: min(280px, 87%);
+  max-width: 87%;
+}
+
+@media (min-width: 576px) {
+  .keyshop-swiper:not(.home-hero-swiper) .swiper:not(.swiper-initialized) .swiper-slide {
+    width: min(320px, 48%);
+    max-width: 48%;
+  }
+}
+
+@media (min-width: 768px) {
+  .keyshop-swiper:not(.home-hero-swiper) .swiper:not(.swiper-initialized) .swiper-slide {
+    width: min(280px, calc((100% - 40px) / 2.4));
+    max-width: calc((100% - 40px) / 2.4);
+  }
+}
+
+@media (min-width: 992px) {
+  .keyshop-swiper:not(.home-hero-swiper) .swiper:not(.swiper-initialized) .swiper-slide {
+    width: calc((100% - 40px) / 3);
+    max-width: calc((100% - 40px) / 3);
+  }
+}
+
+@media (min-width: 1200px) {
+  .keyshop-swiper:not(.home-hero-swiper) .swiper:not(.swiper-initialized) .swiper-slide {
+    width: calc((100% - 80px) / 5);
+    max-width: calc((100% - 80px) / 5);
+  }
+}
+
+/* Sau init: Swiper tự set width inline — gỡ mọi max-width từ pre-init */
+.keyshop-swiper .swiper.swiper-initialized .swiper-slide {
+  max-width: none;
+  box-sizing: border-box;
+}
+
+/* Reserve chiều cao carousel (min-height, không fixed height) */
+.keyshop-product-carousel {
+  min-height: 28rem;
+  overflow: hidden;
+}
+
+@media (min-width: 640px) {
+  .keyshop-product-carousel {
+    min-height: 30rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .keyshop-product-carousel {
+    min-height: 32rem;
+  }
+}
+
+.keyshop-category-carousel {
+  min-height: 14rem;
+  overflow: hidden;
+}
+
+.keyshop-blog-carousel {
+  min-height: 22rem;
+  overflow: hidden;
+}
+
+@media (min-width: 768px) {
+  .keyshop-blog-carousel {
+    min-height: 24rem;
+  }
+}
+
+.keyshop-ads-carousel {
+  min-height: 10rem;
+  overflow: hidden;
+}
+
+@media (min-width: 768px) {
+  .keyshop-ads-carousel {
+    min-height: 12rem;
+  }
+}
+
+.home-hero-swiper {
+  min-height: 280px;
+}
+
+@media (min-width: 640px) {
+  .home-hero-swiper {
+    min-height: 360px;
+  }
+}
+
+@media (min-width: 768px) {
+  .home-hero-swiper {
+    min-height: 480px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .home-hero-swiper {
+    min-height: 540px;
   }
 }

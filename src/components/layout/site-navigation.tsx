@@ -33,6 +33,24 @@ type SiteNavigationProps = {
 const NAV_LIST_ITEM_CLASS =
   "flex shrink-0 lg:min-w-0 lg:flex-1 lg:justify-center";
 
+export function SiteNavigationSkeleton() {
+  return (
+    <nav className="keyshop-nav-bar" aria-hidden="true">
+      <div className="container flex min-h-[56px] items-center gap-3 lg:gap-5">
+        <div className="hidden h-10 w-[148px] shrink-0 rounded-control bg-white/[0.06] lg:block" />
+        <div className="flex min-w-0 flex-1 items-center gap-2 overflow-hidden sm:gap-3">
+          {Array.from({ length: 6 }).map((_, index) => (
+            <div
+              key={index}
+              className="h-9 w-[72px] shrink-0 rounded-control bg-white/[0.06] sm:w-[88px]"
+            />
+          ))}
+        </div>
+      </div>
+    </nav>
+  );
+}
+
 export default function SiteNavigation({ categories }: SiteNavigationProps) {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();

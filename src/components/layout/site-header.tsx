@@ -15,8 +15,11 @@ import { Suspense, useState } from "react";
 
 import CategoryPanel from "@/components/layout/category-panel";
 import SearchBox from "@/components/layout/search-box";
-import SiteNavigation from "@/components/layout/site-navigation";
-import { useCart } from "@/components/providers/cart-provider";
+import SiteNavigation, { SiteNavigationSkeleton } from "@/components/layout/site-navigation";
+import { useCartCore } from "@/components/providers/cart-provider";
+import { useCartUi } from "@/components/providers/cart-ui-provider";
+import { useWishlistCompare } from "@/components/providers/wishlist-compare-provider";
+import { useCategories } from "@/lib/hooks/use-categories";
 import { performLogout } from "@/lib/auth/logout";
 import {
   DropdownMenu,
@@ -26,15 +29,13 @@ import {
 } from "@/components/ui/dropdown-menu";
 import SideDrawer from "@/components/ui/side-drawer";
 import { cn } from "@/lib/utils";
-import type { Category } from "@/types/api";
 
-type SiteHeaderProps = {
-  categories: Category[];
-};
-
-export default function SiteHeader({ categories }: SiteHeaderProps) {
-  const { data: session } = useSession();
-  const { cartSummary, wishlist, setOpenCartPanel } = useCart();
+export default function SiteHeader() {
+  const categories = useCategories();
+  const { data: session, status } = useSession();
+  const { cartSummary } = useCartCore();
+  const { wishlist } = useWishlistCompare();
+  const { setOpenCartPanel } = useCartUi();
   const [openCategory, setOpenCategory] = useState(false);
 
   const isLoggedIn = Boolean(session?.user);
@@ -46,8 +47,11 @@ export default function SiteHeader({ categories }: SiteHeaderProps) {
         <div className="container flex min-h-[34px] items-center justify-between gap-5">
           <p className="truncate">Key phần mềm chính hãng — giao hàng số tức thì.</p>
           <div className="flex shrink-0 items-center gap-5">
-            <Link href="/support/help-center" className="transition-colors hover:text-white">
+            <Link href="/help" className="transition-colors hover:text-white">
               Trung tâm trợ giúp
+            </Link>
+            <Link href="/contact" className="transition-colors hover:text-white">
+              Liên hệ
             </Link>
             <Link href="/track-order" className="transition-colors hover:text-white">
               Tra cứu đơn
@@ -65,8 +69,10 @@ export default function SiteHeader({ categories }: SiteHeaderProps) {
           <div className="flex items-center gap-3">
             <button
               type="button"
-              className="rounded-lg p-2 text-white lg:hidden"
+              className="rounded-lg p-2 text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-keyshop-blue/40 lg:hidden"
               onClick={() => setOpenCategory(true)}
+              aria-label="Mở danh mục"
+              aria-expanded={openCategory}
             >
               <Menu className="h-5 w-5" />
             </button>
@@ -83,13 +89,18 @@ export default function SiteHeader({ categories }: SiteHeaderProps) {
           </div>
 
           <div className="flex items-center justify-end gap-4">
-            <div className="hidden items-center gap-3 sm:flex">
-              {isLoggedIn ? (
+            <div className="hidden min-w-[220px] items-center justify-end gap-3 sm:flex">
+              {status === "loading" ? (
+                <>
+                  <div className="h-10 w-24 rounded-control bg-white/[0.06]" aria-hidden />
+                  <div className="h-10 w-[88px] rounded-control bg-white/[0.06]" aria-hidden />
+                </>
+              ) : isLoggedIn ? (
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <button
                       type="button"
-                      className="flex items-center gap-2 rounded-control px-3 py-2 text-sm text-white hover:bg-white/5"
+                      className="flex cursor-pointer items-center gap-2 rounded-control px-3 py-2 text-sm text-white hover:bg-white/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-keyshop-blue/30"
                     >
                       <User className="h-4 w-4" />
                       <span className="max-w-[120px] truncate">Xin chào, {userName}</span>
@@ -137,16 +148,21 @@ export default function SiteHeader({ categories }: SiteHeaderProps) {
             </div>
 
             <div className="flex items-center gap-2">
-              <HeaderIconLink href="/account/wishlist" badge={wishlist.length}>
+              <HeaderIconLink
+                href="/account/wishlist"
+                badge={wishlist.length}
+                label="Yêu thích"
+              >
                 <Heart className="h-5 w-5" />
               </HeaderIconLink>
-              <HeaderIconLink href="/compare">
+              <HeaderIconLink href="/compare" label="So sánh">
                 <Shuffle className="h-5 w-5" />
               </HeaderIconLink>
               <button
                 type="button"
-                className="relative flex h-11 w-11 items-center justify-center rounded-full text-white transition-colors hover:bg-white/5"
+                className="relative flex h-11 w-11 cursor-pointer items-center justify-center rounded-full text-white transition-colors hover:bg-white/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-keyshop-blue/40"
                 onClick={() => setOpenCartPanel(true)}
+                aria-label={`Giỏ hàng${cartSummary.count > 0 ? `, ${cartSummary.count} sản phẩm` : ""}`}
               >
                 <ShoppingCart className="h-5 w-5" />
                 {cartSummary.count > 0 ? (
@@ -164,7 +180,7 @@ export default function SiteHeader({ categories }: SiteHeaderProps) {
         </div>
       </div>
 
-      <Suspense fallback={null}>
+      <Suspense fallback={<SiteNavigationSkeleton />}>
         <SiteNavigation categories={categories} />
       </Suspense>
 
@@ -182,16 +198,21 @@ function HeaderIconLink({
   href,
   children,
   badge = 0,
+  label,
 }: {
   href: string;
   children: React.ReactNode;
   badge?: number;
+  label: string;
 }) {
+  const ariaLabel = badge > 0 ? `${label}, ${badge} sản phẩm` : label;
+
   return (
     <Link
       href={href}
+      aria-label={ariaLabel}
       className={cn(
-        "relative flex h-11 w-11 items-center justify-center rounded-full text-white transition-colors hover:bg-white/5",
+        "relative flex h-11 w-11 cursor-pointer items-center justify-center rounded-full text-white transition-colors hover:bg-white/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-keyshop-blue/40",
       )}
     >
       {children}

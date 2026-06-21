@@ -9,7 +9,6 @@ import { SwiperSlide } from "swiper/react";
 import KeyshopSwiper from "@/components/ui/keyshop-swiper";
 
 import { resolveMediaUrl } from "@/lib/utils/image";
-import { cn } from "@/lib/utils";
 import type { BlogPost } from "@/types/api";
 
 const FALLBACK_IMAGE =
@@ -67,6 +66,7 @@ export default function BlogCarousel({ blogs }: BlogCarouselProps) {
       </div>
 
       <KeyshopSwiper
+        className="keyshop-blog-carousel"
         modules={[Autoplay]}
         loop={items.length > 3}
         spaceBetween={22}
@@ -88,13 +88,7 @@ export default function BlogCarousel({ blogs }: BlogCarouselProps) {
 
           return (
             <SwiperSlide key={blog.id} className="!h-auto">
-              <article
-                className={cn(
-                  "keyshop-card-hover group flex h-full flex-col overflow-hidden rounded-card border border-keyshop-line bg-white/[0.03]",
-                  "animate-fade-in-up motion-reduce:animate-none",
-                )}
-                style={{ animationDelay: `${Math.min(index, 5) * 80}ms` }}
-              >
+              <article className="keyshop-card-hover group flex h-full flex-col overflow-hidden rounded-card border border-keyshop-line bg-white/[0.03]">
                 <Link
                   href={`/blog/${blog.id}`}
                   className="relative block aspect-[16/10] overflow-hidden"

@@ -2,6 +2,8 @@ import { getToken } from "next-auth/jwt";
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
+import { sessionCookieName } from "@/lib/auth/cookies";
+
 const protectedMatchers = ["/account", "/checkout"];
 
 export async function middleware(request: NextRequest) {
@@ -18,10 +20,7 @@ export async function middleware(request: NextRequest) {
   const token = await getToken({
     req: request,
     secret: process.env.NEXTAUTH_SECRET,
-    cookieName:
-      process.env.NODE_ENV === "production"
-        ? "__Secure-next-auth.session-token"
-        : "next-auth.session-token",
+    cookieName: sessionCookieName,
   });
 
   if (token) {

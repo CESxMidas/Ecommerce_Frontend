@@ -1,7 +1,7 @@
 "use client";
 
 import { useSession } from "next-auth/react";
-import { FormEvent, useEffect, useState } from "react";
+import { FormEvent, useCallback, useEffect, useState } from "react";
 import toast from "react-hot-toast";
 
 import {
@@ -12,12 +12,14 @@ import {
   accountLabelClass,
   accountSelectClass,
 } from "@/components/account/account-ui";
+import { useSessionQuery } from "@/lib/hooks/use-session-query";
 import {
   changePassword,
   fetchProfile,
   requestEmailChange,
   updateProfile,
   verifyEmailChange,
+  type UserProfile,
 } from "@/lib/services/user-service";
 import { getApiErrorMessage } from "@/lib/utils/api-error";
 
@@ -33,10 +35,16 @@ function formatDateForInput(value?: string | null) {
 
 export default function AccountProfilePage() {
   const { data: session, update } = useSession();
+  const loadProfile = useCallback(() => fetchProfile(), []);
+  const {
+    data: profileData,
+    loading: loadingInitialProfile,
+    reload: reloadProfile,
+  } = useSessionQuery<UserProfile | null>(loadProfile, null);
+
   const [showPasswordBox, setShowPasswordBox] = useState(false);
   const [showEmailBox, setShowEmailBox] = useState(false);
   const [loadingProfile, setLoadingProfile] = useState(false);
-  const [loadingInitialProfile, setLoadingInitialProfile] = useState(true);
   const [loadingPassword, setLoadingPassword] = useState(false);
   const [loadingEmail, setLoadingEmail] = useState(false);
 
@@ -61,51 +69,33 @@ export default function AccountProfilePage() {
   });
 
   useEffect(() => {
-    if (!session?.user) {
-      setLoadingInitialProfile(false);
+    if (!session?.user) return;
+
+    if (profileData) {
+      setProfileFields({
+        name: profileData.name || session.user.name || "",
+        phone: profileData.phone || "",
+        avatar: profileData.avatar || session.user.image || "",
+        dateOfBirth: formatDateForInput(profileData.dateOfBirth),
+        gender: profileData.gender || "",
+      });
+      setEmailFields((prev) => ({
+        ...prev,
+        pendingEmail: profileData.pendingEmail || "",
+      }));
       return;
     }
 
-    let cancelled = false;
-
-    const loadProfile = async () => {
-      try {
-        setLoadingInitialProfile(true);
-        const profile = await fetchProfile();
-
-        if (cancelled) return;
-
-        setProfileFields({
-          name: profile.name || session.user.name || "",
-          phone: profile.phone || "",
-          avatar: profile.avatar || session.user.image || "",
-          dateOfBirth: formatDateForInput(profile.dateOfBirth),
-          gender: profile.gender || "",
-        });
-      } catch (error) {
-        if (!cancelled) {
-          setProfileFields({
-            name: session.user.name || "",
-            phone: "",
-            avatar: session.user.image || "",
-            dateOfBirth: "",
-            gender: "",
-          });
-          toast.error(getApiErrorMessage(error, "Không thể tải hồ sơ"));
-        }
-      } finally {
-        if (!cancelled) {
-          setLoadingInitialProfile(false);
-        }
-      }
-    };
-
-    loadProfile();
-
-    return () => {
-      cancelled = true;
-    };
-  }, [session?.user]);
+    if (!loadingInitialProfile) {
+      setProfileFields({
+        name: session.user.name || "",
+        phone: "",
+        avatar: session.user.image || "",
+        dateOfBirth: "",
+        gender: "",
+      });
+    }
+  }, [profileData, session, loadingInitialProfile]);
 
   async function handleProfileSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();

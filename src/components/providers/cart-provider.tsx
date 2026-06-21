@@ -12,7 +12,6 @@ import { useSession } from "next-auth/react";
 import toast from "react-hot-toast";
 
 import * as cartService from "@/lib/services/cart-service";
-import * as wishlistService from "@/lib/services/wishlist-service";
 import {
   calcCartSummary,
   clearStoredCart,
@@ -30,17 +29,9 @@ import {
   resolvePurchaseVariant,
 } from "@/lib/utils/product-schema";
 import { getAddToCartErrorMessage } from "@/lib/utils/order-errors";
-import {
-  loadCompare,
-  MAX_COMPARE_ITEMS,
-  saveCompare,
-} from "@/lib/utils/compare-storage";
-import {
-  clearStoredWishlist,
-  loadWishlist,
-  saveWishlist,
-} from "@/lib/utils/wishlist-storage";
 import { getAccessToken } from "@/lib/api/client";
+import { useCartUi } from "@/components/providers/cart-ui-provider";
+import { useWishlistCompare } from "@/components/providers/wishlist-compare-provider";
 import type {
   CartItem,
   CartSummary,
@@ -54,16 +45,6 @@ type CartContextValue = {
   cartSummary: CartSummary;
   licenseKeyOrder: PlacedOrder | null;
   isAuthenticated: boolean;
-  openCartPanel: boolean;
-  setOpenCartPanel: (open: boolean) => void;
-  wishlist: NormalizedProduct[];
-  compareItems: NormalizedProduct[];
-  toggleWishlist: (product: NormalizedProduct | Record<string, unknown>) => void;
-  isInWishlist: (productId: string) => boolean;
-  toggleCompare: (product: NormalizedProduct | Record<string, unknown>) => void;
-  removeFromCompare: (productId: string) => void;
-  clearCompare: () => void;
-  isInCompare: (productId: string) => boolean;
   addToCart: (
     product: NormalizedProduct | Record<string, unknown>,
     quantity?: number,
@@ -134,29 +115,16 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   const sessionUserId = sessionUser?._id ?? sessionUser?.email ?? null;
   const isAuthenticated = status === "authenticated";
 
-  const [cartItems, setCartItems] = useState<CartItem[]>([]);
+  const [cartItems, setCartItems] = useState<CartItem[]>(() =>
+    typeof window !== "undefined" ? loadCart() : [],
+  );
   const [licenseKeyOrder, setLicenseKeyOrder] = useState<PlacedOrder | null>(null);
-  const [openCartPanel, setOpenCartPanel] = useState(false);
-  const [wishlist, setWishlist] = useState<NormalizedProduct[]>([]);
-  const [compareItems, setCompareItems] = useState<NormalizedProduct[]>([]);
-  const [hydrated, setHydrated] = useState(false);
+  const [hydrated, setHydrated] = useState(() => typeof window !== "undefined");
 
   useEffect(() => {
     setCartItems(loadCart(sessionUser));
-    setWishlist(loadWishlist(sessionUser));
-    setCompareItems(loadCompare());
     setHydrated(true);
   }, [sessionUserId, sessionUser?.email]);
-
-  useEffect(() => {
-    if (!hydrated) return;
-    saveWishlist(wishlist, sessionUser);
-  }, [wishlist, sessionUser, hydrated]);
-
-  useEffect(() => {
-    if (!hydrated) return;
-    saveCompare(compareItems);
-  }, [compareItems, hydrated]);
 
   useEffect(() => {
     if (!hydrated) return;
@@ -186,37 +154,6 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     };
 
     syncServerCart();
-  }, [status, sessionUserId]);
-
-  useEffect(() => {
-    if (status !== "authenticated" || !getAccessToken()) return;
-
-    const syncServerWishlist = async () => {
-      try {
-        const localWishlist = loadWishlist();
-        const serverWishlist = await wishlistService.fetchWishlist();
-
-        if (localWishlist.length > 0) {
-          const mergedIds = Array.from(
-            new Set([
-              ...serverWishlist.map((item) => String(item.id)),
-              ...localWishlist.map((item: { id?: string | number }) =>
-                String(item.id),
-              ),
-            ]),
-          );
-          const syncedWishlist = await wishlistService.replaceWishlist(mergedIds);
-          clearStoredWishlist();
-          setWishlist(syncedWishlist);
-        } else {
-          setWishlist(serverWishlist);
-        }
-      } catch {
-        setWishlist(loadWishlist(sessionUser));
-      }
-    };
-
-    syncServerWishlist();
   }, [status, sessionUserId]);
 
   useEffect(() => {
@@ -341,98 +278,6 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     },
     [cartItems],
   );
-
-  const toggleWishlist = useCallback(
-    async (product: NormalizedProduct | Record<string, unknown>) => {
-      const normalizedProduct = normalizeProduct(product as Record<string, unknown>);
-      if (!normalizedProduct) return;
-
-      const productId = String(normalizedProduct.id);
-      const exists = wishlist.some((item) => String(item.id) === productId);
-
-      if (getAccessToken()) {
-        try {
-          const items = exists
-            ? await wishlistService.removeFromWishlist(productId)
-            : await wishlistService.addToWishlist(productId);
-          setWishlist(items);
-          toast.success(
-            exists ? "Đã bỏ khỏi yêu thích" : "Đã thêm vào yêu thích",
-          );
-        } catch (error) {
-          toast.error(
-            error instanceof Error ? error.message : "Không thể cập nhật yêu thích",
-          );
-        }
-        return;
-      }
-
-      setWishlist((prev) => {
-        const inList = prev.some((item) => String(item.id) === productId);
-
-        if (inList) {
-          toast.success("Đã bỏ khỏi yêu thích");
-          return prev.filter((item) => String(item.id) !== productId);
-        }
-
-        toast.success("Đã thêm vào yêu thích");
-        return [...prev, normalizedProduct];
-      });
-    },
-    [wishlist],
-  );
-
-  const isInWishlist = useCallback(
-    (productId: string) =>
-      wishlist.some((item) => String(item.id) === String(productId)),
-    [wishlist],
-  );
-
-  const toggleCompare = useCallback(
-    (product: NormalizedProduct | Record<string, unknown>) => {
-      const normalizedProduct = normalizeProduct(product as Record<string, unknown>);
-      if (!normalizedProduct) return;
-
-      setCompareItems((prev) => {
-        const exists = prev.some(
-          (item) => String(item.id) === String(normalizedProduct.id),
-        );
-
-        if (exists) {
-          toast.success("Đã bỏ khỏi so sánh");
-          return prev.filter(
-            (item) => String(item.id) !== String(normalizedProduct.id),
-          );
-        }
-
-        if (prev.length >= MAX_COMPARE_ITEMS) {
-          toast.error(`So sánh tối đa ${MAX_COMPARE_ITEMS} sản phẩm`);
-          return prev;
-        }
-
-        toast.success("Đã thêm vào so sánh");
-        return [...prev, normalizedProduct];
-      });
-    },
-    [],
-  );
-
-  const isInCompare = useCallback(
-    (productId: string) =>
-      compareItems.some((item) => String(item.id) === String(productId)),
-    [compareItems],
-  );
-
-  const removeFromCompare = useCallback((productId: string) => {
-    setCompareItems((prev) =>
-      prev.filter((item) => String(item.id) !== String(productId)),
-    );
-  }, []);
-
-  const clearCompare = useCallback(() => {
-    setCompareItems([]);
-    toast.success("Đã xóa danh sách so sánh");
-  }, []);
 
   const removeFromCart = useCallback(
     async (productId: string, variant: PurchaseVariant | null = null) => {
@@ -563,16 +408,6 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       cartSummary,
       licenseKeyOrder,
       isAuthenticated,
-      openCartPanel,
-      setOpenCartPanel,
-      wishlist,
-      compareItems,
-      toggleWishlist,
-      isInWishlist,
-      toggleCompare,
-      removeFromCompare,
-      clearCompare,
-      isInCompare,
       addToCart,
       removeFromCart,
       updateCartQuantity,
@@ -587,15 +422,6 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       cartSummary,
       licenseKeyOrder,
       isAuthenticated,
-      openCartPanel,
-      wishlist,
-      compareItems,
-      toggleWishlist,
-      isInWishlist,
-      toggleCompare,
-      removeFromCompare,
-      clearCompare,
-      isInCompare,
       addToCart,
       removeFromCart,
       updateCartQuantity,
@@ -610,12 +436,28 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;
 }
 
-export function useCart() {
+export function useCartCore() {
   const context = useContext(CartContext);
 
   if (!context) {
-    throw new Error("useCart must be used within CartProvider");
+    throw new Error("useCartCore must be used within CartProvider");
   }
 
   return context;
+}
+
+/** Gộp cart + wishlist/compare + panel UI — tương thích code cũ */
+export function useCart() {
+  const cart = useCartCore();
+  const wishlistCompare = useWishlistCompare();
+  const cartUi = useCartUi();
+
+  return useMemo(
+    () => ({
+      ...cart,
+      ...wishlistCompare,
+      ...cartUi,
+    }),
+    [cart, wishlistCompare, cartUi],
+  );
 }

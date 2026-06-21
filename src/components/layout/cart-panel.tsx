@@ -2,10 +2,13 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { Minus, Plus, Trash2, X } from "lucide-react";
+import { Minus, Plus, ShoppingBag, Trash2, X } from "lucide-react";
 
-import { useCart } from "@/components/providers/cart-provider";
+import { useCartCore } from "@/components/providers/cart-provider";
+import { useCartUi } from "@/components/providers/cart-ui-provider";
 import SideDrawer from "@/components/ui/side-drawer";
+import { EmptyState } from "@/components/ui/empty-state";
+import { checkoutCtaCompactClass } from "@/lib/ui/tokens";
 import { formatPrice } from "@/lib/utils/format";
 import {
   getCartItemSalePrice,
@@ -17,19 +20,15 @@ import {
 } from "@/lib/utils/product-schema";
 import { cn } from "@/lib/utils";
 
-const checkoutCtaClass =
-  "flex h-[52px] w-full items-center justify-center rounded-[18px] bg-gradient-to-br from-keyshop-blue-hover to-keyshop-blue text-sm font-bold text-white transition hover:-translate-y-0.5 hover:shadow-glow";
-
 export default function CartPanel() {
   const {
     cartItems,
     cartSummary,
-    openCartPanel,
-    setOpenCartPanel,
     removeFromCart,
     updateCartQuantity,
     updateCartVariant,
-  } = useCart();
+  } = useCartCore();
+  const { openCartPanel, setOpenCartPanel } = useCartUi();
 
   return (
     <SideDrawer
@@ -54,9 +53,14 @@ export default function CartPanel() {
 
         <div className="keyshop-scrollbar flex-1 overflow-y-auto px-5 py-4">
           {cartItems.length === 0 ? (
-            <p className="py-10 text-center text-sm text-keyshop-muted">
-              Giỏ hàng trống.
-            </p>
+            <EmptyState
+              icon={ShoppingBag}
+              title="Giỏ hàng trống"
+              description="Thêm sản phẩm để bắt đầu thanh toán."
+              actionLabel="Xem sản phẩm"
+              actionHref="/products"
+              className="border-none py-8"
+            />
           ) : (
             <div className="space-y-4">
               {cartItems.map((item) => {
@@ -192,14 +196,14 @@ export default function CartPanel() {
               <Link
                 href="/checkout"
                 onClick={() => setOpenCartPanel(false)}
-                className={checkoutCtaClass}
+                className={checkoutCtaCompactClass}
               >
                 Thanh toán
               </Link>
               <Link
                 href="/cart"
                 onClick={() => setOpenCartPanel(false)}
-                className="flex h-[52px] w-full items-center justify-center rounded-[18px] border border-keyshop-line text-sm font-bold text-white transition hover:bg-white/5"
+                className="keyshop-interactive flex h-[52px] w-full cursor-pointer items-center justify-center rounded-control border border-keyshop-line text-sm font-bold text-white transition hover:bg-white/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-keyshop-blue/25"
               >
                 Xem giỏ đầy đủ
               </Link>

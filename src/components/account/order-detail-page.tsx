@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import { useSearchParams } from "next/navigation";
 import toast from "react-hot-toast";
 
@@ -10,7 +10,8 @@ import {
   AccountCard,
   AccountCardHeader,
 } from "@/components/account/account-ui";
-import { useCart } from "@/components/providers/cart-provider";
+import { useCartCore } from "@/components/providers/cart-provider";
+import { useSessionQuery } from "@/lib/hooks/use-session-query";
 import {
   fetchOrderById,
   type Order,
@@ -51,39 +52,17 @@ function StatCard({ label, value }: { label: string; value: string }) {
 export default function OrderDetailPageClient({ orderId }: { orderId: string }) {
   const searchParams = useSearchParams();
   const paymentResult = searchParams.get("payment");
-  const { completeCheckout } = useCart();
+  const { completeCheckout } = useCartCore();
   const handledPaymentResultRef = useRef("");
 
-  const [order, setOrder] = useState<Order | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
+  const loadOrder = useCallback(() => fetchOrderById(orderId), [orderId]);
+  const {
+    data: order,
+    loading,
+    reload,
+  } = useSessionQuery<Order | null>(loadOrder, null);
 
-  useEffect(() => {
-    let cancelled = false;
-
-    async function load() {
-      try {
-        const data = await fetchOrderById(orderId);
-        if (!cancelled) {
-          setOrder(data);
-        }
-      } catch (err) {
-        if (!cancelled) {
-          setError(getApiErrorMessage(err, "Không thể tải đơn hàng"));
-        }
-      } finally {
-        if (!cancelled) {
-          setLoading(false);
-        }
-      }
-    }
-
-    load();
-
-    return () => {
-      cancelled = true;
-    };
-  }, [orderId]);
+  const error = !loading && !order ? "Không thể tải đơn hàng" : "";
 
   useEffect(() => {
     const paymentMessage = paymentResult

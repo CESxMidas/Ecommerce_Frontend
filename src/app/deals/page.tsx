@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Suspense } from "react";
 
 import ProductListing from "@/components/shop/product-listing";
+import { ProductListingSkeleton } from "@/components/ui/skeleton";
 import { getCategories, getProducts } from "@/lib/api/server";
 
 export const metadata: Metadata = {
@@ -23,7 +24,7 @@ export default async function DealsPage() {
     categoriesRes.status === "fulfilled" ? categoriesRes.value.categories : [];
 
   return (
-    <Suspense fallback={<div className="container py-16 text-keyshop-muted">Đang tải...</div>}>
+    <Suspense fallback={<ProductListingSkeleton />}>
       <ProductListing products={products} categories={categories} mode="deals" />
     </Suspense>
   );

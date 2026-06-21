@@ -3,32 +3,31 @@ import { notFound } from "next/navigation";
 
 import StaticPageView from "@/components/commerce/static-page-view";
 import { getStaticPage } from "@/lib/content/static-pages";
+import { pageMetadata } from "@/lib/metadata";
 
-const titles: Record<string, string> = {
-  terms: "Điều khoản dịch vụ",
-  "privacy-policy": "Chính sách bảo mật",
-  "payment-policy": "Chính sách thanh toán",
-};
+const LEGAL_SLUGS = ["terms", "privacy-policy", "payment-policy", "cookie-policy"] as const;
 
 type Props = {
   params: { slug: string };
 };
 
 export function generateStaticParams() {
-  return Object.keys(titles).map((slug) => ({ slug }));
+  return LEGAL_SLUGS.map((slug) => ({ slug }));
 }
 
 export function generateMetadata({ params }: Props): Metadata {
   const content = getStaticPage(params.slug);
-  return {
-    title: content?.title || titles[params.slug] || params.slug,
-    description: content?.intro,
-  };
+  if (!content) return { title: "Pháp lý" };
+  return pageMetadata(content.title, content.intro);
 }
 
 export default function LegalPage({ params }: Props) {
+  if (!LEGAL_SLUGS.includes(params.slug as (typeof LEGAL_SLUGS)[number])) {
+    notFound();
+  }
+
   const content = getStaticPage(params.slug);
-  if (!content || !titles[params.slug]) notFound();
+  if (!content) notFound();
 
   return <StaticPageView content={content} />;
 }

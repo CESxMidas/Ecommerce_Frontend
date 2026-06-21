@@ -7,10 +7,12 @@ import { FormEvent, useEffect, useState } from "react";
 import toast from "react-hot-toast";
 
 import { useCart } from "@/components/providers/cart-provider";
+import { TrustSignals } from "@/components/commerce/trust-signals";
 import { OrderSummaryTotals } from "@/components/shop/order-summary-totals";
 import { placeOrder } from "@/lib/services/order-service";
 import { fetchAddresses } from "@/lib/services/user-service";
 import { getPayableCartTotal } from "@/lib/utils/cart-storage";
+import { checkoutCtaClass, fieldClass, labelClass } from "@/lib/ui/tokens";
 import { cn } from "@/lib/utils";
 import { formatPrice } from "@/lib/utils/format";
 import {
@@ -44,14 +46,6 @@ const emptyForm: CheckoutForm = {
   pincode: "",
   address: "",
 };
-
-const fieldClass =
-  "h-auto w-full rounded-control border border-keyshop-line bg-white/[0.03] px-[18px] py-4 text-[15px] text-white outline-none placeholder:text-white/30 focus:border-keyshop-blue focus:ring-4 focus:ring-keyshop-blue/15";
-
-const labelClass = "mb-2 block text-sm font-bold text-white";
-
-const checkoutCtaClass =
-  "flex h-[58px] w-full items-center justify-center rounded-[18px] bg-gradient-to-br from-keyshop-blue-hover to-keyshop-blue text-sm font-bold text-white transition hover:-translate-y-0.5 hover:shadow-glow disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:translate-y-0 disabled:hover:shadow-none";
 
 export default function CheckoutPageClient() {
   const router = useRouter();
@@ -578,6 +572,8 @@ export default function CheckoutPageClient() {
             >
               {loading ? "Đang xử lý..." : "Đặt hàng"}
             </button>
+
+            <TrustSignals compact className="mt-4" />
           </div>
         </div>
       </div>

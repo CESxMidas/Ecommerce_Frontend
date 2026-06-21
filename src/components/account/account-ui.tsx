@@ -1,14 +1,18 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
 
+import { AccountPageSkeleton } from "@/components/ui/skeleton";
+import {
+  checkoutCtaClass,
+  fieldClass,
+  labelClass,
+  selectClass,
+} from "@/lib/ui/tokens";
 import { cn } from "@/lib/utils";
 
-export const accountFieldClass =
-  "h-auto w-full rounded-control border border-keyshop-line bg-white/[0.03] px-[18px] py-4 text-[15px] text-white outline-none placeholder:text-white/30 focus:border-keyshop-blue focus:ring-4 focus:ring-keyshop-blue/15";
-
-export const accountLabelClass = "mb-2 block text-sm font-bold text-white";
-
-export const accountSelectClass = cn(accountFieldClass, "cursor-pointer");
+export const accountFieldClass = fieldClass;
+export const accountLabelClass = labelClass;
+export const accountSelectClass = selectClass;
 
 export function AccountCard({
   children,
@@ -99,7 +103,7 @@ export function AccountEmptyState({
       {actionLabel && actionHref ? (
         <Link
           href={actionHref}
-          className="mt-6 inline-flex min-h-[48px] items-center rounded-control bg-gradient-to-br from-keyshop-blue-hover to-keyshop-blue px-6 text-sm font-bold text-white transition hover:-translate-y-0.5 hover:shadow-glow"
+          className={cn(checkoutCtaClass, "mx-auto mt-6 inline-flex max-w-xs")}
         >
           {actionLabel}
         </Link>
@@ -109,7 +113,12 @@ export function AccountEmptyState({
 }
 
 export function AccountLoading({ label = "Đang tải..." }: { label?: string }) {
-  return <p className="text-sm text-keyshop-muted">{label}</p>;
+  return (
+    <div role="status" aria-live="polite">
+      <span className="sr-only">{label}</span>
+      <AccountPageSkeleton />
+    </div>
+  );
 }
 
 export function AccountListItem({

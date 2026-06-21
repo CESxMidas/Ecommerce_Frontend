@@ -2,6 +2,8 @@
 
 import { useEffect, useRef, useState } from "react";
 
+import { lockBodyScroll } from "@/lib/utils/body-scroll-lock";
+
 const DEFAULT_DURATION = 300;
 
 export function useOverlayPresence(open: boolean, duration = DEFAULT_DURATION) {
@@ -56,20 +58,24 @@ export function useOverlayPresence(open: boolean, duration = DEFAULT_DURATION) {
 }
 
 let overlayLockCount = 0;
+let overlayUnlock: (() => void) | null = null;
 
 export function useOverlayLock(shouldLock: boolean) {
   useEffect(() => {
     if (!shouldLock) return;
 
     overlayLockCount += 1;
-    const previousOverflow = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
+
+    if (overlayLockCount === 1) {
+      overlayUnlock = lockBodyScroll();
+    }
 
     return () => {
       overlayLockCount = Math.max(0, overlayLockCount - 1);
 
-      if (overlayLockCount === 0) {
-        document.body.style.overflow = previousOverflow || "";
+      if (overlayLockCount === 0 && overlayUnlock) {
+        overlayUnlock();
+        overlayUnlock = null;
       }
     };
   }, [shouldLock]);

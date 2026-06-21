@@ -1,5 +1,18 @@
+import type { Metadata } from "next";
+
 import HomeView from "@/components/home/home-view";
 import { getBanners, getBlogs, getCategories, getProducts } from "@/lib/api/server";
+
+export const metadata: Metadata = {
+  title: "KEYSHOP | Key phần mềm & bản quyền số",
+  description:
+    "Mua key game, phần mềm và bản quyền số với giao hàng tức thì sau thanh toán. Thanh toán VNPay an toàn.",
+  openGraph: {
+    title: "KEYSHOP — Bản quyền số chính hãng",
+    description: "Key phần mềm, game và công cụ số — giao ngay sau thanh toán.",
+    type: "website",
+  },
+};
 
 export const revalidate = 300;
 
