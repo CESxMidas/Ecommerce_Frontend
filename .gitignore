@@ -12,6 +12,7 @@ build
 # Env
 .env
 .env*.local
+vercel-import.env
 
 # Debug
 npm-debug.log*
