@@ -70,7 +70,9 @@ function LoginForm() {
     setLoading(false);
 
     if (!result?.ok || result?.error) {
-      const verificationError = parseEmailNotVerifiedError(result.error);
+      const verificationError = result?.error
+        ? parseEmailNotVerifiedError(result.error)
+        : null;
 
       if (verificationError) {
         toast[verificationError.emailSent ? "success" : "error"](
@@ -84,7 +86,7 @@ function LoginForm() {
         return;
       }
 
-      toast.error(result.error || "Đăng nhập thất bại");
+      toast.error(result?.error || "Đăng nhập thất bại");
       return;
     }
 
