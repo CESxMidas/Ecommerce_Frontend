@@ -51,7 +51,7 @@ export default function OrderView({ order }: { order: Order }) {
                 src={
                   item.product?.thumbnail ||
                   item.product?.image ||
-                  "/images/bypass/cerberus-banner.png"
+                  "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?q=80&w=1200&auto=format&fit=crop"
                 }
                 alt={item.product?.name || item.product?.title || "Sản phẩm"}
                 fill
@@ -68,6 +68,15 @@ export default function OrderView({ order }: { order: Order }) {
                 <p className="mt-1 text-sm text-sky-300">
                   Mã bản quyền: {item.licenseKeys.join(", ")}
                 </p>
+              ) : null}
+              {item.accountCredentials?.length ? (
+                <div className="mt-1 space-y-1 text-sm text-sky-300">
+                  {item.accountCredentials.map((credential, index) => (
+                    <p key={`${credential.username}-${index}`}>
+                      Tài khoản: {credential.username} / {credential.password}
+                    </p>
+                  ))}
+                </div>
               ) : null}
             </div>
             <strong className="text-keyshop-blue">

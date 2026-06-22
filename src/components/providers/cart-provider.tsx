@@ -383,15 +383,10 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   }, [clearCart, sessionUser]);
 
   const showLicenseKeysFromOrder = useCallback((order: PlacedOrder) => {
-    const keys =
-      order?.items?.flatMap((item) =>
-        (item.licenseKeys || []).map((key) => ({
-          key,
-          productName: item.product?.name || item.product?.title || "Product",
-        })),
-      ) || [];
+    const hasKeys = order?.items?.some((item) => item.licenseKeys?.length);
+    const hasAccounts = order?.items?.some((item) => item.accountCredentials?.length);
 
-    if (keys.length > 0) {
+    if (hasKeys || hasAccounts) {
       setLicenseKeyOrder(order);
     }
   }, []);

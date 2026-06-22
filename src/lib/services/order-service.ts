@@ -1,11 +1,12 @@
 import apiClient from "@/lib/api/client";
 import { API_ENDPOINTS } from "@/constants/apiEndpoints";
-import type { CartItem, PlacedOrder } from "@/types/cart";
+import type { AccountCredential, CartItem, PlacedOrder } from "@/types/cart";
 
 export interface OrderItem {
   productId: string;
   quantity: number;
   licenseKeys?: string[];
+  accountCredentials?: AccountCredential[];
   product?: {
     name?: string;
     title?: string;

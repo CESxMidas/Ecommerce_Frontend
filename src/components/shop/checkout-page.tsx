@@ -292,7 +292,11 @@ export default function CheckoutPageClient() {
       showLicenseKeysFromOrder(order);
       toast.success("Đặt hàng thành công");
 
-      if (!order?.items?.some((item) => item.licenseKeys?.length)) {
+      if (
+        !order?.items?.some(
+          (item) => item.licenseKeys?.length || item.accountCredentials?.length,
+        )
+      ) {
         router.push("/account/orders");
       }
     } catch (error) {

@@ -5,16 +5,17 @@ import ProductListing from "@/components/shop/product-listing";
 import { ProductListingSkeleton } from "@/components/ui/skeleton";
 import { getCategories, getProducts } from "@/lib/api/server";
 
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
   title: "Sản phẩm",
   description: "Duyệt key phần mềm và bản quyền số chính hãng.",
 };
 
-export const revalidate = 300;
-
 type SearchParams = {
   q?: string;
   category?: string;
+  categoryIds?: string;
   sort?: string;
   page?: string;
   brand?: string;
@@ -34,6 +35,7 @@ export default async function ProductsPage({
   };
 
   if (searchParams.category) params.category = searchParams.category;
+  if (searchParams.categoryIds) params.categoryIds = searchParams.categoryIds;
   if (searchParams.q) params.q = searchParams.q;
   if (searchParams.sort) params.sort = searchParams.sort;
   if (searchParams.brand) params.brand = searchParams.brand;

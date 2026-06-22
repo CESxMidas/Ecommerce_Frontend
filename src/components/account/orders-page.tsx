@@ -153,7 +153,10 @@ export default function OrdersPageClient() {
                       ["PendingPayment", "Processing", "Pending"].includes(
                         order.status || "",
                       ) &&
-                      !order.items?.some((item) => item.licenseKeys?.length);
+                      !order.items?.some(
+                        (item) =>
+                          item.licenseKeys?.length || item.accountCredentials?.length,
+                      );
 
                     const statusLabel =
                       order.paymentStatus === "failed"

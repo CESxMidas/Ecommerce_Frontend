@@ -14,6 +14,7 @@ import {
   ShoppingBag,
   Star,
   User,
+  UserRound,
   Bell,
 } from "lucide-react";
 
@@ -27,6 +28,7 @@ const links = [
   { href: "/account/orders", label: "Đơn hàng", icon: ShoppingBag },
   { href: "/account/reviews", label: "Đánh giá", icon: Star },
   { href: "/account/licenses", label: "Key bản quyền", icon: Key },
+  { href: "/account/premium-accounts", label: "Tài khoản Premium", icon: UserRound },
   { href: "/account/notifications", label: "Thông báo", icon: Bell },
   { href: "/account/tickets", label: "Hỗ trợ", icon: MessageCircle },
   { href: "/account/security", label: "Bảo mật", icon: Shield },

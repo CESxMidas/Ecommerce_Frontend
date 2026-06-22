@@ -18,8 +18,10 @@ import ListingSidebar from "@/components/shop/listing-sidebar";
 import { EmptyState } from "@/components/ui/empty-state";
 import SideDrawer from "@/components/ui/side-drawer";
 import {
+  buildCategoryFilterParams,
   collectCategoryIds,
   findCategoryBySlug,
+  normalizeCategorySelection,
 } from "@/lib/utils/category-utils";
 import {
   filterProducts,
@@ -60,6 +62,7 @@ export default function ProductListing({
 
   const query = searchParams.get("q") || "";
   const categorySlug = searchParams.get("category") || "";
+  const categoryIdsParam = searchParams.get("categoryIds") || "";
   const sortBy = searchParams.get("sort") || (mode === "deals" ? "popular" : "latest");
   const page = Number(searchParams.get("page") || "1");
 
@@ -78,7 +81,34 @@ export default function ProductListing({
     getProductPriceBounds(products),
   );
 
+  const updateParams = (updates: Record<string, string | number | null>) => {
+    const next = new URLSearchParams(searchParams.toString());
+
+    Object.entries(updates).forEach(([key, value]) => {
+      if (value === null || value === undefined || value === "") {
+        next.delete(key);
+      } else {
+        next.set(key, String(value));
+      }
+    });
+
+    router.push(`${pathname}?${next.toString()}`);
+  };
+
   useEffect(() => {
+    if (categoryIdsParam) {
+      setSelectedCategoryIds(
+        normalizeCategorySelection(
+          categories,
+          categoryIdsParam
+            .split(",")
+            .map((value) => value.trim())
+            .filter(Boolean),
+        ),
+      );
+      return;
+    }
+
     if (!categorySlug || categories.length === 0) {
       setSelectedCategoryIds([]);
       return;
@@ -88,28 +118,46 @@ export default function ProductListing({
     if (matched) {
       setSelectedCategoryIds(collectCategoryIds(matched));
     }
-  }, [categorySlug, categories]);
+  }, [categorySlug, categoryIdsParam, categories]);
+
+  const handleCategoryChange = (ids: string[]) => {
+    const normalized = normalizeCategorySelection(categories, ids);
+    setSelectedCategoryIds(normalized);
+
+    if (normalized.length === 0) {
+      updateParams({ category: null, categoryIds: null, page: 1 });
+      return;
+    }
+
+    const filterParams = buildCategoryFilterParams(categories, normalized);
+    updateParams({ ...filterParams, page: 1 });
+  };
 
   const brands = useMemo(() => getUniqueBrands(products), [products]);
 
   const filtered = useMemo(() => {
-    if (serverPagination) {
-      return products;
-    }
-
     return filterProducts(products, {
-      search: query,
-      categoryIds: selectedCategoryIds,
+      search: serverPagination ? "" : query,
+      categoryIds: serverPagination ? [] : selectedCategoryIds,
       brands: selectedBrands,
       priceRange,
       dealsOnly: mode === "deals",
     });
-  }, [products, query, selectedCategoryIds, selectedBrands, priceRange, mode, serverPagination]);
+  }, [
+    products,
+    query,
+    selectedCategoryIds,
+    selectedBrands,
+    priceRange,
+    mode,
+    serverPagination,
+  ]);
 
   const sorted = useMemo(() => {
     if (serverPagination) {
       return filtered;
     }
+
     return sortProducts(filtered, sortBy);
   }, [filtered, sortBy, serverPagination]);
 
@@ -126,29 +174,11 @@ export default function ProductListing({
     return paginateProducts(sorted, page, PER_PAGE);
   }, [serverPagination, sorted, page, mode]);
 
-  const updateParams = (updates: Record<string, string | number | null>) => {
-    const next = new URLSearchParams(searchParams.toString());
-
-    Object.entries(updates).forEach(([key, value]) => {
-      if (value === null || value === undefined || value === "") {
-        next.delete(key);
-      } else {
-        next.set(key, String(value));
-      }
-    });
-
-    router.push(`${pathname}?${next.toString()}`);
-  };
-
   const clearFilters = () => {
     setSelectedBrands([]);
-    if (activeCategory) {
-      setSelectedCategoryIds(collectCategoryIds(activeCategory));
-    } else {
-      setSelectedCategoryIds([]);
-    }
+    setSelectedCategoryIds([]);
     setPriceRange(priceBounds);
-    updateParams({ page: 1 });
+    updateParams({ category: null, categoryIds: null, page: 1 });
   };
 
   const pageTitle = query
@@ -174,7 +204,7 @@ export default function ProductListing({
     selectedBrands,
     priceRange,
     priceBounds,
-    onCategoryChange: setSelectedCategoryIds,
+    onCategoryChange: handleCategoryChange,
     onBrandChange: setSelectedBrands,
     onPriceChange: setPriceRange,
   };

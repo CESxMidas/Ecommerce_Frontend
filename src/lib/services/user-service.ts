@@ -112,6 +112,17 @@ export type LicenseEntry = {
   keys?: string[];
 };
 
+export type PremiumAccountEntry = {
+  id: string;
+  orderId: string;
+  productName: string;
+  credentials: Array<{
+    username: string;
+    password: string;
+    note?: string;
+  }>;
+};
+
 export type UserNotification = {
   id: string;
   title: string;
@@ -160,6 +171,18 @@ export async function fetchLicenses() {
 
 export async function resendLicenseKeys(orderId: string) {
   const { data } = await apiClient.post(API_ENDPOINTS.user.licenseResend(orderId));
+  return data;
+}
+
+export async function fetchPremiumAccounts() {
+  const { data } = await apiClient.get<PremiumAccountEntry[]>(
+    API_ENDPOINTS.user.premiumAccounts,
+  );
+  return Array.isArray(data) ? data : [];
+}
+
+export async function resendPremiumAccounts(orderId: string) {
+  const { data } = await apiClient.post(API_ENDPOINTS.user.premiumAccountResend(orderId));
   return data;
 }
 

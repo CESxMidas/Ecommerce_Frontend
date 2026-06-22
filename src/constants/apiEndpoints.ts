@@ -61,6 +61,8 @@ export const API_ENDPOINTS = {
     addressDefault: (id: string) => `/user/addresses/${id}/default`,
     licenses: "/user/licenses",
     licenseResend: (orderId: string) => `/user/licenses/${orderId}/resend`,
+    premiumAccounts: "/user/accounts",
+    premiumAccountResend: (orderId: string) => `/user/accounts/${orderId}/resend`,
     notifications: "/user/notifications",
     notificationRead: (id: string) => `/user/notifications/${id}/read`,
     notificationsReadAll: "/user/notifications/read-all",

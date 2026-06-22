@@ -52,7 +52,7 @@ function StatCard({ label, value }: { label: string; value: string }) {
 export default function OrderDetailPageClient({ orderId }: { orderId: string }) {
   const searchParams = useSearchParams();
   const paymentResult = searchParams.get("payment");
-  const { completeCheckout } = useCartCore();
+  const { completeCheckout, showLicenseKeysFromOrder } = useCartCore();
   const handledPaymentResultRef = useRef("");
 
   const loadOrder = useCallback(() => fetchOrderById(orderId), [orderId]);
@@ -81,10 +81,25 @@ export default function OrderDetailPageClient({ orderId }: { orderId: string }) 
 
     if (paymentResult === "success") {
       completeCheckout();
+      void reload().then(() => {
+        // Modal opens after order refetch in effect below
+      });
     }
 
     toast[paymentMessage.type](paymentMessage.message);
-  }, [completeCheckout, orderId, paymentResult]);
+  }, [completeCheckout, orderId, paymentResult, reload]);
+
+  useEffect(() => {
+    if (paymentResult !== "success" || !order) return;
+
+    const hasDigitalDelivery = order.items?.some(
+      (item) => item.licenseKeys?.length || item.accountCredentials?.length,
+    );
+
+    if (hasDigitalDelivery && order.paymentStatus === "paid") {
+      showLicenseKeysFromOrder(order);
+    }
+  }, [order, paymentResult, showLicenseKeysFromOrder]);
 
   if (loading) {
     return <p className="text-sm text-keyshop-muted">Đang tải đơn hàng...</p>;
@@ -158,7 +173,7 @@ export default function OrderDetailPageClient({ orderId }: { orderId: string }) 
                   src={
                     item.product?.thumbnail ||
                     item.product?.image ||
-                    "/images/bypass/cerberus-banner.png"
+                    "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?q=80&w=1200&auto=format&fit=crop"
                   }
                   alt={item.product?.name || "Sản phẩm"}
                   fill
@@ -179,6 +194,16 @@ export default function OrderDetailPageClient({ orderId }: { orderId: string }) 
                   <p className="mt-2 text-sm text-sky-300">
                     Mã bản quyền: {item.licenseKeys.join(", ")}
                   </p>
+                ) : null}
+                {item.accountCredentials?.length ? (
+                  <div className="mt-2 space-y-1 text-sm text-sky-300">
+                    {item.accountCredentials.map((credential, index) => (
+                      <p key={`${credential.username}-${index}`}>
+                        Tài khoản: {credential.username} / {credential.password}
+                        {credential.note ? ` (${credential.note})` : ""}
+                      </p>
+                    ))}
+                  </div>
                 ) : null}
               </div>
               <p className="font-extrabold text-sky-400">

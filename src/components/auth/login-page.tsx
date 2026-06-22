@@ -101,7 +101,7 @@ function LoginForm() {
 
   return (
     <AuthSplitLayout
-      heroImage="/images/bypass/cerberus-banner.png"
+      heroImage="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?q=80&w=1920&auto=format&fit=crop"
       badge="Gaming đỉnh cao"
       title="Chợ game số cao cấp"
       description="Đăng nhập để tiếp tục khám phá key game và ưu đãi độc quyền."

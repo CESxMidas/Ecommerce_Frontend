@@ -86,8 +86,15 @@ export interface UserAddress {
   isDefault?: boolean;
 }
 
+export interface AccountCredential {
+  username: string;
+  password: string;
+  note?: string;
+}
+
 export interface OrderLicenseItem {
   licenseKeys?: string[];
+  accountCredentials?: AccountCredential[];
   product?: { name?: string; title?: string };
 }
 

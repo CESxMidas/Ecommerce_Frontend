@@ -2,8 +2,6 @@ const DEFAULT_MEDIA_FALLBACK =
   "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?q=80&w=1920&auto=format&fit=crop";
 
 const LOCAL_IMAGE_FALLBACKS: Record<string, string> = {
-  "/images/bypass/cerberus-banner.png":
-    "https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=1920&auto=format&fit=crop",
   "/images/bypass/snake-app.png":
     "https://images.unsplash.com/photo-1633419461186-7d40a38105ec?q=80&w=1920&auto=format&fit=crop",
 };
