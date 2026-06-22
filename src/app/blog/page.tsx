@@ -18,7 +18,7 @@ export const metadata: Metadata = {
 export const revalidate = 300;
 
 export default async function BlogListPage() {
-  const { blogs = [] } = await getBlogs();
+  const { blogs = [] } = await getBlogs().catch(() => ({ blogs: [] }));
 
   return (
     <CommercePage>
