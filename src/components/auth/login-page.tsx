@@ -1,6 +1,6 @@
 "use client";
 
-import { signIn } from "next-auth/react";
+import { getSession, signIn } from "next-auth/react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Eye, EyeOff, Lock, Mail } from "lucide-react";
@@ -69,7 +69,7 @@ function LoginForm() {
 
     setLoading(false);
 
-    if (result?.error) {
+    if (!result?.ok || result?.error) {
       const verificationError = parseEmailNotVerifiedError(result.error);
 
       if (verificationError) {
@@ -94,9 +94,13 @@ function LoginForm() {
       localStorage.removeItem("rememberedEmail");
     }
 
+    await getSession();
     toast.success("Đăng nhập thành công");
-    router.push(callbackUrl);
-    router.refresh();
+    const safeCallbackUrl =
+      callbackUrl.startsWith("/") && !callbackUrl.startsWith("//")
+        ? callbackUrl
+        : "/account";
+    window.location.assign(safeCallbackUrl);
   }
 
   return (

@@ -1,7 +1,6 @@
 "use client";
 
-import { signIn } from "next-auth/react";
-import { useRouter } from "next/navigation";
+import { getSession, signIn } from "next-auth/react";
 import { Github } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
@@ -12,6 +11,14 @@ import {
   loadGoogleIdentityScript,
 } from "@/lib/auth/google-identity";
 import { cn } from "@/lib/utils";
+
+function resolveCallbackUrl(callbackUrl: string) {
+  if (!callbackUrl.startsWith("/") || callbackUrl.startsWith("//")) {
+    return "/account";
+  }
+
+  return callbackUrl;
+}
 
 function GoogleIcon({ className }: { className?: string }) {
   return (
@@ -52,7 +59,6 @@ export default function SocialAuthButtons({
 }: {
   callbackUrl?: string;
 }) {
-  const router = useRouter();
   const googleButtonRef = useRef<HTMLDivElement>(null);
   const [googleEnabled, setGoogleEnabled] = useState(false);
   const [googleStatusLoaded, setGoogleStatusLoaded] = useState(false);
@@ -68,21 +74,21 @@ export default function SocialAuthButtons({
           redirect: false,
         });
 
-        if (result?.error) {
-          toast.error(result.error);
+        if (!result?.ok || result?.error) {
+          toast.error(result?.error || "Đăng nhập Google thất bại");
           return;
         }
 
+        await getSession();
         toast.success("Đăng nhập Google thành công");
-        router.push(callbackUrl);
-        router.refresh();
+        window.location.assign(resolveCallbackUrl(callbackUrl));
       } catch (error) {
         toast.error(
           error instanceof Error ? error.message : "Đăng nhập Google thất bại",
         );
       }
     },
-    [callbackUrl, clientId, router],
+    [callbackUrl, clientId],
   );
 
   useEffect(() => {
@@ -136,6 +142,7 @@ export default function SocialAuthButtons({
           },
           auto_select: false,
           cancel_on_tap_outside: true,
+          use_fedcm_for_prompt: true,
         });
 
         googleButtonRef.current.replaceChildren();
