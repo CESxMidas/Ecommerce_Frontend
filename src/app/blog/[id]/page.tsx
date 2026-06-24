@@ -55,7 +55,7 @@ export default async function BlogDetailPage({ params }: Props) {
         />
 
         <CommercePanel>
-          <div className="relative mb-6 aspect-[21/9] w-full overflow-hidden rounded-[20px] bg-white/10 md:aspect-[2.4/1]">
+          <div className="relative mb-6 aspect-[16/10] w-full overflow-hidden rounded-[20px] bg-white/10 sm:aspect-[21/9] md:aspect-[2.4/1]">
             <Image
               src={resolveMediaUrl(blog.image)}
               alt={blog.title}
@@ -67,10 +67,10 @@ export default async function BlogDetailPage({ params }: Props) {
           </div>
 
           {blog.excerpt && blog.excerpt !== blog.content ? (
-            <p className="mb-6 text-lg leading-7 text-slate-300">{blog.excerpt}</p>
+            <p className="mb-6 text-base leading-7 text-slate-300 sm:text-lg">{blog.excerpt}</p>
           ) : null}
 
-          <div className="whitespace-pre-wrap leading-8 text-slate-200">
+          <div className="whitespace-pre-wrap break-words leading-7 text-slate-200 sm:leading-8">
             {blog.content || blog.excerpt}
           </div>
 

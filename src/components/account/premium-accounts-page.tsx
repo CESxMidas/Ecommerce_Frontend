@@ -111,7 +111,7 @@ export default function PremiumAccountsPageClient() {
                         </span>
                         <button
                           type="button"
-                          className="text-xs font-extrabold uppercase text-keyshop-muted hover:text-white"
+                          className="inline-flex min-h-11 items-center px-2 text-xs font-extrabold uppercase text-keyshop-muted hover:text-white"
                           onClick={() =>
                             setVisible({ ...visible, [usernameKey]: !visible[usernameKey] })
                           }
@@ -120,7 +120,7 @@ export default function PremiumAccountsPageClient() {
                         </button>
                         <button
                           type="button"
-                          className="text-xs font-extrabold uppercase text-keyshop-blue hover:text-sky-300"
+                          className="inline-flex min-h-11 items-center px-2 text-xs font-extrabold uppercase text-keyshop-blue hover:text-sky-300"
                           onClick={() => copyText(credential.username, "email")}
                         >
                           Email
@@ -132,7 +132,7 @@ export default function PremiumAccountsPageClient() {
                         </span>
                         <button
                           type="button"
-                          className="text-xs font-extrabold uppercase text-keyshop-muted hover:text-white"
+                          className="inline-flex min-h-11 items-center px-2 text-xs font-extrabold uppercase text-keyshop-muted hover:text-white"
                           onClick={() =>
                             setVisible({ ...visible, [passwordKey]: !visible[passwordKey] })
                           }
@@ -141,7 +141,7 @@ export default function PremiumAccountsPageClient() {
                         </button>
                         <button
                           type="button"
-                          className="text-xs font-extrabold uppercase text-keyshop-blue hover:text-sky-300"
+                          className="inline-flex min-h-11 items-center px-2 text-xs font-extrabold uppercase text-keyshop-blue hover:text-sky-300"
                           onClick={() => copyText(credential.password, "mật khẩu")}
                         >
                           Mật khẩu

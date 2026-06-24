@@ -44,7 +44,7 @@ export default function CartPanel() {
           <button
             type="button"
             onClick={() => setOpenCartPanel(false)}
-            className="rounded-lg p-2 hover:bg-white/5"
+            className="flex h-11 w-11 items-center justify-center rounded-lg hover:bg-white/5"
             aria-label="Đóng giỏ hàng"
           >
             <X className="h-5 w-5" />
@@ -108,7 +108,7 @@ export default function CartPanel() {
                                   type="button"
                                   onClick={() => updateCartVariant(item, variant)}
                                   className={cn(
-                                    "rounded-full border px-2 py-1 text-[10px] font-extrabold",
+                                    "min-h-11 rounded-full border px-3 py-2 text-xs font-extrabold",
                                     item.variant?.id === variant.id
                                       ? "border-keyshop-blue bg-keyshop-blue/20 text-white"
                                       : "border-keyshop-line text-keyshop-muted",
@@ -128,7 +128,7 @@ export default function CartPanel() {
                           <div className="flex items-center rounded-control border border-keyshop-line">
                             <button
                               type="button"
-                              className="px-2 py-1"
+                              className="flex h-11 w-11 items-center justify-center"
                               onClick={() =>
                                 updateCartQuantity(
                                   item.productId,
@@ -140,12 +140,12 @@ export default function CartPanel() {
                             >
                               <Minus className="h-3.5 w-3.5" />
                             </button>
-                            <span className="min-w-6 text-center text-sm">
+                            <span className="min-w-8 text-center text-sm">
                               {item.quantity}
                             </span>
                             <button
                               type="button"
-                              className="px-2 py-1"
+                              className="flex h-11 w-11 items-center justify-center"
                               onClick={() =>
                                 updateCartQuantity(
                                   item.productId,
@@ -164,7 +164,7 @@ export default function CartPanel() {
 
                     <button
                       type="button"
-                      className="absolute right-3 top-3 text-keyshop-muted hover:text-red-400"
+                      className="absolute right-2 top-2 flex h-11 w-11 items-center justify-center text-keyshop-muted hover:text-red-400"
                       onClick={() => removeFromCart(item.productId, item.variant)}
                       aria-label="Xóa sản phẩm"
                     >

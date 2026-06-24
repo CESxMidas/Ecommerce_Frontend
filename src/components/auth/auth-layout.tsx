@@ -32,7 +32,7 @@ export function AuthSplitLayout({
           sizes="50vw"
         />
         <div className="absolute inset-0 bg-gradient-to-b from-keyshop-bg/15 to-keyshop-bg/92" />
-        <div className="absolute bottom-14 left-14 z-10 max-w-[520px]">
+        <div className="absolute bottom-8 left-5 z-10 max-w-[520px] sm:bottom-14 sm:left-14">
           <span className="mb-5 inline-flex items-center rounded-full border border-white/10 bg-keyshop-blue/15 px-[18px] py-2.5 text-xs font-bold text-sky-400">
             {badge}
           </span>
@@ -52,7 +52,7 @@ export function AuthSplitLayout({
 
 export function AuthCenteredLayout({ children }: { children: ReactNode }) {
   return (
-    <section className="relative flex min-h-[100svh] items-center justify-center overflow-hidden bg-keyshop-bg p-8">
+    <section className="relative flex min-h-[100svh] items-center justify-center overflow-hidden bg-keyshop-bg p-4 sm:p-8">
       <div className="pointer-events-none absolute -right-28 -top-44 h-[600px] w-[600px] rounded-full bg-keyshop-blue-hover/15 blur-[120px]" />
       <div className="relative z-10 w-full max-w-[520px]">{children}</div>
     </section>
@@ -69,7 +69,7 @@ export function AuthGlassCard({
   return (
     <div
       className={cn(
-        "w-full max-w-[480px] rounded-[24px] border border-keyshop-line bg-white/[0.03] p-8 shadow-card backdrop-blur-xl",
+        "w-full max-w-[480px] rounded-[24px] border border-keyshop-line bg-white/[0.03] p-5 shadow-card backdrop-blur-xl sm:p-8",
         className,
       )}
     >
@@ -88,7 +88,7 @@ export function AuthCenteredCard({
   return (
     <div
       className={cn(
-        "rounded-[30px] border border-keyshop-line bg-white/[0.03] px-9 py-11 text-center shadow-card backdrop-blur-xl",
+        "rounded-[30px] border border-keyshop-line bg-white/[0.03] px-5 py-8 text-center shadow-card backdrop-blur-xl sm:px-9 sm:py-11",
         className,
       )}
     >

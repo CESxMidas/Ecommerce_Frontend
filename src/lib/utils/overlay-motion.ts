@@ -56,7 +56,7 @@ export function overlayModalPanelClass(active: boolean, className?: string) {
 
 export function overlayDialogPanelClass(active: boolean, className?: string) {
   return cn(
-    "w-full overflow-hidden rounded-card border border-keyshop-line bg-keyshop-bg shadow-glow",
+    "keyshop-scrollbar max-h-[92vh] w-full overflow-y-auto rounded-card border border-keyshop-line bg-keyshop-bg shadow-glow",
     motionTransition,
     active
       ? "translate-y-0 scale-100 opacity-100"

@@ -24,7 +24,7 @@ export function AccountCard({
   return (
     <div
       className={cn(
-        "rounded-card border border-keyshop-line bg-white/[0.03] p-6 backdrop-blur-xl md:p-7",
+        "rounded-card border border-keyshop-line bg-white/[0.03] p-4 backdrop-blur-xl sm:p-6 md:p-7",
         className,
       )}
     >
@@ -43,14 +43,14 @@ export function AccountCardHeader({
   action?: ReactNode;
 }) {
   return (
-    <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-      <div>
-        <h1 className="text-[28px] font-extrabold text-white md:text-[32px]">{title}</h1>
+    <div className="mb-4 flex flex-col gap-3 sm:mb-6 sm:flex-row sm:items-start sm:justify-between">
+      <div className="min-w-0">
+        <h1 className="text-xl font-extrabold text-white sm:text-[28px] md:text-[32px]">{title}</h1>
         {description ? (
-          <p className="mt-1 text-sm text-keyshop-muted">{description}</p>
+          <p className="mt-1 break-all text-sm text-keyshop-muted sm:break-normal">{description}</p>
         ) : null}
       </div>
-      {action}
+      {action ? <div className="w-full shrink-0 sm:w-auto">{action}</div> : null}
     </div>
   );
 }
@@ -74,7 +74,7 @@ export function AccountActionButton({
       disabled={disabled}
       onClick={onClick}
       className={cn(
-        "inline-flex min-h-[42px] items-center justify-center rounded-control px-4 text-xs font-extrabold uppercase tracking-wide transition disabled:opacity-60",
+        "inline-flex min-h-11 items-center justify-center rounded-control px-4 text-xs font-extrabold uppercase tracking-wide transition disabled:opacity-60",
         variant === "primary"
           ? "bg-keyshop-blue-hover text-white hover:bg-keyshop-blue"
           : "border border-keyshop-line bg-white/[0.03] text-white hover:border-keyshop-blue/40",

@@ -183,20 +183,16 @@ export default function ProductDetailView({ product: rawProduct }: ProductDetail
   return (
     <div className="pb-20">
       <section className="border-b border-keyshop-line bg-white/[0.02] py-4">
-        <nav aria-label="Breadcrumb" className="container text-sm text-keyshop-muted">
+        <nav aria-label="Breadcrumb" className="container flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-keyshop-muted">
           <Link href="/" className="hover:text-white">
             Trang chủ
           </Link>
-          <span className="mx-2" aria-hidden>
-            ›
-          </span>
+          <span aria-hidden>›</span>
           <Link href="/products" className="hover:text-white">
             Sản phẩm
           </Link>
-          <span className="mx-2" aria-hidden>
-            ›
-          </span>
-          <span className="text-white" aria-current="page">
+          <span aria-hidden>›</span>
+          <span className="max-w-full truncate text-white" aria-current="page">
             {displayName}
           </span>
         </nav>
@@ -223,7 +219,7 @@ export default function ProductDetailView({ product: rawProduct }: ProductDetail
             </div>
 
             <div className="mt-6 flex flex-wrap items-center gap-4">
-              <span className="text-4xl font-extrabold text-keyshop-blue">
+              <span className="text-3xl font-extrabold text-keyshop-blue sm:text-4xl">
                 {formatPrice(salePrice)}
               </span>
               {listPrice != null ? (
@@ -303,7 +299,7 @@ export default function ProductDetailView({ product: rawProduct }: ProductDetail
               <div className="inline-flex items-center rounded-control border border-keyshop-line">
                 <button
                   type="button"
-                  className="px-4 py-2 disabled:opacity-40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-keyshop-blue/30"
+                  className="flex h-11 w-11 items-center justify-center disabled:opacity-40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-keyshop-blue/30"
                   disabled={quantity === 1}
                   onClick={() => setQuantity((value) => Math.max(1, value - 1))}
                   aria-label="Giảm số lượng"
@@ -315,7 +311,7 @@ export default function ProductDetailView({ product: rawProduct }: ProductDetail
                 </span>
                 <button
                   type="button"
-                  className="px-4 py-2 disabled:opacity-40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-keyshop-blue/30"
+                  className="flex h-11 w-11 items-center justify-center disabled:opacity-40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-keyshop-blue/30"
                   disabled={outOfStock || quantity >= maxQuantity}
                   onClick={() => setQuantity((value) => Math.min(maxQuantity, value + 1))}
                   aria-label="Tăng số lượng"
@@ -330,7 +326,7 @@ export default function ProductDetailView({ product: rawProduct }: ProductDetail
                 type="button"
                 disabled={outOfStock}
                 onClick={() => addToCart(product, quantity, selectedVariant)}
-                className="rounded-control bg-keyshop-blue px-6 py-3 font-semibold hover:bg-keyshop-blue-hover disabled:cursor-not-allowed disabled:opacity-50"
+                className="inline-flex min-h-11 items-center rounded-control bg-keyshop-blue px-6 font-semibold hover:bg-keyshop-blue-hover disabled:cursor-not-allowed disabled:opacity-50"
               >
                 {outOfStock ? stockStatusLabel : "Thêm vào giỏ"}
               </button>
@@ -338,7 +334,7 @@ export default function ProductDetailView({ product: rawProduct }: ProductDetail
                 type="button"
                 disabled={outOfStock}
                 onClick={handleBuyNow}
-                className="rounded-control border border-keyshop-blue px-6 py-3 font-semibold text-keyshop-blue hover:bg-keyshop-blue/10 disabled:cursor-not-allowed disabled:opacity-50"
+                className="inline-flex min-h-11 items-center rounded-control border border-keyshop-blue px-6 font-semibold text-keyshop-blue hover:bg-keyshop-blue/10 disabled:cursor-not-allowed disabled:opacity-50"
               >
                 {outOfStock
                   ? stockStatusLabel
@@ -422,10 +418,10 @@ export default function ProductDetailView({ product: rawProduct }: ProductDetail
               {specifications.map(([label, value]) => (
                 <div
                   key={label}
-                  className="flex items-center justify-between rounded-control border border-keyshop-line px-4 py-3"
+                  className="flex flex-col gap-1 rounded-control border border-keyshop-line px-4 py-3 sm:flex-row sm:items-center sm:justify-between"
                 >
                   <span className="text-keyshop-muted">{label}</span>
-                  <span className="font-medium text-white">{value}</span>
+                  <span className="break-words font-medium text-white sm:text-right">{value}</span>
                 </div>
               ))}
             </div>
@@ -434,7 +430,7 @@ export default function ProductDetailView({ product: rawProduct }: ProductDetail
           {activeTab === "reviews" ? (
             <div className="space-y-8">
               <div className="rounded-card border border-keyshop-line bg-white/[0.03] p-6">
-                <h2 className="text-4xl font-extrabold">{reviewSummaryRating.toFixed(1)}</h2>
+                <h2 className="text-3xl font-extrabold sm:text-4xl">{reviewSummaryRating.toFixed(1)}</h2>
                 <div className="mt-2 flex items-center gap-1">
                   {renderStars(reviewSummaryRating, "lg")}
                 </div>
@@ -453,7 +449,7 @@ export default function ProductDetailView({ product: rawProduct }: ProductDetail
                         type="button"
                         onClick={() => setRating(index + 1)}
                         aria-label={`Chọn ${index + 1} sao`}
-                        className="rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-keyshop-blue/40"
+                        className="flex h-11 w-11 items-center justify-center rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-keyshop-blue/40"
                       >
                         <Star
                           className={cn(

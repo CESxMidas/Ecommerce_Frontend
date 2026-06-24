@@ -225,17 +225,19 @@ export default function AccountProfilePage() {
               className={accountFieldClass}
             />
           </div>
-          <div>
+          <div className="md:col-span-2">
             <label htmlFor="avatar" className={accountLabelClass}>
               URL ảnh đại diện
             </label>
             <input
               id="avatar"
+              type="url"
               value={profileFields.avatar}
               onChange={(event) =>
                 setProfileFields({ ...profileFields, avatar: event.target.value })
               }
-              className={accountFieldClass}
+              className={`${accountFieldClass} text-sm sm:text-base`}
+              placeholder="https://..."
             />
           </div>
           <div>

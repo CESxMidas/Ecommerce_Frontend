@@ -45,7 +45,7 @@ function CategoryCollapse({
           <button
             type="button"
             onClick={() => setOpen((value) => !value)}
-            className="mr-1 rounded-lg p-2 text-white/70 hover:bg-white/5"
+            className="mr-1 flex h-11 w-11 items-center justify-center rounded-lg text-white/70 hover:bg-white/5"
             aria-label={open ? "Thu gọn danh mục" : "Mở rộng danh mục"}
           >
             {open ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
@@ -119,7 +119,7 @@ export default function CategoryPanel({ categories, onNavigate }: CategoryPanelP
       <Link
         href="/products"
         onClick={onNavigate}
-        className="mb-4 inline-flex rounded-control bg-keyshop-blue px-4 py-2 text-sm font-semibold text-white hover:bg-keyshop-blue-hover"
+        className="mb-4 inline-flex min-h-11 items-center rounded-control bg-keyshop-blue px-4 py-2 text-sm font-semibold text-white hover:bg-keyshop-blue-hover"
       >
         Xem tất cả sản phẩm
       </Link>

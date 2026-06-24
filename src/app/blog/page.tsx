@@ -49,7 +49,7 @@ export default async function BlogListPage() {
                   sizes="(max-width: 768px) 100vw, 33vw"
                 />
               </div>
-              <div className="flex flex-1 flex-col p-5">
+              <div className="flex flex-1 flex-col p-4 sm:p-5">
                 <span className="text-[11px] font-bold uppercase tracking-wide text-keyshop-blue">
                   {blog.category || "Bài viết"}
                 </span>

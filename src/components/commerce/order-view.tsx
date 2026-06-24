@@ -33,13 +33,13 @@ export default function OrderView({ order }: { order: Order }) {
         </div>
       </div>
 
-      <h2 className="mt-8 text-[22px] font-extrabold text-white">Khách hàng</h2>
-      <p className="mt-2 text-slate-300">
+      <h2 className="mt-8 text-lg font-extrabold text-white sm:text-xl md:text-[22px]">Khách hàng</h2>
+      <p className="mt-2 break-words text-slate-300">
         {order.name} - {order.phone} - {order.email}
       </p>
-      <p className="text-slate-400">{order.address}</p>
+      <p className="break-words text-slate-400">{order.address}</p>
 
-      <h2 className="mt-8 text-[22px] font-extrabold text-white">Sản phẩm</h2>
+      <h2 className="mt-8 text-lg font-extrabold text-white sm:text-xl md:text-[22px]">Sản phẩm</h2>
       <div className="mt-4 space-y-4">
         {(order.items || []).map((item) => (
           <article
@@ -65,12 +65,12 @@ export default function OrderView({ order }: { order: Order }) {
               </h3>
               <p className="mt-1 text-sm text-slate-400">Số lượng: {item.quantity}</p>
               {item.licenseKeys?.length ? (
-                <p className="mt-1 text-sm text-sky-300">
+                <p className="mt-1 break-all text-sm text-sky-300">
                   Mã bản quyền: {item.licenseKeys.join(", ")}
                 </p>
               ) : null}
               {item.accountCredentials?.length ? (
-                <div className="mt-1 space-y-1 text-sm text-sky-300">
+                <div className="mt-1 space-y-1 break-all text-sm text-sky-300">
                   {item.accountCredentials.map((credential, index) => (
                     <p key={`${credential.username}-${index}`}>
                       Tài khoản: {credential.username} / {credential.password}

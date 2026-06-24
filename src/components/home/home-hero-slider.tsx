@@ -93,13 +93,13 @@ export default function HomeHeroSlider({ banners }: HomeHeroSliderProps) {
                   <div className="mt-5 flex flex-wrap gap-3 sm:mt-6">
                     <Link
                       href={slide.link}
-                      className="keyshop-interactive rounded-control bg-keyshop-blue px-5 py-2.5 text-sm font-semibold hover:bg-keyshop-blue-hover sm:py-3"
+                      className="keyshop-interactive inline-flex min-h-11 items-center rounded-control bg-keyshop-blue px-5 text-sm font-semibold hover:bg-keyshop-blue-hover"
                     >
                       Khám phá ngay
                     </Link>
                     <Link
                       href="/deals"
-                      className="keyshop-interactive rounded-control border border-white/25 px-5 py-2.5 text-sm font-semibold hover:bg-white/10 sm:py-3"
+                      className="keyshop-interactive inline-flex min-h-11 items-center rounded-control border border-white/25 px-5 text-sm font-semibold hover:bg-white/10"
                     >
                       Tìm hiểu thêm
                     </Link>

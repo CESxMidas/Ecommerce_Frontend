@@ -92,10 +92,12 @@ export default function CartPageClient() {
       : `${cartSummary.count} sản phẩm trong giỏ`;
 
   return (
-    <section className="container py-10 pb-16 md:py-[50px]">
-      <div className="mb-8 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+    <section className="container py-6 pb-12 sm:py-8 md:py-10 md:pb-16">
+      <div className="mb-6 flex flex-col gap-4 sm:mb-8 md:flex-row md:items-center md:justify-between">
         <div>
-          <h1 className="text-4xl font-extrabold text-white md:text-[42px]">Giỏ hàng</h1>
+          <h1 className="text-2xl font-extrabold text-white sm:text-3xl md:text-4xl lg:text-[42px]">
+            Giỏ hàng
+          </h1>
           <p className="mt-1 text-[15px] text-keyshop-muted">{itemCountLabel}</p>
         </div>
         <Link
@@ -127,10 +129,10 @@ export default function CartPageClient() {
               return (
                 <div
                   key={`${item.productId}-${item.variant?.id || "default"}`}
-                  className="rounded-card border border-keyshop-line bg-white/[0.03] p-5 transition hover:-translate-y-0.5 hover:border-keyshop-blue/35 hover:bg-white/[0.045]"
+                  className="rounded-card border border-keyshop-line bg-white/[0.03] p-4 transition hover:-translate-y-0.5 hover:border-keyshop-blue/35 hover:bg-white/[0.045] sm:p-5"
                 >
                   <div className="flex flex-col gap-5 md:flex-row md:items-start">
-                    <div className="group relative mx-auto h-[140px] w-full shrink-0 overflow-hidden rounded-[18px] bg-white/10 md:mx-0 md:h-[140px] md:w-[150px]">
+                    <div className="group relative mx-auto h-[120px] w-full max-w-[150px] shrink-0 overflow-hidden rounded-[18px] bg-white/10 sm:h-[140px] md:mx-0 md:w-[150px]">
                       <Image
                         src={getProductThumbnail(item.product)}
                         alt={getProductDisplayName(item.product)}
@@ -147,7 +149,7 @@ export default function CartPageClient() {
                             {vendor}
                           </span>
                         ) : null}
-                        <h3 className="mt-2 line-clamp-2 text-2xl font-bold text-white">
+                        <h3 className="mt-2 line-clamp-2 text-lg font-bold text-white sm:text-xl md:text-2xl">
                           {getProductDisplayName(item.product)}
                         </h3>
                         <div className="mt-2 flex flex-wrap gap-3 text-sm text-keyshop-muted">
@@ -207,7 +209,7 @@ export default function CartPageClient() {
                             {formatPrice(itemListPrice)}
                           </span>
                         ) : null}
-                        <span className="text-[28px] font-extrabold text-keyshop-blue">
+                        <span className="text-xl font-extrabold text-keyshop-blue sm:text-2xl md:text-[28px]">
                           {formatPrice(itemSalePrice)}
                         </span>
                         {!item.variant && computeDiscountLabel(item.product) ? (
@@ -253,7 +255,7 @@ export default function CartPageClient() {
                         </button>
                       </div>
 
-                      <p className="text-2xl font-extrabold text-white">
+                      <p className="text-lg font-extrabold text-white sm:text-xl md:text-2xl">
                         {formatPrice(itemSalePrice * item.quantity)}
                       </p>
 
@@ -272,7 +274,7 @@ export default function CartPageClient() {
             })}
           </div>
 
-          <div className="h-fit rounded-card border border-keyshop-line bg-white/[0.03] p-7 backdrop-blur-md lg:sticky lg:top-24">
+          <div className="h-fit rounded-card border border-keyshop-line bg-white/[0.03] p-4 backdrop-blur-md sm:p-6 md:p-7 lg:sticky lg:top-24">
             <h2 className="text-xl font-bold text-white">Tóm tắt đơn hàng</h2>
             <div className="mt-5 space-y-4 text-sm">
               <OrderSummaryTotals

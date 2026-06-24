@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useSession } from "next-auth/react";
 import {
   Globe,
@@ -31,6 +32,8 @@ import SideDrawer from "@/components/ui/side-drawer";
 import { cn } from "@/lib/utils";
 
 export default function SiteHeader() {
+  const pathname = usePathname();
+  const isAccountRoute = pathname.startsWith("/account");
   const categories = useCategories();
   const { data: session, status } = useSession();
   const { cartSummary } = useCartCore();
@@ -44,9 +47,9 @@ export default function SiteHeader() {
   return (
     <header className="sticky top-0 z-[999] w-full bg-keyshop-bg/95 backdrop-blur-[14px]">
       <div className="keyshop-topbar">
-        <div className="container flex min-h-[34px] items-center justify-between gap-5">
-          <p className="truncate">Key phần mềm chính hãng — giao hàng số tức thì.</p>
-          <div className="flex shrink-0 items-center gap-5">
+        <div className="container flex min-h-[34px] items-center justify-between gap-3">
+          <p className="min-w-0 truncate">Key phần mềm chính hãng — giao hàng số tức thì.</p>
+          <div className="hidden shrink-0 items-center gap-4 md:flex md:gap-5">
             <Link href="/help" className="transition-colors hover:text-white">
               Trung tâm trợ giúp
             </Link>
@@ -61,23 +64,29 @@ export default function SiteHeader() {
               VI
             </span>
           </div>
+          <Link
+            href="/help"
+            className="shrink-0 transition-colors hover:text-white md:hidden"
+          >
+            Hỗ trợ
+          </Link>
         </div>
       </div>
 
       <div className="keyshop-header-main">
-        <div className="container grid items-center gap-6 lg:grid-cols-[minmax(190px,250px)_1fr_auto]">
-          <div className="flex items-center gap-3">
+        <div className="container flex items-center justify-between gap-3 lg:grid lg:grid-cols-[minmax(190px,250px)_1fr_auto] lg:items-center lg:gap-6">
+          <div className="flex min-w-0 items-center gap-2 sm:gap-3">
             <button
               type="button"
-              className="rounded-lg p-2 text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-keyshop-blue/40 lg:hidden"
+              className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-keyshop-blue/40 lg:hidden"
               onClick={() => setOpenCategory(true)}
               aria-label="Mở danh mục"
               aria-expanded={openCategory}
             >
               <Menu className="h-5 w-5" />
             </button>
-            <Link href="/" className="flex flex-col">
-              <span className="text-3xl font-extrabold leading-none text-white transition-colors hover:text-keyshop-blue">
+            <Link href="/" className="flex min-w-0 flex-col">
+              <span className="text-2xl font-extrabold leading-none text-white transition-colors hover:text-keyshop-blue sm:text-3xl">
                 KEYSHOP
               </span>
               <span className="text-xs text-keyshop-muted">Bản quyền số</span>
@@ -88,8 +97,8 @@ export default function SiteHeader() {
             <SearchBox />
           </div>
 
-          <div className="flex items-center justify-end gap-4">
-            <div className="hidden min-w-[220px] items-center justify-end gap-3 sm:flex">
+          <div className="flex shrink-0 items-center justify-end gap-2 sm:gap-4">
+            <div className="hidden min-w-0 items-center justify-end gap-3 sm:flex lg:min-w-[220px]">
               {status === "loading" ? (
                 <>
                   <div className="h-10 w-24 rounded-control bg-white/[0.06]" aria-hidden />
@@ -147,7 +156,25 @@ export default function SiteHeader() {
               )}
             </div>
 
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1 sm:gap-2">
+              {status !== "loading" && !isLoggedIn ? (
+                <Link
+                  href="/auth/login"
+                  aria-label="Đăng nhập"
+                  className="flex h-11 w-11 items-center justify-center rounded-full text-white transition-colors hover:bg-white/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-keyshop-blue/40 sm:hidden"
+                >
+                  <LogIn className="h-5 w-5" />
+                </Link>
+              ) : null}
+              {status !== "loading" && isLoggedIn && !isAccountRoute ? (
+                <Link
+                  href="/account"
+                  aria-label="Tài khoản"
+                  className="flex h-11 w-11 items-center justify-center rounded-full text-white transition-colors hover:bg-white/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-keyshop-blue/40 sm:hidden"
+                >
+                  <User className="h-5 w-5" />
+                </Link>
+              ) : null}
               <HeaderIconLink
                 href="/account/wishlist"
                 badge={wishlist.length}
@@ -155,7 +182,11 @@ export default function SiteHeader() {
               >
                 <Heart className="h-5 w-5" />
               </HeaderIconLink>
-              <HeaderIconLink href="/compare" label="So sánh">
+              <HeaderIconLink
+                href="/compare"
+                label="So sánh"
+                className="hidden min-[400px]:flex"
+              >
                 <Shuffle className="h-5 w-5" />
               </HeaderIconLink>
               <button
@@ -175,13 +206,13 @@ export default function SiteHeader() {
           </div>
         </div>
 
-        <div className="container mt-3 lg:hidden">
+        <div className={cn("container mt-3 lg:hidden", isAccountRoute && "hidden")}>
           <SearchBox />
         </div>
       </div>
 
       <Suspense fallback={<SiteNavigationSkeleton />}>
-        <SiteNavigation categories={categories} />
+        <SiteNavigation categories={categories} hiddenOnMobileAccount={isAccountRoute} />
       </Suspense>
 
       <SideDrawer open={openCategory} onClose={() => setOpenCategory(false)} anchor="left">
@@ -199,11 +230,13 @@ function HeaderIconLink({
   children,
   badge = 0,
   label,
+  className,
 }: {
   href: string;
   children: React.ReactNode;
   badge?: number;
   label: string;
+  className?: string;
 }) {
   const ariaLabel = badge > 0 ? `${label}, ${badge} sản phẩm` : label;
 
@@ -213,6 +246,7 @@ function HeaderIconLink({
       aria-label={ariaLabel}
       className={cn(
         "relative flex h-11 w-11 cursor-pointer items-center justify-center rounded-full text-white transition-colors hover:bg-white/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-keyshop-blue/40",
+        className,
       )}
     >
       {children}

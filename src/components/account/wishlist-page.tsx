@@ -28,7 +28,7 @@ export default function WishlistPageClient() {
           !isEmpty ? (
             <Link
               href="/products"
-              className="text-sm font-semibold text-keyshop-blue hover:text-sky-300"
+              className="inline-flex min-h-11 items-center text-sm font-semibold text-keyshop-blue hover:text-sky-300"
             >
               Tiếp tục mua sắm
             </Link>
@@ -44,7 +44,7 @@ export default function WishlistPageClient() {
           actionHref="/products"
         />
       ) : (
-        <div className="grid grid-cols-[repeat(auto-fill,minmax(220px,1fr))] items-stretch gap-5">
+        <div className="grid grid-cols-1 items-stretch gap-5 min-[400px]:grid-cols-2 lg:grid-cols-[repeat(auto-fill,minmax(200px,1fr))]">
           {wishlist.map((item, index) => (
             <ProductItem key={item.id} item={item} />
           ))}

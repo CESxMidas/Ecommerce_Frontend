@@ -28,6 +28,7 @@ import type { Category } from "@/types/api";
 
 type SiteNavigationProps = {
   categories: Category[];
+  hiddenOnMobileAccount?: boolean;
 };
 
 const NAV_LIST_ITEM_CLASS =
@@ -51,7 +52,10 @@ export function SiteNavigationSkeleton() {
   );
 }
 
-export default function SiteNavigation({ categories }: SiteNavigationProps) {
+export default function SiteNavigation({
+  categories,
+  hiddenOnMobileAccount = false,
+}: SiteNavigationProps) {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -60,7 +64,7 @@ export default function SiteNavigation({ categories }: SiteNavigationProps) {
 
   return (
     <>
-      <nav className="keyshop-nav-bar">
+      <nav className={cn("keyshop-nav-bar", hiddenOnMobileAccount && "hidden lg:block")}>
         <div className="container flex min-h-[56px] items-center gap-3 lg:gap-5">
           <button
             type="button"
@@ -71,7 +75,7 @@ export default function SiteNavigation({ categories }: SiteNavigationProps) {
             Tất cả danh mục
           </button>
 
-          <ul className="flex min-w-0 flex-1 items-center gap-2 overflow-x-auto scrollbar-hide sm:gap-3 lg:gap-0">
+          <ul className="keyshop-nav-scroll flex min-w-0 flex-1 items-center gap-2 sm:gap-3 lg:gap-0">
             <NavItem item={PRIMARY_NAV_ITEM} pathname={pathname} search={searchSuffix} />
 
             <NavDropdown group={SHOP_NAV_GROUP} pathname={pathname} search={searchSuffix} />

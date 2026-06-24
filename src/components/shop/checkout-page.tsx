@@ -307,18 +307,18 @@ export default function CheckoutPageClient() {
   };
 
   return (
-    <div className="container min-h-screen py-10 pb-16">
+    <div className="container min-h-screen py-6 pb-12 sm:py-8 md:py-10 md:pb-16">
       <div className="grid gap-6 lg:grid-cols-[7fr_3fr]">
         <div className="space-y-6">
-          <div className="rounded-card border border-keyshop-line bg-white/[0.03] p-7 backdrop-blur-xl">
-            <h1 className="text-[34px] font-extrabold text-white">Thanh toán</h1>
+          <div className="rounded-card border border-keyshop-line bg-white/[0.03] p-4 backdrop-blur-xl sm:p-6 md:p-7">
+            <h1 className="text-2xl font-extrabold text-white sm:text-3xl md:text-[34px]">Thanh toán</h1>
             <p className="mt-2 text-sm text-keyshop-muted">
               Xác nhận thông tin để giao key và sản phẩm số.
             </p>
           </div>
 
-          <div className="rounded-card border border-keyshop-line bg-white/[0.03] p-7 backdrop-blur-xl">
-            <h2 className="text-[22px] font-bold text-white">Thông tin giao hàng</h2>
+          <div className="rounded-card border border-keyshop-line bg-white/[0.03] p-4 backdrop-blur-xl sm:p-6 md:p-7">
+            <h2 className="text-lg font-bold text-white sm:text-xl md:text-[22px]">Thông tin giao hàng</h2>
             <div className="mt-5 space-y-4">
               {savedAddresses.length > 0 ? (
                 <div>
@@ -448,8 +448,8 @@ export default function CheckoutPageClient() {
             </div>
           </div>
 
-          <div className="rounded-card border border-keyshop-line bg-white/[0.03] p-7 backdrop-blur-xl">
-            <h2 className="text-[22px] font-bold text-white">Phương thức thanh toán</h2>
+          <div className="rounded-card border border-keyshop-line bg-white/[0.03] p-4 backdrop-blur-xl sm:p-6 md:p-7">
+            <h2 className="text-lg font-bold text-white sm:text-xl md:text-[22px]">Phương thức thanh toán</h2>
             <div className="mt-5 space-y-4">
               <div
                 className={cn(
@@ -521,7 +521,7 @@ export default function CheckoutPageClient() {
           </div>
         </div>
 
-        <div className="h-fit rounded-card border border-keyshop-line bg-white/[0.03] p-7 backdrop-blur-xl lg:sticky lg:top-24">
+        <div className="h-fit rounded-card border border-keyshop-line bg-white/[0.03] p-4 backdrop-blur-xl sm:p-6 md:p-7 lg:sticky lg:top-24">
           <h2 className="text-xl font-bold text-white">Tóm tắt đơn hàng</h2>
           <div className="mt-5 space-y-4">
             {cartItems.map((item) => (
@@ -564,7 +564,7 @@ export default function CheckoutPageClient() {
               <OrderSummaryTotals
                 cartSummary={cartSummary}
                 effectiveCoupon={effectiveCoupon}
-                totalClassName="text-[22px] font-bold text-white"
+                totalClassName="text-lg font-bold text-white sm:text-xl md:text-[22px]"
               />
             </div>
 

@@ -114,7 +114,7 @@ export default function LicenseKeyModal({
           type="button"
           onClick={onClose}
           aria-label="Đóng"
-          className="rounded-control p-2 text-keyshop-muted transition hover:bg-white/5 hover:text-white"
+          className="flex h-11 w-11 items-center justify-center rounded-control text-keyshop-muted transition hover:bg-white/5 hover:text-white"
         >
           <X className="h-5 w-5" />
         </button>

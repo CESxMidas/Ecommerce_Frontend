@@ -64,7 +64,7 @@ export default function ListingSidebar({
       return [
         <label
           key={category.id}
-          className="flex cursor-pointer items-start gap-3 rounded-control px-2 py-2 hover:bg-white/5"
+          className="flex min-h-11 cursor-pointer items-start gap-3 rounded-control px-3 py-2 hover:bg-white/5"
           style={{ marginLeft: depth * 12 }}
         >
           <input
@@ -115,7 +115,7 @@ export default function ListingSidebar({
             brands.map((brand) => (
               <label
                 key={brand}
-                className="flex cursor-pointer items-center gap-3 rounded-control px-2 py-2 hover:bg-white/5"
+                  className="flex min-h-11 cursor-pointer items-center gap-3 rounded-control px-3 py-2 hover:bg-white/5"
               >
                 <input
                   type="checkbox"
@@ -187,7 +187,7 @@ function FilterSection({
       <button
         type="button"
         onClick={onToggle}
-        className="flex w-full items-center justify-between px-4 py-3 text-left"
+        className="flex min-h-11 w-full items-center justify-between px-4 py-3 text-left"
       >
         <h3 className="font-semibold text-white">{title}</h3>
         <ChevronDown className={cn("h-4 w-4 transition", open && "rotate-180")} />

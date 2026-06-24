@@ -35,7 +35,7 @@ export default function SiteFooter() {
   return (
     <footer className="mt-auto border-t border-keyshop-line bg-keyshop-bg">
       <div className="border-b border-keyshop-line">
-        <div className="container grid gap-6 py-8 sm:grid-cols-2 xl:grid-cols-5">
+        <div className="container grid gap-6 py-6 sm:grid-cols-2 sm:py-8 xl:grid-cols-5">
           {features.map((feature) => (
             <div key={feature.title} className="flex items-start gap-4">
               <feature.icon className="mt-1 h-7 w-7 shrink-0 text-keyshop-blue" />
@@ -48,7 +48,7 @@ export default function SiteFooter() {
         </div>
       </div>
 
-      <div className="container grid gap-10 py-14 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
+      <div className="container grid gap-8 py-10 sm:gap-10 sm:py-14 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
         <div className="xl:col-span-1">
           <h3 className="mb-4 text-lg font-bold text-white">Liên hệ</h3>
           <p className="text-sm text-keyshop-muted">KEYSHOP — Cửa hàng bản quyền số</p>
@@ -58,7 +58,7 @@ export default function SiteFooter() {
               {CONTACT_INFO.email}
             </a>
           </p>
-          <p className="mt-2 text-xl font-bold text-keyshop-blue">
+          <p className="mt-2 text-lg font-bold text-keyshop-blue sm:text-xl">
             <a href={`tel:${CONTACT_INFO.phone.replace(/\s/g, "")}`}>{CONTACT_INFO.phoneDisplay}</a>
           </p>
         </div>
@@ -81,7 +81,7 @@ export default function SiteFooter() {
                 key={label}
                 type="button"
                 aria-label={label}
-                className="keyshop-interactive flex h-10 w-10 cursor-pointer items-center justify-center rounded-full border border-keyshop-line text-white/80 hover:bg-white/5 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-keyshop-blue/30"
+                className="keyshop-interactive flex h-11 w-11 cursor-pointer items-center justify-center rounded-full border border-keyshop-line text-white/80 hover:bg-white/5 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-keyshop-blue/30"
               >
                 <Icon className="h-4 w-4" />
               </button>

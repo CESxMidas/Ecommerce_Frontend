@@ -136,7 +136,7 @@ function LoginForm() {
             action={
               <Link
                 href="/auth/forgot-password"
-                className="text-xs font-semibold text-keyshop-blue hover:text-sky-300"
+                className="inline-flex min-h-11 items-center py-1 text-xs font-semibold text-keyshop-blue hover:text-sky-300"
               >
                 Quên mật khẩu?
               </Link>
@@ -153,7 +153,7 @@ function LoginForm() {
               endAction={
                 <button
                   type="button"
-                  className="text-white/55 transition hover:text-white"
+                  className="flex h-11 w-11 items-center justify-center text-white/55 transition hover:text-white"
                   onClick={() => setShowPassword((value) => !value)}
                 >
                   {showPassword ? (

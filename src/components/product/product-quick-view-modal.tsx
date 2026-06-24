@@ -142,7 +142,7 @@ export default function ProductQuickViewModal({
     <OverlayModal
       open={open}
       onClose={onClose}
-      panelClassName="max-w-5xl"
+      panelClassName="max-h-[92vh] w-full max-w-5xl overflow-y-auto sm:max-w-[min(100vw-2rem,64rem)]"
       ariaLabel={`Xem nhanh: ${displayName}`}
     >
       <div className="flex items-start justify-between gap-4 border-b border-keyshop-line px-4 py-4 sm:px-6">
@@ -156,7 +156,7 @@ export default function ProductQuickViewModal({
           type="button"
           onClick={onClose}
           aria-label="Đóng xem nhanh"
-          className="rounded-control p-2 text-keyshop-muted transition hover:bg-white/5 hover:text-white"
+          className="flex h-11 w-11 items-center justify-center rounded-control text-keyshop-muted transition hover:bg-white/5 hover:text-white"
         >
           <X className="h-5 w-5" />
         </button>
@@ -204,7 +204,7 @@ export default function ProductQuickViewModal({
             </div>
 
             <div className="mt-5 flex flex-wrap items-center gap-3">
-              <span className="text-3xl font-extrabold text-keyshop-blue">
+              <span className="text-2xl font-extrabold text-keyshop-blue sm:text-3xl">
                 {formatPrice(salePrice)}
               </span>
               {listPrice != null && listPrice > salePrice ? (
@@ -284,7 +284,7 @@ export default function ProductQuickViewModal({
               <div className="inline-flex items-center rounded-control border border-keyshop-line">
                 <button
                   type="button"
-                  className="px-3 py-2 disabled:opacity-40"
+                  className="flex h-11 w-11 items-center justify-center disabled:opacity-40"
                   disabled={quantity === 1}
                   onClick={() => setQuantity((value) => Math.max(1, value - 1))}
                 >
@@ -293,7 +293,7 @@ export default function ProductQuickViewModal({
                 <span className="min-w-10 text-center text-sm">{quantity}</span>
                 <button
                   type="button"
-                  className="px-3 py-2 disabled:opacity-40"
+                  className="flex h-11 w-11 items-center justify-center disabled:opacity-40"
                   disabled={outOfStock || quantity >= maxQuantity}
                   onClick={() => setQuantity((value) => Math.min(maxQuantity, value + 1))}
                 >

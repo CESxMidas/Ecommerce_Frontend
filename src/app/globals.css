@@ -142,6 +142,60 @@
     @apply border-b border-keyshop-line bg-keyshop-soft/55;
   }
 
+  .keyshop-nav-scroll {
+    @apply overflow-x-auto scrollbar-hide;
+    -webkit-mask-image: linear-gradient(
+      to right,
+      transparent,
+      #000 12px,
+      #000 calc(100% - 12px),
+      transparent
+    );
+    mask-image: linear-gradient(
+      to right,
+      transparent,
+      #000 12px,
+      #000 calc(100% - 12px),
+      transparent
+    );
+  }
+
+  @media (min-width: 1024px) {
+    .keyshop-nav-scroll {
+      -webkit-mask-image: none;
+      mask-image: none;
+      overflow-x: visible;
+    }
+  }
+
+  .keyshop-account-nav-scroll {
+    @apply scrollbar-hide;
+    max-width: 100%;
+    -webkit-overflow-scrolling: touch;
+    -webkit-mask-image: linear-gradient(
+      to right,
+      transparent,
+      #000 10px,
+      #000 calc(100% - 10px),
+      transparent
+    );
+    mask-image: linear-gradient(
+      to right,
+      transparent,
+      #000 10px,
+      #000 calc(100% - 10px),
+      transparent
+    );
+  }
+
+  @media (min-width: 1024px) {
+    .keyshop-account-nav-scroll {
+      -webkit-mask-image: none;
+      mask-image: none;
+      overflow-x: visible;
+    }
+  }
+
   .keyshop-nav-link {
     @apply flex items-center gap-2.5 rounded-control px-3.5 py-2.5 text-sm font-medium text-white/80 transition-colors hover:bg-white/5 hover:text-white lg:px-4;
   }
@@ -274,7 +328,7 @@
   }
 
   .keyshop-swiper-nav {
-    @apply absolute top-1/2 z-20 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full border-0 bg-keyshop-bg/70 text-keyshop-blue shadow-sm backdrop-blur-sm transition duration-200 ease-out;
+    @apply absolute top-1/2 z-20 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border-0 bg-keyshop-bg/70 text-keyshop-blue shadow-sm backdrop-blur-sm transition duration-200 ease-out sm:h-11 sm:w-11;
   }
 
   .keyshop-swiper-nav:hover {
@@ -298,7 +352,7 @@
   }
 
   .keyshop-swiper-nav-hero {
-    @apply h-10 w-10 bg-black/30;
+    @apply h-10 w-10 bg-black/30 sm:h-11 sm:w-11;
   }
 
   .keyshop-swiper-nav-hero.keyshop-swiper-nav-prev {
@@ -378,10 +432,22 @@
   max-width: 87%;
 }
 
-@media (min-width: 576px) {
-  .keyshop-swiper:not(.home-hero-swiper) .swiper:not(.swiper-initialized) .swiper-slide {
-    width: min(320px, 48%);
-    max-width: 48%;
+.keyshop-product-carousel .swiper:not(.swiper-initialized) .swiper-slide {
+  width: 100%;
+  max-width: 100%;
+}
+
+@media (min-width: 480px) {
+  .keyshop-product-carousel .swiper:not(.swiper-initialized) .swiper-slide {
+    width: min(320px, calc((100% - 16px) / 1.15));
+    max-width: calc((100% - 16px) / 1.15);
+  }
+}
+
+@media (min-width: 640px) {
+  .keyshop-product-carousel .swiper:not(.swiper-initialized) .swiper-slide {
+    width: calc((100% - 20px) / 2);
+    max-width: calc((100% - 20px) / 2);
   }
 }
 
@@ -412,9 +478,17 @@
   box-sizing: border-box;
 }
 
+.keyshop-product-carousel .swiper.swiper-initialized .swiper-slide {
+  height: auto !important;
+}
+
 /* Reserve chiều cao carousel (min-height, không fixed height) */
 .keyshop-product-carousel {
   min-height: 28rem;
+  overflow: visible;
+}
+
+.keyshop-product-carousel .swiper {
   overflow: hidden;
 }
 

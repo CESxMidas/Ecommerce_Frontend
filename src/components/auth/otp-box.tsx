@@ -50,7 +50,7 @@ export default function OTPBox({ otp, setOtp }: OTPBoxProps) {
   };
 
   return (
-    <div className="flex justify-center gap-3">
+    <div className="flex max-w-full justify-center gap-2 px-1 sm:gap-3">
       {otp.map((item, index) => (
         <input
           key={index}
@@ -64,7 +64,7 @@ export default function OTPBox({ otp, setOtp }: OTPBoxProps) {
           onChange={(event) => handleChange(event.target.value, index)}
           onKeyDown={(event) => handleKeyDown(event, index)}
           onPaste={handlePaste}
-          className="h-[62px] w-[58px] rounded-[18px] border border-keyshop-line bg-white/[0.03] text-center text-xl font-bold text-white outline-none transition focus:border-keyshop-blue focus:shadow-[0_0_0_4px_rgba(59,130,246,0.12)]"
+          className="h-12 w-10 rounded-[18px] border border-keyshop-line bg-white/[0.03] text-center text-lg font-bold text-white outline-none transition focus:border-keyshop-blue focus:shadow-[0_0_0_4px_rgba(59,130,246,0.12)] sm:h-[62px] sm:w-[58px] sm:text-xl"
         />
       ))}
     </div>

@@ -20,7 +20,7 @@ export default function StorefrontChromeClient({
   return (
     <>
       <SiteHeader />
-      <main className="keyshop-scrollbar flex-1 bg-keyshop-bg">{children}</main>
+      <main className="keyshop-scrollbar min-w-0 flex-1 overflow-x-clip bg-keyshop-bg">{children}</main>
       <SiteFooter />
     </>
   );

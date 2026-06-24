@@ -64,7 +64,58 @@ export default function ComparePageClient() {
             <CommerceBtn onClick={clearCompare}>Xóa danh sách so sánh</CommerceBtn>
           </div>
 
-          <div className="overflow-x-auto">
+          <div className="space-y-4 md:hidden">
+            {compareItems.map((item) => (
+              <div
+                key={item.id}
+                className="rounded-card border border-keyshop-line bg-white/[0.02] p-4"
+              >
+                <div className="flex gap-3">
+                  <div className="relative h-20 w-20 shrink-0 overflow-hidden rounded-[18px] bg-white/10">
+                    <Image
+                      src={getProductThumbnail(item)}
+                      alt={getProductDisplayName(item)}
+                      fill
+                      className="object-cover"
+                      sizes="80px"
+                    />
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <Link
+                      href={`/products/${item.slug || item.id}`}
+                      className="line-clamp-2 font-bold text-white hover:text-keyshop-blue"
+                    >
+                      {getProductDisplayName(item)}
+                    </Link>
+                  </div>
+                </div>
+                <dl className="mt-4 space-y-2 text-sm">
+                  {rows.map(([label, getValue]) => (
+                    <div key={label} className="flex justify-between gap-3 border-b border-keyshop-line/60 py-2 last:border-0">
+                      <dt className="shrink-0 font-bold text-slate-400">{label}</dt>
+                      <dd className="break-words text-right text-slate-200">{getValue(item)}</dd>
+                    </div>
+                  ))}
+                </dl>
+                <div className="mt-4 flex flex-wrap gap-2">
+                  <CommerceBtn onClick={() => addToCart(item)}>
+                    <ShoppingCart className="h-4 w-4" />
+                    Thêm
+                  </CommerceBtn>
+                  <button
+                    type="button"
+                    className="inline-flex h-11 w-11 items-center justify-center rounded-control border border-sky-400/35 text-sky-200 transition hover:border-red-400/40 hover:bg-red-500/10 hover:text-red-300"
+                    onClick={() => removeFromCompare(item.id)}
+                    aria-label="Xóa khỏi danh sách so sánh"
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div className="hidden overflow-x-auto md:block">
             <table className="w-full min-w-[720px] border-collapse text-sm">
               <thead>
                 <tr>
@@ -88,7 +139,7 @@ export default function ComparePageClient() {
                         </div>
                         <Link
                           href={`/products/${item.slug || item.id}`}
-                          className="font-bold text-white hover:text-keyshop-blue"
+                          className="line-clamp-2 break-words font-bold text-white hover:text-keyshop-blue"
                         >
                           {getProductDisplayName(item)}
                         </Link>
@@ -124,7 +175,7 @@ export default function ComparePageClient() {
                         </CommerceBtn>
                         <button
                           type="button"
-                          className="inline-flex h-[42px] w-[42px] items-center justify-center rounded-control border border-sky-400/35 text-sky-200 transition hover:border-red-400/40 hover:bg-red-500/10 hover:text-red-300"
+                          className="inline-flex h-11 w-11 items-center justify-center rounded-control border border-sky-400/35 text-sky-200 transition hover:border-red-400/40 hover:bg-red-500/10 hover:text-red-300"
                           onClick={() => removeFromCompare(item.id)}
                           aria-label="Xóa khỏi danh sách so sánh"
                         >

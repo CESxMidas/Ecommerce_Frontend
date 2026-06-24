@@ -26,7 +26,7 @@ export default function HomeCategorySlider({ categories }: HomeCategorySliderPro
   return (
     <div className="mt-8">
       <div className="mb-6">
-        <h2 className="text-3xl font-bold text-white">Browse Categories</h2>
+        <h2 className="text-2xl font-bold text-white sm:text-3xl">Danh mục nổi bật</h2>
         <p className="mt-1 text-keyshop-muted">
           Explore trending categories and collections
         </p>
@@ -55,7 +55,7 @@ export default function HomeCategorySlider({ categories }: HomeCategorySliderPro
 
           return (
             <SwiperSlide key={category.id}>
-              <div className="group relative h-56 overflow-hidden rounded-card transition-transform duration-300 hover:-translate-y-1 motion-reduce:hover:translate-y-0">
+              <div className="group relative h-48 overflow-hidden rounded-card transition-transform duration-300 hover:-translate-y-1 motion-reduce:hover:translate-y-0 sm:h-56">
                 <Image
                   src={image}
                   alt={category.name}

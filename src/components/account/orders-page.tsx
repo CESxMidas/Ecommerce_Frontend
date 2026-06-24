@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
@@ -25,6 +24,38 @@ import { formatPrice } from "@/lib/utils/format";
 import { getApiErrorMessage } from "@/lib/utils/api-error";
 
 const ORDERS_PER_PAGE = 5;
+
+function getOrderStatusLabel(order: Order) {
+  if (order.paymentStatus === "failed") return "Thanh toán thất bại";
+  if (order.status === "PendingPayment") return "Chờ thanh toán";
+  if (order.paymentStatus === "pending" && order.paymentMethod === "vnpay") {
+    return "Đang chờ thanh toán";
+  }
+  if (order.paymentStatus === "paid") return order.status || "Đã thanh toán";
+  return order.paymentStatus || order.status || "-";
+}
+
+function getPaymentMethodLabel(order: Order) {
+  if (order.paymentMethod === "vnpay") return "VNPay";
+  if (order.paymentMethod === "cod") return "Thủ công";
+  return order.paymentMethod || "-";
+}
+
+function canPayOrderOnline(order: Order) {
+  return (
+    order.paymentMethod === "vnpay" &&
+    ["failed", "pending"].includes(order.paymentStatus || "")
+  );
+}
+
+function canCancelOrder(order: Order) {
+  return (
+    ["PendingPayment", "Processing", "Pending"].includes(order.status || "") &&
+    !order.items?.some(
+      (item) => item.licenseKeys?.length || item.accountCredentials?.length,
+    )
+  );
+}
 
 export default function OrdersPageClient() {
   const router = useRouter();
@@ -131,7 +162,77 @@ export default function OrdersPageClient() {
         <p className="text-sm text-keyshop-muted">Chưa có đơn hàng nào.</p>
       ) : (
         <div className="space-y-4">
-          <div className="overflow-x-auto">
+          <div className="space-y-3 md:hidden">
+            {paginatedOrders.map((order) => {
+              const currentOrderId = String(order.id || order.orderId);
+              const canPayOnline = canPayOrderOnline(order);
+              const canCancel = canCancelOrder(order);
+              const statusLabel = getOrderStatusLabel(order);
+
+              return (
+                <div
+                  key={currentOrderId}
+                  className="rounded-card border border-keyshop-line bg-white/[0.03] p-4"
+                >
+                  <div className="flex items-start justify-between gap-3">
+                    <div>
+                      <p className="font-bold text-white">#{currentOrderId}</p>
+                      <p className="mt-1 text-sm text-keyshop-muted">
+                        {order.createdAt
+                          ? new Date(order.createdAt).toLocaleDateString("vi-VN")
+                          : "-"}
+                      </p>
+                    </div>
+                    <p className="text-lg font-extrabold text-keyshop-blue">
+                      {formatPrice(order.total || 0)}
+                    </p>
+                  </div>
+                  <div className="mt-3 space-y-1 text-sm">
+                    <p className="text-white">{statusLabel}</p>
+                    <p className="text-keyshop-muted">
+                      {getPaymentMethodLabel(order)} · {order.paymentStatus || "-"}
+                    </p>
+                  </div>
+                  <div className="mt-4 flex flex-wrap gap-2">
+                    <Link
+                      href={`/account/orders/${currentOrderId}`}
+                      className="inline-flex min-h-11 items-center justify-center rounded-control border border-keyshop-line bg-white/[0.03] px-4 text-xs font-extrabold uppercase tracking-wide text-white transition hover:border-keyshop-blue/40"
+                    >
+                      Xem
+                    </Link>
+                    {canPayOnline ? (
+                      <AccountActionButton
+                        onClick={() => handleRePay(currentOrderId)}
+                        disabled={payingId === currentOrderId}
+                      >
+                        {payingId === currentOrderId
+                          ? "Đang xử lý..."
+                          : order.paymentStatus === "failed"
+                            ? "Thanh toán lại"
+                            : "Tiếp tục thanh toán"}
+                      </AccountActionButton>
+                    ) : null}
+                    {canCancel ? (
+                      <AccountActionButton
+                        variant="outline"
+                        onClick={() => handleCancel(currentOrderId)}
+                      >
+                        Hủy
+                      </AccountActionButton>
+                    ) : null}
+                    <AccountActionButton
+                      variant="outline"
+                      onClick={() => handleHideOrder(currentOrderId)}
+                    >
+                      Xóa
+                    </AccountActionButton>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+
+          <div className="hidden overflow-x-auto md:block">
             <table className="w-full min-w-[720px] text-left text-sm">
               <thead className="border-b border-keyshop-line text-keyshop-muted">
                   <tr>
@@ -146,29 +247,9 @@ export default function OrdersPageClient() {
                 <tbody>
                   {paginatedOrders.map((order) => {
                     const currentOrderId = String(order.id || order.orderId);
-                    const canPayOnline =
-                      order.paymentMethod === "vnpay" &&
-                      ["failed", "pending"].includes(order.paymentStatus || "");
-                    const canCancel =
-                      ["PendingPayment", "Processing", "Pending"].includes(
-                        order.status || "",
-                      ) &&
-                      !order.items?.some(
-                        (item) =>
-                          item.licenseKeys?.length || item.accountCredentials?.length,
-                      );
-
-                    const statusLabel =
-                      order.paymentStatus === "failed"
-                        ? "Thanh toán thất bại"
-                        : order.status === "PendingPayment"
-                          ? "Chờ thanh toán"
-                          : order.paymentStatus === "pending" &&
-                              order.paymentMethod === "vnpay"
-                            ? "Đang chờ thanh toán"
-                            : order.paymentStatus === "paid"
-                              ? order.status
-                              : order.paymentStatus || order.status;
+                    const canPayOnline = canPayOrderOnline(order);
+                    const canCancel = canCancelOrder(order);
+                    const statusLabel = getOrderStatusLabel(order);
 
                     return (
                       <tr key={currentOrderId} className="border-b border-keyshop-line/60">
@@ -180,11 +261,7 @@ export default function OrdersPageClient() {
                         <td className="py-4 pr-4">
                           <div>
                             <p className="font-semibold text-white">
-                              {order.paymentMethod === "vnpay"
-                                ? "VNPay"
-                                : order.paymentMethod === "cod"
-                                  ? "Thủ công"
-                                  : order.paymentMethod || "-"}
+                              {getPaymentMethodLabel(order)}
                             </p>
                             <p className="text-xs text-keyshop-muted">
                               {order.paymentStatus || "-"}

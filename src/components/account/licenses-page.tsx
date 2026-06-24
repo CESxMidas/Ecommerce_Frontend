@@ -65,7 +65,7 @@ export default function LicensesPageClient() {
           <select
             value={productFilter}
             onChange={(event) => setProductFilter(event.target.value)}
-            className={accountSelectClass}
+            className={`${accountSelectClass} w-full sm:w-auto`}
           >
             <option value="all" className="bg-keyshop-bg">
               Tất cả sản phẩm
@@ -114,14 +114,14 @@ export default function LicensesPageClient() {
                     </span>
                     <button
                       type="button"
-                      className="text-xs font-extrabold uppercase text-keyshop-muted hover:text-white"
+                      className="text-xs font-extrabold uppercase text-keyshop-muted hover:text-white inline-flex min-h-11 items-center px-2"
                       onClick={() => setVisible({ ...visible, [key]: !visible[key] })}
                     >
                       {visible[key] ? "Ẩn" : "Hiện"}
                     </button>
                     <button
                       type="button"
-                      className="text-xs font-extrabold uppercase text-keyshop-blue hover:text-sky-300"
+                      className="text-xs font-extrabold uppercase text-keyshop-blue hover:text-sky-300 inline-flex min-h-11 items-center px-2"
                       onClick={() => copyKey(key)}
                     >
                       Sao chép

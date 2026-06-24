@@ -51,14 +51,14 @@ export default function BlogCarousel({ blogs }: BlogCarouselProps) {
     <section className="mt-14">
       <div className="mb-8 flex flex-wrap items-end justify-between gap-4">
         <div>
-          <h2 className="text-3xl font-extrabold text-white md:text-[34px]">
+          <h2 className="text-2xl font-extrabold text-white sm:text-3xl md:text-[34px]">
             Bài viết mới nhất
           </h2>
           <p className="mt-2 text-keyshop-muted">Tin tức, hướng dẫn và cập nhật phần mềm</p>
         </div>
         <Link
           href="/blog"
-          className="keyshop-interactive inline-flex items-center gap-2 text-sm font-semibold text-keyshop-blue hover:text-keyshop-blue-hover"
+          className="keyshop-interactive inline-flex min-h-11 items-center gap-2 text-sm font-semibold text-keyshop-blue hover:text-keyshop-blue-hover"
         >
           Xem tất cả bài viết
           <ArrowRight className="h-4 w-4" />

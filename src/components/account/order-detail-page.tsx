@@ -166,7 +166,7 @@ export default function OrderDetailPageClient({ orderId }: { orderId: string }) 
           {(order.items || []).map((item) => (
             <div
               key={`${item.productId}-${item.quantity}`}
-              className="flex gap-4 rounded-card border border-keyshop-line bg-white/[0.03] p-4"
+              className="flex flex-col gap-3 rounded-card border border-keyshop-line bg-white/[0.03] p-4 sm:flex-row sm:gap-4"
             >
               <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-control bg-white/10">
                 <Image
@@ -191,12 +191,12 @@ export default function OrderDetailPageClient({ orderId }: { orderId: string }) 
                   Số lượng: {item.quantity}
                 </p>
                 {item.licenseKeys?.length ? (
-                  <p className="mt-2 text-sm text-sky-300">
+                  <p className="mt-2 break-all text-sm text-sky-300">
                     Mã bản quyền: {item.licenseKeys.join(", ")}
                   </p>
                 ) : null}
                 {item.accountCredentials?.length ? (
-                  <div className="mt-2 space-y-1 text-sm text-sky-300">
+                  <div className="mt-2 space-y-1 break-all text-sm text-sky-300">
                     {item.accountCredentials.map((credential, index) => (
                       <p key={`${credential.username}-${index}`}>
                         Tài khoản: {credential.username} / {credential.password}
@@ -206,7 +206,7 @@ export default function OrderDetailPageClient({ orderId }: { orderId: string }) 
                   </div>
                 ) : null}
               </div>
-              <p className="font-extrabold text-sky-400">
+              <p className="font-extrabold text-sky-400 sm:shrink-0">
                 {formatPrice(item.product?.salePrice || item.product?.price || 0)}
               </p>
             </div>

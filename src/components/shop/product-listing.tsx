@@ -246,7 +246,7 @@ export default function ProductListing({
 
         <header className="mb-8 flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
           <div>
-            <h1 className="text-3xl font-extrabold text-white md:text-4xl">{pageTitle}</h1>
+            <h1 className="text-2xl font-extrabold text-white sm:text-3xl md:text-4xl">{pageTitle}</h1>
             <p className="mt-2 max-w-2xl text-keyshop-muted">{pageSubtitle}</p>
           </div>
           <div className="text-sm text-keyshop-muted">
@@ -263,7 +263,7 @@ export default function ProductListing({
             <div className="mb-6 flex flex-wrap items-center justify-between gap-3 rounded-card border border-keyshop-line bg-white/[0.03] p-3">
               <button
                 type="button"
-                className="keyshop-interactive inline-flex cursor-pointer items-center gap-2 rounded-control border border-keyshop-line px-3 py-2 text-sm text-white lg:hidden focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-keyshop-blue/30"
+                className="keyshop-interactive inline-flex min-h-11 cursor-pointer items-center gap-2 rounded-control border border-keyshop-line px-4 py-2 text-sm text-white lg:hidden focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-keyshop-blue/30"
                 onClick={() => setFilterOpen(true)}
                 aria-expanded={filterOpen}
               >
@@ -277,19 +277,19 @@ export default function ProductListing({
                   onClick={() => setSortOpen((value) => !value)}
                   aria-expanded={sortOpen}
                   aria-haspopup="listbox"
-                  className="keyshop-interactive inline-flex cursor-pointer items-center gap-2 rounded-control border border-keyshop-line px-3 py-2 text-sm text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-keyshop-blue/30"
+                  className="keyshop-interactive inline-flex min-h-11 cursor-pointer items-center gap-2 rounded-control border border-keyshop-line px-4 py-2 text-sm text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-keyshop-blue/30"
                 >
                   Sắp xếp: {SORT_LABELS[sortBy] || SORT_LABELS.latest}
                   <ChevronDown className="h-4 w-4" />
                 </button>
                 {sortOpen ? (
-                  <div className="absolute left-0 top-full z-20 mt-2 min-w-[220px] rounded-card border border-keyshop-line bg-keyshop-soft p-2 shadow-card">
+                  <div className="absolute right-0 top-full z-20 mt-2 min-w-[220px] rounded-card border border-keyshop-line bg-keyshop-soft p-2 shadow-card sm:left-0 sm:right-auto">
                     {Object.entries(SORT_LABELS).map(([value, label]) => (
                       <button
                         key={value}
                         type="button"
                         className={cn(
-                          "block w-full rounded-control px-3 py-2 text-left text-sm hover:bg-white/5",
+                          "block w-full min-h-11 rounded-control px-3 text-left text-sm hover:bg-white/5",
                           sortBy === value && "bg-keyshop-blue/20 text-white",
                         )}
                         onClick={() => {
@@ -317,7 +317,7 @@ export default function ProductListing({
                     aria-pressed={gridCols === cols}
                     onClick={() => setGridCols(cols)}
                     className={cn(
-                      "keyshop-interactive cursor-pointer rounded-control border p-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-keyshop-blue/30",
+                      "keyshop-interactive flex h-11 w-11 cursor-pointer items-center justify-center rounded-control border focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-keyshop-blue/30",
                       gridCols === cols
                         ? "border-keyshop-blue bg-keyshop-blue/20 text-white"
                         : "border-keyshop-line text-keyshop-muted hover:text-white",
@@ -359,7 +359,7 @@ export default function ProductListing({
                         window.scrollTo({ top: 0, behavior: "smooth" });
                       }}
                       className={cn(
-                        "min-w-10 rounded-control border px-3 py-2 text-sm",
+                        "flex h-11 min-w-11 items-center justify-center rounded-control border px-3 text-sm",
                         pagination.page === pageNumber
                           ? "border-keyshop-blue bg-keyshop-blue text-white"
                           : "border-keyshop-line text-keyshop-muted hover:text-white",
@@ -378,7 +378,12 @@ export default function ProductListing({
       <SideDrawer open={filterOpen} onClose={() => setFilterOpen(false)} anchor="left">
         <div className="flex items-center justify-between border-b border-keyshop-line p-4 text-white">
           <h3 className="font-semibold">Bộ lọc</h3>
-          <button type="button" onClick={() => setFilterOpen(false)} aria-label="Đóng bộ lọc">
+          <button
+            type="button"
+            onClick={() => setFilterOpen(false)}
+            aria-label="Đóng bộ lọc"
+            className="flex h-11 w-11 items-center justify-center rounded-lg hover:bg-white/5"
+          >
             <X className="h-5 w-5" />
           </button>
         </div>
@@ -387,7 +392,7 @@ export default function ProductListing({
           <button
             type="button"
             onClick={clearFilters}
-            className="mt-4 w-full rounded-control border border-keyshop-line py-2 text-sm text-white hover:bg-white/5"
+            className="mt-4 min-h-11 w-full rounded-control border border-keyshop-line py-3 text-sm text-white hover:bg-white/5"
           >
             Xóa bộ lọc
           </button>

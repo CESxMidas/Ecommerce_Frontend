@@ -97,7 +97,7 @@ function ProductSectionBlock({
                   type="button"
                   onClick={() => setActiveTab(index)}
                   className={cn(
-                    "keyshop-interactive whitespace-nowrap rounded-control px-4 py-2.5 text-sm font-bold text-white/70 transition-all duration-200",
+                    "keyshop-interactive min-h-11 whitespace-nowrap rounded-control px-4 py-2.5 text-sm font-bold text-white/70 transition-all duration-200",
                     activeTab === index
                       ? "bg-keyshop-blue text-white shadow-glow"
                       : "hover:bg-white/5",
@@ -121,12 +121,12 @@ function InstantDeliveryBanner() {
   return (
     <section className="mt-16 lg:mt-20">
       <div className="container">
-        <div className="flex flex-col items-start justify-between gap-6 rounded-card border border-keyshop-line bg-white/[0.03] p-6 transition-all duration-300 hover:border-keyshop-blue/25 md:flex-row md:items-center">
+        <div className="flex flex-col items-start justify-between gap-6 rounded-card border border-keyshop-line bg-white/[0.03] p-4 transition-all duration-300 hover:border-keyshop-blue/25 sm:p-6 md:flex-row md:items-center">
           <div className="flex items-center gap-4">
             <div className="flex h-14 w-14 items-center justify-center rounded-full bg-keyshop-blue/20 text-keyshop-blue motion-safe:animate-pulse">
               <Zap className="h-6 w-6" />
             </div>
-            <h3 className="text-2xl font-extrabold text-white">GIAO NGAY</h3>
+            <h3 className="text-xl font-extrabold text-white sm:text-2xl">GIAO NGAY</h3>
           </div>
           <p className="max-w-2xl text-keyshop-muted">
             Key bản quyền được giao số ngay sau khi xác nhận thanh toán.

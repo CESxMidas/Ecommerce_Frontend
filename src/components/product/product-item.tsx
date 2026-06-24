@@ -2,11 +2,13 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { Expand, Heart, ShoppingCart, Shuffle } from "lucide-react";
 import { useState } from "react";
 
 import ProductQuickViewModal from "@/components/product/product-quick-view-modal";
 import { useCart } from "@/components/providers/cart-provider";
+import { useCanHover, useCanQuickView } from "@/lib/hooks/use-media-query";
 import { StarRating } from "@/components/ui/star-rating";
 import { formatPrice } from "@/lib/utils/format";
 import {
@@ -30,6 +32,9 @@ type ProductItemProps = {
 };
 
 export default function ProductItem({ item }: ProductItemProps) {
+  const router = useRouter();
+  const canQuickView = useCanQuickView();
+  const canHover = useCanHover();
   const { addToCart, toggleWishlist, toggleCompare, isInWishlist, isInCompare } =
     useCart();
   const [quickViewOpen, setQuickViewOpen] = useState(false);
@@ -64,10 +69,27 @@ export default function ProductItem({ item }: ProductItemProps) {
     addToCart(product, 1, defaultVariant);
   };
 
+  const handleQuickView = (event: React.MouseEvent) => {
+    event.preventDefault();
+    event.stopPropagation();
+
+    if (!canQuickView) {
+      router.push(href);
+      return;
+    }
+
+    setQuickViewOpen(true);
+  };
+
   return (
     <article className="group keyshop-card-hover flex h-full min-w-0 flex-col overflow-hidden rounded-card border border-keyshop-line bg-product-card shadow-card backdrop-blur-[14px]">
       <div className="relative aspect-square overflow-hidden bg-gray-100">
-        <div className="absolute left-3 top-3 z-20 flex max-w-[calc(100%-4.5rem)] flex-wrap gap-1.5">
+        <div
+          className={cn(
+            "absolute left-3 top-3 z-20 flex flex-wrap gap-1.5",
+            canQuickView ? "max-w-[calc(100%-4.5rem)]" : "max-w-[calc(100%-1.5rem)]",
+          )}
+        >
           {discount ? (
             <span className="inline-flex min-h-6 items-center rounded-full bg-keyshop-danger px-2 text-[10px] font-bold text-white">
               {discount}
@@ -80,32 +102,32 @@ export default function ProductItem({ item }: ProductItemProps) {
           ) : null}
         </div>
 
-        <div className="absolute right-2 top-2 z-20 flex flex-col gap-1.5 opacity-100 transition-opacity sm:opacity-0 sm:group-hover:opacity-100">
-          <IconActionButton
-            active={isInWishlist(String(product.id))}
-            onClick={() => toggleWishlist(product)}
-            label="Yêu thích"
+        {canQuickView ? (
+          <div
+            className={cn(
+              "absolute right-2 top-2 z-20 flex flex-col gap-1.5 transition-opacity",
+              canHover ? "opacity-0 group-hover:opacity-100" : "opacity-100",
+            )}
           >
-            <Heart className="h-3.5 w-3.5" />
-          </IconActionButton>
-          <IconActionButton
-            active={isInCompare(String(product.id))}
-            onClick={() => toggleCompare(product)}
-            label="So sánh"
-          >
-            <Shuffle className="h-3.5 w-3.5" />
-          </IconActionButton>
-          <IconActionButton
-            onClick={(event) => {
-              event.preventDefault();
-              event.stopPropagation();
-              setQuickViewOpen(true);
-            }}
-            label="Xem nhanh"
-          >
-            <Expand className="h-3.5 w-3.5" />
-          </IconActionButton>
-        </div>
+            <IconActionButton
+              active={isInWishlist(String(product.id))}
+              onClick={() => toggleWishlist(product)}
+              label="Yêu thích"
+            >
+              <Heart className="h-3.5 w-3.5" />
+            </IconActionButton>
+            <IconActionButton
+              active={isInCompare(String(product.id))}
+              onClick={() => toggleCompare(product)}
+              label="So sánh"
+            >
+              <Shuffle className="h-3.5 w-3.5" />
+            </IconActionButton>
+            <IconActionButton onClick={handleQuickView} label="Xem nhanh">
+              <Expand className="h-3.5 w-3.5" />
+            </IconActionButton>
+          </div>
+        ) : null}
 
         <Link href={href} className="block h-full w-full">
           <Image
@@ -186,14 +208,14 @@ export default function ProductItem({ item }: ProductItemProps) {
               type="button"
               disabled={outOfStock}
               onClick={handleAddToCart}
-              className="keyshop-interactive inline-flex min-h-10 flex-1 cursor-pointer items-center justify-center gap-2 rounded-control bg-keyshop-blue px-3 text-xs font-bold uppercase tracking-wide text-white hover:bg-keyshop-blue-hover focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-keyshop-blue/25 disabled:cursor-not-allowed disabled:opacity-50"
+              className="keyshop-interactive inline-flex min-h-11 flex-1 cursor-pointer items-center justify-center gap-2 rounded-control bg-keyshop-blue px-3 text-xs font-bold uppercase tracking-wide text-white hover:bg-keyshop-blue-hover focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-keyshop-blue/25 disabled:cursor-not-allowed disabled:opacity-50"
             >
               <ShoppingCart className="h-3.5 w-3.5" />
               {outOfStock ? stockStatusLabel : "Thêm vào giỏ"}
             </button>
             <Link
               href={href}
-              className="keyshop-interactive inline-flex min-h-10 cursor-pointer items-center justify-center rounded-control border border-keyshop-line px-3 text-xs font-semibold text-white transition hover:border-keyshop-blue/50 hover:text-keyshop-blue focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-keyshop-blue/25"
+              className="keyshop-interactive inline-flex min-h-11 cursor-pointer items-center justify-center rounded-control border border-keyshop-line px-3 text-xs font-semibold text-white transition hover:border-keyshop-blue/50 hover:text-keyshop-blue focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-keyshop-blue/25"
             >
               Xem
             </Link>
@@ -201,11 +223,13 @@ export default function ProductItem({ item }: ProductItemProps) {
         </div>
       </div>
 
-      <ProductQuickViewModal
-        open={quickViewOpen}
-        product={item}
-        onClose={() => setQuickViewOpen(false)}
-      />
+      {canQuickView ? (
+        <ProductQuickViewModal
+          open={quickViewOpen}
+          product={item}
+          onClose={() => setQuickViewOpen(false)}
+        />
+      ) : null}
     </article>
   );
 }
@@ -224,7 +248,7 @@ function IconActionButton({
   label: string;
 }) {
   const className = cn(
-    "keyshop-interactive flex h-8 w-8 cursor-pointer items-center justify-center rounded-full border border-keyshop-line bg-keyshop-bg/90 text-white transition-colors hover:bg-keyshop-blue focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-keyshop-blue/40",
+    "keyshop-interactive flex h-11 w-11 cursor-pointer items-center justify-center rounded-full border border-keyshop-line bg-keyshop-bg/90 text-white transition-colors hover:bg-keyshop-blue focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-keyshop-blue/40 sm:h-8 sm:w-8",
     active && "bg-keyshop-blue",
   );
 
