@@ -13,6 +13,8 @@ export interface UserProfile {
   verify_email: boolean;
   twoFactorEnabled?: boolean;
   pendingEmail?: string;
+  authProvider?: "local" | "google";
+  hasPassword?: boolean;
 }
 
 export async function updateProfile(profile: Partial<UserProfile>) {
@@ -30,8 +32,22 @@ export async function fetchProfile() {
   return data;
 }
 
+export async function uploadAvatar(file: File): Promise<{
+  url: string;
+  profile: UserProfile;
+}> {
+  const formData = new FormData();
+  formData.append("file", file);
+
+  const { data } = await apiClient.post(API_ENDPOINTS.user.avatarUpload, formData, {
+    headers: { "Content-Type": "multipart/form-data" },
+  });
+
+  return data as { url: string; profile: UserProfile };
+}
+
 export async function changePassword(payload: {
-  currentPassword: string;
+  currentPassword?: string;
   password: string;
   confirmPassword: string;
 }) {

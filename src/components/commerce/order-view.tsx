@@ -2,8 +2,12 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { CommercePanel } from "@/components/commerce/commerce-ui";
-import { formatPrice } from "@/lib/utils/format";
 import type { Order } from "@/lib/services/order-service";
+import {
+  formatOrderDisplayStatus,
+  formatOrderPaymentSummary,
+} from "@/lib/utils/order-display";
+import { formatPrice } from "@/lib/utils/format";
 
 export default function OrderView({ order }: { order: Order }) {
   const orderId = String(order.id || order.orderId || "");
@@ -17,12 +21,14 @@ export default function OrderView({ order }: { order: Order }) {
         </div>
         <div>
           <span className="text-xs uppercase tracking-wide text-slate-400">Trạng thái</span>
-          <p className="mt-1 text-lg font-extrabold text-white">{order.status || "Chờ xử lý"}</p>
+          <p className="mt-1 text-lg font-extrabold text-white">
+            {formatOrderDisplayStatus(order)}
+          </p>
         </div>
         <div>
           <span className="text-xs uppercase tracking-wide text-slate-400">Thanh toán</span>
           <p className="mt-1 text-lg font-extrabold text-white">
-            {order.paymentStatus || order.paymentMethod || "Chờ xử lý"}
+            {formatOrderPaymentSummary(order)}
           </p>
         </div>
         <div>

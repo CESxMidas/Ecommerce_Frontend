@@ -12,7 +12,7 @@ import {
   Shuffle,
   User,
 } from "lucide-react";
-import { Suspense, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 
 import CategoryPanel from "@/components/layout/category-panel";
 import SearchBox from "@/components/layout/search-box";
@@ -31,6 +31,19 @@ import {
 import SideDrawer from "@/components/ui/side-drawer";
 import { cn } from "@/lib/utils";
 
+const MOBILE_HEADER_COMPACT_QUERY = "(max-width: 1023px)";
+const HEADER_COMPACT_SCROLL_OFFSET = 12;
+
+function mobileHeaderSectionClass(compact: boolean, expandedMaxHeight: string) {
+  return cn(
+    "overflow-hidden transition-[max-height,opacity,margin] duration-300 ease-out",
+    "lg:max-h-none lg:opacity-100 lg:pointer-events-auto",
+    compact
+      ? "max-h-0 opacity-0 pointer-events-none"
+      : cn(expandedMaxHeight, "opacity-100"),
+  );
+}
+
 export default function SiteHeader() {
   const pathname = usePathname();
   const isAccountRoute = pathname.startsWith("/account");
@@ -40,14 +53,43 @@ export default function SiteHeader() {
   const { wishlist } = useWishlistCompare();
   const { setOpenCartPanel } = useCartUi();
   const [openCategory, setOpenCategory] = useState(false);
+  const [compactHeader, setCompactHeader] = useState(false);
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia(MOBILE_HEADER_COMPACT_QUERY);
+
+    const updateCompactHeader = () => {
+      if (!mediaQuery.matches) {
+        setCompactHeader(false);
+        return;
+      }
+
+      setCompactHeader(window.scrollY > HEADER_COMPACT_SCROLL_OFFSET);
+    };
+
+    updateCompactHeader();
+    window.addEventListener("scroll", updateCompactHeader, { passive: true });
+    window.addEventListener("resize", updateCompactHeader);
+    mediaQuery.addEventListener("change", updateCompactHeader);
+
+    return () => {
+      window.removeEventListener("scroll", updateCompactHeader);
+      window.removeEventListener("resize", updateCompactHeader);
+      mediaQuery.removeEventListener("change", updateCompactHeader);
+    };
+  }, []);
 
   const isLoggedIn = Boolean(session?.user);
   const userName = session?.user?.name || "User";
 
   return (
     <header className="sticky top-0 z-[999] w-full bg-keyshop-bg/95 backdrop-blur-[14px]">
-      <div className="keyshop-topbar">
-        <div className="container flex min-h-[34px] items-center justify-between gap-3">
+      <div
+        className={mobileHeaderSectionClass(compactHeader, "max-h-10")}
+        aria-hidden={compactHeader}
+      >
+        <div className="keyshop-topbar">
+          <div className="container flex min-h-[34px] items-center justify-between gap-3">
           <p className="min-w-0 truncate">Key phần mềm chính hãng — giao hàng số tức thì.</p>
           <div className="hidden shrink-0 items-center gap-4 md:flex md:gap-5">
             <Link href="/help" className="transition-colors hover:text-white">
@@ -70,6 +112,7 @@ export default function SiteHeader() {
           >
             Hỗ trợ
           </Link>
+          </div>
         </div>
       </div>
 
@@ -206,14 +249,27 @@ export default function SiteHeader() {
           </div>
         </div>
 
-        <div className={cn("container mt-3 lg:hidden", isAccountRoute && "hidden")}>
+        <div
+          className={cn(
+            mobileHeaderSectionClass(compactHeader, "max-h-24"),
+            "container lg:hidden",
+            compactHeader ? "mt-0" : "mt-3",
+            isAccountRoute && "hidden",
+          )}
+          aria-hidden={compactHeader || isAccountRoute}
+        >
           <SearchBox />
         </div>
       </div>
 
-      <Suspense fallback={<SiteNavigationSkeleton />}>
-        <SiteNavigation categories={categories} hiddenOnMobileAccount={isAccountRoute} />
-      </Suspense>
+      <div
+        className={mobileHeaderSectionClass(compactHeader, "max-h-16")}
+        aria-hidden={compactHeader}
+      >
+        <Suspense fallback={<SiteNavigationSkeleton />}>
+          <SiteNavigation categories={categories} hiddenOnMobileAccount={isAccountRoute} />
+        </Suspense>
+      </div>
 
       <SideDrawer open={openCategory} onClose={() => setOpenCategory(false)} anchor="left">
         <CategoryPanel

@@ -17,6 +17,7 @@ import {
   AuthSubmitButton,
 } from "@/components/auth/auth-layout";
 import SocialAuthButtons from "@/components/auth/social-auth-buttons";
+import { isGoogleOnlyLoginError } from "@/lib/auth/account-password";
 import { parseEmailNotVerifiedError } from "@/lib/auth/constants";
 import { getToastErrorMessage } from "@/lib/utils/toast-error";
 
@@ -27,6 +28,7 @@ function LoginForm() {
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
+  const [googleOnlyHint, setGoogleOnlyHint] = useState(false);
   const [formFields, setFormFields] = useState({
     email: "",
     password: "",
@@ -60,6 +62,7 @@ function LoginForm() {
     }
 
     setLoading(true);
+    setGoogleOnlyHint(false);
 
     const result = await signIn("credentials", {
       email: formFields.email.trim(),
@@ -85,6 +88,10 @@ function LoginForm() {
           )}`,
         );
         return;
+      }
+
+      if (isGoogleOnlyLoginError(result?.error)) {
+        setGoogleOnlyHint(true);
       }
 
       toast.error(getToastErrorMessage(result?.error, "Đăng nhập thất bại"));
@@ -120,6 +127,20 @@ function LoginForm() {
         />
 
         <form onSubmit={onSubmit}>
+          {googleOnlyHint ? (
+            <div className="mb-4 rounded-xl border border-sky-400/25 bg-sky-500/10 px-4 py-3.5 text-sm leading-relaxed text-sky-100/90">
+              <p className="font-semibold text-sky-100">Tài khoản đăng nhập bằng Google</p>
+              <p className="mt-1.5">
+                Bấm <span className="font-medium text-white">Đăng nhập Google</span> bên dưới.
+                Sau khi vào tài khoản, mở{" "}
+                <Link href="/account/security#password-setup" className="font-semibold text-keyshop-blue hover:text-sky-300">
+                  Bảo mật
+                </Link>{" "}
+                để thiết lập mật khẩu nếu muốn đăng nhập bằng email.
+              </p>
+            </div>
+          ) : null}
+
           <AuthField label="Email">
             <AuthInput
               id="email"

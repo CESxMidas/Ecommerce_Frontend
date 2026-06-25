@@ -24,7 +24,7 @@ const TOAST_ERROR_PATTERNS: ErrorPattern[] = [
   { pattern: /google token không hợp lệ/i, message: "Phiên Google không hợp lệ. Vui lòng thử lại." },
   { pattern: /google credential is required/i, message: "Thiếu thông tin đăng nhập Google" },
   { pattern: /đăng nhập google thất bại/i, message: "Đăng nhập Google thất bại" },
-  { pattern: /đăng nhập bằng google/i, message: "Tài khoản này đăng nhập bằng Google. Vui lòng bấm nút Google bên dưới." },
+  { pattern: /đăng nhập bằng google/i, message: "Tài khoản này đăng nhập bằng Google. Hãy đăng nhập Google, sau đó vào Bảo mật để thiết lập mật khẩu." },
 
   // Network / generic
   { pattern: /^network error$/i, message: "Không thể kết nối máy chủ. Kiểm tra mạng và thử lại." },

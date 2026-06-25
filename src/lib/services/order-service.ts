@@ -20,7 +20,9 @@ export interface OrderItem {
 export interface Order extends PlacedOrder {
   orderId?: string;
   status?: string;
+  statusLabel?: string;
   paymentStatus?: string;
+  paymentStatusLabel?: string;
   paymentMethod?: string;
   total?: number;
   createdAt?: string;

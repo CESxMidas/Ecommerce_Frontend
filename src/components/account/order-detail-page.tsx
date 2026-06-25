@@ -18,6 +18,10 @@ import {
 } from "@/lib/services/order-service";
 import { formatPrice } from "@/lib/utils/format";
 import { getApiErrorMessage } from "@/lib/utils/api-error";
+import {
+  formatOrderDisplayStatus,
+  formatOrderPaymentSummary,
+} from "@/lib/utils/order-display";
 
 const PAYMENT_MESSAGES: Record<string, { type: "success" | "error"; message: string }> = {
   success: {
@@ -127,7 +131,7 @@ export default function OrderDetailPageClient({ orderId }: { orderId: string }) 
     <AccountCard>
       <AccountCardHeader
         title={`Đơn hàng #${currentOrderId}`}
-        description={`${order.status || "Chờ xử lý"} · ${order.paymentStatus || order.paymentMethod || "Chờ thanh toán"}`}
+        description={`${formatOrderDisplayStatus(order)} · ${formatOrderPaymentSummary(order)}`}
         action={
           <Link
             href="/account/orders"
@@ -139,11 +143,8 @@ export default function OrderDetailPageClient({ orderId }: { orderId: string }) 
       />
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <StatCard label="Trạng thái" value={order.status || "Chờ xử lý"} />
-        <StatCard
-          label="Thanh toán"
-          value={order.paymentStatus || order.paymentMethod || "Chờ xử lý"}
-        />
+        <StatCard label="Trạng thái" value={formatOrderDisplayStatus(order)} />
+        <StatCard label="Thanh toán" value={formatOrderPaymentSummary(order)} />
         <StatCard label="Tổng tiền" value={formatPrice(order.total || 0)} />
         <StatCard label="Khách hàng" value={order.name || "—"} />
       </div>

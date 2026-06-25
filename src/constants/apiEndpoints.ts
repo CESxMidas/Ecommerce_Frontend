@@ -53,6 +53,7 @@ export const API_ENDPOINTS = {
   },
   user: {
     profile: "/user/profile",
+    avatarUpload: "/user/profile/avatar",
     password: "/user/profile/password",
     emailRequest: "/user/profile/email/request",
     emailVerify: "/user/profile/email/verify",

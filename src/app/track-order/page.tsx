@@ -4,8 +4,8 @@ import TrackOrderPageClient from "@/components/commerce/track-order-page";
 import { pageMetadata } from "@/lib/metadata";
 
 export const metadata: Metadata = pageMetadata(
-  "Track Order",
-  "Track your KEYSHOP order status with your order ID.",
+  "Tra cứu đơn hàng",
+  "Tra cứu trạng thái đơn hàng KEYSHOP bằng mã đơn và email hoặc số điện thoại.",
 );
 
 export default function TrackOrderPage() {

@@ -186,11 +186,14 @@ export const authOptions: NextAuthOptions = {
 
       return true;
     },
-    async jwt({ token, user, account }) {
+    async jwt({ token, user, account, trigger, session }) {
       if (user) {
         token.accessToken = (user as { accessToken?: string }).accessToken;
         token.role = (user as { role?: string }).role;
         token.userId = user.id;
+        token.picture = user.image ?? token.picture;
+        token.name = user.name ?? token.name;
+        token.email = user.email ?? token.email;
 
         const rememberMe = Boolean((user as { rememberMe?: boolean }).rememberMe);
         token.rememberMe = rememberMe;
@@ -200,6 +203,21 @@ export const authOptions: NextAuthOptions = {
           : 60 * 60;
 
         token.exp = Math.floor(Date.now() / 1000) + sessionLength;
+      }
+
+      if (trigger === "update" && session) {
+        const patch = session as {
+          image?: string | null;
+          name?: string;
+        };
+
+        if (patch.image !== undefined) {
+          token.picture = patch.image || "";
+        }
+
+        if (patch.name) {
+          token.name = patch.name;
+        }
       }
 
       if (account?.provider === "google" && account.id_token) {
@@ -226,6 +244,9 @@ export const authOptions: NextAuthOptions = {
       if (session.user) {
         session.user.id = token.userId as string;
         session.user.role = token.role as string;
+        session.user.image = (token.picture as string) || null;
+        if (token.name) session.user.name = token.name as string;
+        if (token.email) session.user.email = token.email as string;
       }
 
       session.accessToken = token.accessToken as string;

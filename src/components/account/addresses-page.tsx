@@ -216,7 +216,7 @@ export default function AddressesPageClient() {
             />
           </div>
           <div>
-            <label className={accountLabelClass}>Thành phố</label>
+            <label className={accountLabelClass}>Quận/Huyện</label>
             <input
               value={formFields.city}
               onChange={(event) =>

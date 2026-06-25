@@ -19,6 +19,7 @@ import {
   fetchTickets,
 } from "@/lib/services/user-service";
 import { getApiErrorMessage } from "@/lib/utils/api-error";
+import { tAuthorRole, tTicketPriority, tTicketStatus } from "@/lib/constants/vi";
 
 const emptyTicket = {
   orderId: "",
@@ -130,7 +131,8 @@ export default function TicketsPageClient() {
               <AccountListItem key={ticket.id}>
                 <h3 className="text-lg font-bold text-white">{ticket.subject}</h3>
                 <p className="text-sm text-keyshop-muted">
-                  Trạng thái: {ticket.status} | Ưu tiên: {ticket.priority}
+                  Trạng thái: {tTicketStatus(ticket.status)} · Ưu tiên:{" "}
+                  {tTicketPriority(ticket.priority)}
                 </p>
                 {ticket.orderId ? (
                   <p className="text-sm text-keyshop-muted">Đơn hàng #{ticket.orderId}</p>
@@ -138,7 +140,7 @@ export default function TicketsPageClient() {
                 <p className="text-sm text-white/80">{ticket.message}</p>
                 {(ticket.replies || []).map((reply) => (
                   <p key={reply.id} className="rounded-control bg-white/[0.03] px-3 py-2 text-sm text-keyshop-muted">
-                    <strong className="text-white">{reply.authorRole}:</strong>{" "}
+                    <strong className="text-white">{tAuthorRole(reply.authorRole)}:</strong>{" "}
                     {reply.message}
                   </p>
                 ))}

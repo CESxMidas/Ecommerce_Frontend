@@ -130,15 +130,14 @@ export function WishlistCompareProvider({ children }: { children: React.ReactNod
         return;
       }
 
-      setWishlist((prev) => {
-        const inList = prev.some((item) => String(item.id) === productId);
-        if (inList) {
-          toast.success("Đã bỏ khỏi yêu thích");
-          return prev.filter((item) => String(item.id) !== productId);
-        }
-        toast.success("Đã thêm vào yêu thích");
-        return [...prev, normalizedProduct];
-      });
+      if (exists) {
+        setWishlist((prev) => prev.filter((item) => String(item.id) !== productId));
+        toast.success("Đã bỏ khỏi yêu thích");
+        return;
+      }
+
+      setWishlist((prev) => [...prev, normalizedProduct]);
+      toast.success("Đã thêm vào yêu thích");
     },
     [wishlist],
   );
@@ -153,21 +152,24 @@ export function WishlistCompareProvider({ children }: { children: React.ReactNod
       const normalizedProduct = normalizeProduct(product as Record<string, unknown>);
       if (!normalizedProduct) return;
 
-      setCompareItems((prev) => {
-        const exists = prev.some((item) => String(item.id) === String(normalizedProduct.id));
-        if (exists) {
-          toast.success("Đã bỏ khỏi so sánh");
-          return prev.filter((item) => String(item.id) !== String(normalizedProduct.id));
-        }
-        if (prev.length >= MAX_COMPARE_ITEMS) {
-          toast.error(`So sánh tối đa ${MAX_COMPARE_ITEMS} sản phẩm`);
-          return prev;
-        }
-        toast.success("Đã thêm vào so sánh");
-        return [...prev, normalizedProduct];
-      });
+      const productId = String(normalizedProduct.id);
+      const exists = compareItems.some((item) => String(item.id) === productId);
+
+      if (exists) {
+        setCompareItems((prev) => prev.filter((item) => String(item.id) !== productId));
+        toast.success("Đã bỏ khỏi so sánh");
+        return;
+      }
+
+      if (compareItems.length >= MAX_COMPARE_ITEMS) {
+        toast.error(`So sánh tối đa ${MAX_COMPARE_ITEMS} sản phẩm`);
+        return;
+      }
+
+      setCompareItems((prev) => [...prev, normalizedProduct]);
+      toast.success("Đã thêm vào so sánh");
     },
-    [],
+    [compareItems],
   );
 
   const isInCompare = useCallback(

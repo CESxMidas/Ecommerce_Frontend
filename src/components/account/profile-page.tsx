@@ -12,9 +12,10 @@ import {
   accountLabelClass,
   accountSelectClass,
 } from "@/components/account/account-ui";
+import PasswordSetupPrompt from "@/components/account/password-setup-prompt";
+import ProfileAvatarPicker from "@/components/account/profile-avatar-picker";
 import { useSessionQuery } from "@/lib/hooks/use-session-query";
 import {
-  changePassword,
   fetchProfile,
   requestEmailChange,
   updateProfile,
@@ -39,13 +40,10 @@ export default function AccountProfilePage() {
   const {
     data: profileData,
     loading: loadingInitialProfile,
-    reload: reloadProfile,
   } = useSessionQuery<UserProfile | null>(loadProfile, null);
 
-  const [showPasswordBox, setShowPasswordBox] = useState(false);
   const [showEmailBox, setShowEmailBox] = useState(false);
   const [loadingProfile, setLoadingProfile] = useState(false);
-  const [loadingPassword, setLoadingPassword] = useState(false);
   const [loadingEmail, setLoadingEmail] = useState(false);
 
   const [profileFields, setProfileFields] = useState({
@@ -54,12 +52,6 @@ export default function AccountProfilePage() {
     avatar: "",
     dateOfBirth: "",
     gender: "",
-  });
-
-  const [passwordFields, setPasswordFields] = useState({
-    currentPassword: "",
-    password: "",
-    confirmPassword: "",
   });
 
   const [emailFields, setEmailFields] = useState({
@@ -102,8 +94,13 @@ export default function AccountProfilePage() {
 
     try {
       setLoadingProfile(true);
-      await updateProfile(profileFields);
-      await update();
+      await updateProfile({
+        name: profileFields.name,
+        phone: profileFields.phone,
+        dateOfBirth: profileFields.dateOfBirth || undefined,
+        gender: profileFields.gender,
+      });
+      await update({ name: profileFields.name.trim() });
       toast.success("Đã cập nhật hồ sơ");
     } catch (error) {
       toast.error(getApiErrorMessage(error, "Không thể cập nhật hồ sơ"));
@@ -112,34 +109,9 @@ export default function AccountProfilePage() {
     }
   }
 
-  async function handlePasswordSubmit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-
-    if (passwordFields.password.length < 6) {
-      toast.error("Mật khẩu phải có ít nhất 6 ký tự");
-      return;
-    }
-
-    if (passwordFields.password !== passwordFields.confirmPassword) {
-      toast.error("Mật khẩu không khớp");
-      return;
-    }
-
-    try {
-      setLoadingPassword(true);
-      await changePassword(passwordFields);
-      toast.success("Đã đổi mật khẩu");
-      setPasswordFields({
-        currentPassword: "",
-        password: "",
-        confirmPassword: "",
-      });
-      setShowPasswordBox(false);
-    } catch (error) {
-      toast.error(getApiErrorMessage(error, "Không thể đổi mật khẩu"));
-    } finally {
-      setLoadingPassword(false);
-    }
+  async function handleRemoveAvatar() {
+    await updateProfile({ avatar: "" });
+    setProfileFields((prev) => ({ ...prev, avatar: "" }));
   }
 
   async function handleEmailRequest(event: FormEvent<HTMLFormElement>) {
@@ -179,18 +151,23 @@ export default function AccountProfilePage() {
 
   return (
     <div className="space-y-6">
+      <PasswordSetupPrompt profile={profileData} loading={loadingInitialProfile} />
+
+      <ProfileAvatarPicker
+        avatar={profileFields.avatar}
+        name={profileFields.name}
+        email={session?.user?.email || ""}
+        disabled={loadingInitialProfile}
+        onAvatarChange={(url) =>
+          setProfileFields((prev) => ({ ...prev, avatar: url }))
+        }
+        onAvatarRemove={handleRemoveAvatar}
+      />
+
       <AccountCard>
         <AccountCardHeader
-          title="Hồ sơ của tôi"
-          description={`Email: ${session?.user?.email || ""}`}
-          action={
-            <AccountActionButton
-              variant="outline"
-              onClick={() => setShowPasswordBox((value) => !value)}
-            >
-              Đổi mật khẩu
-            </AccountActionButton>
-          }
+          title="Thông tin cá nhân"
+          description="Cập nhật họ tên, liên hệ và thông tin hiển thị trên tài khoản."
         />
 
         <form onSubmit={handleProfileSubmit} className="grid gap-4 md:grid-cols-2">
@@ -199,6 +176,7 @@ export default function AccountProfilePage() {
               Đang tải hồ sơ...
             </p>
           ) : null}
+
           <div>
             <label htmlFor="name" className={accountLabelClass}>
               Họ và tên
@@ -210,8 +188,10 @@ export default function AccountProfilePage() {
                 setProfileFields({ ...profileFields, name: event.target.value })
               }
               className={accountFieldClass}
+              placeholder="Nguyễn Văn A"
             />
           </div>
+
           <div>
             <label htmlFor="phone" className={accountLabelClass}>
               Số điện thoại
@@ -223,23 +203,10 @@ export default function AccountProfilePage() {
                 setProfileFields({ ...profileFields, phone: event.target.value })
               }
               className={accountFieldClass}
+              placeholder="09xx xxx xxx"
             />
           </div>
-          <div className="md:col-span-2">
-            <label htmlFor="avatar" className={accountLabelClass}>
-              URL ảnh đại diện
-            </label>
-            <input
-              id="avatar"
-              type="url"
-              value={profileFields.avatar}
-              onChange={(event) =>
-                setProfileFields({ ...profileFields, avatar: event.target.value })
-              }
-              className={`${accountFieldClass} text-sm sm:text-base`}
-              placeholder="https://..."
-            />
-          </div>
+
           <div>
             <label htmlFor="dob" className={accountLabelClass}>
               Ngày sinh
@@ -257,7 +224,8 @@ export default function AccountProfilePage() {
               className={accountFieldClass}
             />
           </div>
-          <div className="md:col-span-2">
+
+          <div>
             <label htmlFor="gender" className={accountLabelClass}>
               Giới tính
             </label>
@@ -283,11 +251,13 @@ export default function AccountProfilePage() {
               </option>
             </select>
           </div>
+
           <div className="flex flex-wrap gap-3 md:col-span-2">
             <AccountActionButton type="submit" disabled={loadingProfile || loadingInitialProfile}>
-              {loadingProfile ? "Đang cập nhật..." : "Cập nhật hồ sơ"}
+              {loadingProfile ? "Đang cập nhật..." : "Lưu thông tin"}
             </AccountActionButton>
             <AccountActionButton
+              type="button"
               variant="outline"
               onClick={() => setShowEmailBox((value) => !value)}
             >
@@ -299,7 +269,10 @@ export default function AccountProfilePage() {
 
       {showEmailBox ? (
         <AccountCard>
-          <AccountCardHeader title="Đổi email" />
+          <AccountCardHeader
+            title="Đổi email"
+            description="Mã xác minh sẽ được gửi tới email mới trước khi thay đổi."
+          />
           <div className="space-y-4">
             <form onSubmit={handleEmailRequest} className="flex flex-col gap-3 sm:flex-row">
               <input
@@ -332,53 +305,6 @@ export default function AccountProfilePage() {
               </form>
             ) : null}
           </div>
-        </AccountCard>
-      ) : null}
-
-      {showPasswordBox ? (
-        <AccountCard>
-          <AccountCardHeader title="Đổi mật khẩu" />
-          <form onSubmit={handlePasswordSubmit} className="grid gap-4 md:grid-cols-2">
-            <input
-              type="password"
-              placeholder="Mật khẩu hiện tại"
-              value={passwordFields.currentPassword}
-              onChange={(event) =>
-                setPasswordFields({
-                  ...passwordFields,
-                  currentPassword: event.target.value,
-                })
-              }
-              className={accountFieldClass}
-            />
-            <input
-              type="password"
-              placeholder="Mật khẩu mới"
-              value={passwordFields.password}
-              onChange={(event) =>
-                setPasswordFields({
-                  ...passwordFields,
-                  password: event.target.value,
-                })
-              }
-              className={accountFieldClass}
-            />
-            <input
-              type="password"
-              placeholder="Xác nhận mật khẩu"
-              value={passwordFields.confirmPassword}
-              onChange={(event) =>
-                setPasswordFields({
-                  ...passwordFields,
-                  confirmPassword: event.target.value,
-                })
-              }
-              className={`md:col-span-2 ${accountFieldClass}`}
-            />
-            <AccountActionButton type="submit" disabled={loadingPassword}>
-              {loadingPassword ? "Đang lưu..." : "Đổi mật khẩu"}
-            </AccountActionButton>
-          </form>
         </AccountCard>
       ) : null}
     </div>

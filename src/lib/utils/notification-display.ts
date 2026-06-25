@@ -1,9 +1,16 @@
 /** Hiển thị thông báo tiếng Việt — map bản ghi cũ tiếng Anh từ backend */
+import { tOrderStatus } from "@/lib/constants/vi";
+
 const TITLE_MAP: Record<string, string> = {
   "Support ticket created": "Đã tạo yêu cầu hỗ trợ",
   "Phản hồi hỗ trợ mới": "Phản hồi hỗ trợ mới",
   "Email updated": "Email đã được cập nhật",
+  "Email đã được cập nhật": "Email đã được cập nhật",
   "Password changed": "Mật khẩu đã được đổi",
+  "Mật khẩu đã được đổi": "Mật khẩu đã được đổi",
+  "Đã tạo yêu cầu hỗ trợ": "Đã tạo yêu cầu hỗ trợ",
+  "Order paid": "Thanh toán thành công",
+  "Order status updated": "Cập nhật đơn hàng",
 };
 
 export function localizeNotificationTitle(title: string): string {
@@ -27,6 +34,15 @@ export function localizeNotificationMessage(message: string): string {
     .replace(
       "Your account password was changed.",
       "Mật khẩu tài khoản của bạn vừa được thay đổi.",
+    )
+    .replace(
+      /^Order #(.+) has been paid\.$/,
+      "Đơn hàng #$1 đã thanh toán thành công.",
+    )
+    .replace(
+      /^Order #(.+) status changed to (.+)\.$/,
+      (_, orderId, status) =>
+        `Đơn hàng #${orderId} chuyển sang trạng thái ${tOrderStatus(status)}.`,
     );
 }
 

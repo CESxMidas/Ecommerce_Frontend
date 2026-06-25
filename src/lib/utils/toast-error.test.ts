@@ -16,7 +16,7 @@ describe("toast-error", () => {
     expect(
       translateToastMessage("Tài khoản này đăng nhập bằng Google"),
     ).toBe(
-      "Tài khoản này đăng nhập bằng Google. Vui lòng bấm nút Google bên dưới.",
+      "Tài khoản này đăng nhập bằng Google. Hãy đăng nhập Google, sau đó vào Bảo mật để thiết lập mật khẩu.",
     );
   });
 

@@ -17,12 +17,15 @@ export const accountSelectClass = selectClass;
 export function AccountCard({
   children,
   className,
+  id,
 }: {
   children: ReactNode;
   className?: string;
+  id?: string;
 }) {
   return (
     <div
+      id={id}
       className={cn(
         "rounded-card border border-keyshop-line bg-white/[0.03] p-4 backdrop-blur-xl sm:p-6 md:p-7",
         className,
@@ -74,7 +77,7 @@ export function AccountActionButton({
       disabled={disabled}
       onClick={onClick}
       className={cn(
-        "inline-flex min-h-11 items-center justify-center rounded-control px-4 text-xs font-extrabold uppercase tracking-wide transition disabled:opacity-60",
+        "inline-flex min-h-11 items-center justify-center gap-2 rounded-control px-4 text-xs font-extrabold uppercase tracking-wide transition disabled:opacity-60",
         variant === "primary"
           ? "bg-keyshop-blue-hover text-white hover:bg-keyshop-blue"
           : "border border-keyshop-line bg-white/[0.03] text-white hover:border-keyshop-blue/40",

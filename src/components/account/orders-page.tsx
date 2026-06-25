@@ -20,26 +20,15 @@ import {
   recreateVnpayPayment,
   type Order,
 } from "@/lib/services/order-service";
+import { tPaymentMethod } from "@/lib/constants/vi";
 import { formatPrice } from "@/lib/utils/format";
 import { getApiErrorMessage } from "@/lib/utils/api-error";
+import {
+  formatOrderDisplayStatus,
+  formatOrderPaymentStatus,
+} from "@/lib/utils/order-display";
 
 const ORDERS_PER_PAGE = 5;
-
-function getOrderStatusLabel(order: Order) {
-  if (order.paymentStatus === "failed") return "Thanh toán thất bại";
-  if (order.status === "PendingPayment") return "Chờ thanh toán";
-  if (order.paymentStatus === "pending" && order.paymentMethod === "vnpay") {
-    return "Đang chờ thanh toán";
-  }
-  if (order.paymentStatus === "paid") return order.status || "Đã thanh toán";
-  return order.paymentStatus || order.status || "-";
-}
-
-function getPaymentMethodLabel(order: Order) {
-  if (order.paymentMethod === "vnpay") return "VNPay";
-  if (order.paymentMethod === "cod") return "Thủ công";
-  return order.paymentMethod || "-";
-}
 
 function canPayOrderOnline(order: Order) {
   return (
@@ -167,7 +156,7 @@ export default function OrdersPageClient() {
               const currentOrderId = String(order.id || order.orderId);
               const canPayOnline = canPayOrderOnline(order);
               const canCancel = canCancelOrder(order);
-              const statusLabel = getOrderStatusLabel(order);
+              const statusLabel = formatOrderDisplayStatus(order);
 
               return (
                 <div
@@ -190,7 +179,8 @@ export default function OrdersPageClient() {
                   <div className="mt-3 space-y-1 text-sm">
                     <p className="text-white">{statusLabel}</p>
                     <p className="text-keyshop-muted">
-                      {getPaymentMethodLabel(order)} · {order.paymentStatus || "-"}
+                      {tPaymentMethod(order.paymentMethod)} ·{" "}
+                      {formatOrderPaymentStatus(order)}
                     </p>
                   </div>
                   <div className="mt-4 flex flex-wrap gap-2">
@@ -249,7 +239,7 @@ export default function OrdersPageClient() {
                     const currentOrderId = String(order.id || order.orderId);
                     const canPayOnline = canPayOrderOnline(order);
                     const canCancel = canCancelOrder(order);
-                    const statusLabel = getOrderStatusLabel(order);
+                    const statusLabel = formatOrderDisplayStatus(order);
 
                     return (
                       <tr key={currentOrderId} className="border-b border-keyshop-line/60">
@@ -261,16 +251,16 @@ export default function OrdersPageClient() {
                         <td className="py-4 pr-4">
                           <div>
                             <p className="font-semibold text-white">
-                              {getPaymentMethodLabel(order)}
+                              {tPaymentMethod(order.paymentMethod)}
                             </p>
                             <p className="text-xs text-keyshop-muted">
-                              {order.paymentStatus || "-"}
+                              {formatOrderPaymentStatus(order)}
                             </p>
                           </div>
                         </td>
                         <td className="py-4 pr-4 text-keyshop-muted">
                           {order.createdAt
-                            ? new Date(order.createdAt).toLocaleDateString()
+                            ? new Date(order.createdAt).toLocaleDateString("vi-VN")
                             : "-"}
                         </td>
                         <td className="py-4">
