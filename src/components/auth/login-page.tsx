@@ -18,6 +18,7 @@ import {
 } from "@/components/auth/auth-layout";
 import SocialAuthButtons from "@/components/auth/social-auth-buttons";
 import { parseEmailNotVerifiedError } from "@/lib/auth/constants";
+import { getToastErrorMessage } from "@/lib/utils/toast-error";
 
 function LoginForm() {
   const router = useRouter();
@@ -86,7 +87,7 @@ function LoginForm() {
         return;
       }
 
-      toast.error(result?.error || "Đăng nhập thất bại");
+      toast.error(getToastErrorMessage(result?.error, "Đăng nhập thất bại"));
       return;
     }
 

@@ -1,0 +1,62 @@
+import type { CartItem, NormalizedProduct } from "@/types/cart";
+
+export const mockProduct: NormalizedProduct = {
+  id: "990001",
+  sku: "QA-001",
+  name: "QA Windows Key",
+  slug: "qa-windows-key",
+  description: "Test product",
+  price: 250000,
+  discountPrice: 199000,
+  currency: "VND",
+  images: [],
+  thumbnail: "/favicon.svg",
+  categoryId: "1",
+  categoryName: "Windows",
+  vendor: "KEYSHOP QA",
+  brand: "KEYSHOP QA",
+  tags: [],
+  attributes: {},
+  variants: [],
+  stock: 10,
+  rating: 4.5,
+  reviewsCount: 12,
+  isActive: true,
+  createdAt: new Date().toISOString(),
+  badge: "NEW",
+  salePrice: 199000,
+  listPrice: 250000,
+  title: "QA Windows Key",
+  image: "/favicon.svg",
+  oldPrice: 250000,
+  tag: "NEW",
+  productType: "license_key",
+  deliveryType: "instant_key",
+  requiresOnlinePayment: true,
+  keyPrefix: "WIN",
+  weight: 0,
+  dimensions: { length: 0, width: 0, height: 0 },
+};
+
+export const mockCartItem = (quantity = 2): CartItem => ({
+  productId: "990001",
+  quantity,
+  variant: null,
+  product: mockProduct,
+});
+
+export const mockProductsForFilter = [
+  mockProduct,
+  {
+    ...mockProduct,
+    id: "990002",
+    name: "QA Office Key",
+    vendor: "Microsoft QA",
+    brand: "Microsoft QA",
+    price: 500000,
+    discountPrice: 450000,
+    salePrice: 450000,
+    categoryId: "2",
+    badge: "",
+  },
+];

@@ -36,6 +36,7 @@ import {
   resolvePurchaseVariant,
 } from "@/lib/utils/product-schema";
 import { cn } from "@/lib/utils";
+import { getToastErrorMessage } from "@/lib/utils/toast-error";
 import type { Product } from "@/types/api";
 
 type ProductDetailViewProps = {
@@ -174,7 +175,7 @@ export default function ProductDetailView({ product: rawProduct }: ProductDetail
       setRating(0);
       toast.success("Đánh giá đã được gửi");
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : "Gửi đánh giá không thành công");
+      toast.error(getToastErrorMessage(error, "Gửi đánh giá không thành công"));
     } finally {
       setSubmittingReview(false);
     }

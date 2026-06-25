@@ -1,5 +1,10 @@
 import axios from "axios";
 
+import {
+  getToastErrorMessage,
+  translateToastMessage,
+} from "@/lib/utils/toast-error";
+
 export function getApiErrorData(error: unknown) {
   if (axios.isAxiosError(error)) {
     return error.response?.data as
@@ -15,10 +20,11 @@ export function getApiErrorData(error: unknown) {
   return undefined;
 }
 
-export function getApiErrorMessage(error: unknown, fallback = "Request failed") {
-  if (error instanceof Error && error.message) {
-    return error.message;
-  }
-
-  return getApiErrorData(error)?.message || fallback;
+export function getApiErrorMessage(
+  error: unknown,
+  fallback = "Đã xảy ra lỗi. Vui lòng thử lại.",
+) {
+  return getToastErrorMessage(error, fallback);
 }
+
+export { translateToastMessage };

@@ -28,3 +28,10 @@ export function parseEmailNotVerifiedError(
     return null;
   }
 }
+
+import { translateToastMessage } from "@/lib/utils/toast-error";
+
+/** Chuyển mã lỗi NextAuth/backend sang thông báo tiếng Việt cho form đăng nhập */
+export function formatAuthLoginError(error?: string | null) {
+  return translateToastMessage(error?.trim() || "", "Đăng nhập thất bại");
+}

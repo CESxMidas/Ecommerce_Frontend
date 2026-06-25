@@ -13,6 +13,7 @@ import { OrderSummaryTotals } from "@/components/shop/order-summary-totals";
 import { checkoutCtaClass, fieldClass } from "@/lib/ui/tokens";
 import { validateCoupon } from "@/lib/services/cms-service";
 import { cn } from "@/lib/utils";
+import { getToastErrorMessage } from "@/lib/utils/toast-error";
 import { formatPrice } from "@/lib/utils/format";
 import {
   computeDiscountLabel,
@@ -82,7 +83,7 @@ export default function CartPageClient() {
       setAppliedCoupon(result);
       toast.success("Đã áp dụng mã giảm giá");
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : "Mã giảm giá không hợp lệ");
+      toast.error(getToastErrorMessage(error, "Mã giảm giá không hợp lệ"));
     }
   };
 

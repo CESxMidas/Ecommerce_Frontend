@@ -153,6 +153,10 @@ export const authOptions: NextAuthOptions = {
             throw error;
           }
 
+          if (error instanceof Error && error.message) {
+            throw error;
+          }
+
           return null;
         }
       },

@@ -11,6 +11,7 @@ import {
   loadGoogleIdentityScript,
 } from "@/lib/auth/google-identity";
 import { cn } from "@/lib/utils";
+import { getToastErrorMessage } from "@/lib/utils/toast-error";
 
 function resolveCallbackUrl(callbackUrl: string) {
   if (!callbackUrl.startsWith("/") || callbackUrl.startsWith("//")) {
@@ -75,7 +76,7 @@ export default function SocialAuthButtons({
         });
 
         if (!result?.ok || result?.error) {
-          toast.error(result?.error || "Đăng nhập Google thất bại");
+          toast.error(getToastErrorMessage(result?.error, "Đăng nhập Google thất bại"));
           return;
         }
 
@@ -83,9 +84,7 @@ export default function SocialAuthButtons({
         toast.success("Đăng nhập Google thành công");
         window.location.assign(resolveCallbackUrl(callbackUrl));
       } catch (error) {
-        toast.error(
-          error instanceof Error ? error.message : "Đăng nhập Google thất bại",
-        );
+        toast.error(getToastErrorMessage(error, "Đăng nhập Google thất bại"));
       }
     },
     [callbackUrl, clientId],

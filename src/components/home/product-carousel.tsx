@@ -25,7 +25,7 @@ export default function ProductCarousel({ products, limit = 10 }: ProductCarouse
     <KeyshopSwiper
       className="keyshop-product-carousel mt-8"
       modules={[Autoplay]}
-      showNavigation={canQuickView}
+      showNavigation
       autoplay={
         canQuickView ? { delay: 3500, disableOnInteraction: false } : false
       }

@@ -18,6 +18,7 @@ import {
   saveCompare,
 } from "@/lib/utils/compare-storage";
 import { normalizeProduct } from "@/lib/utils/product-schema";
+import { getToastErrorMessage } from "@/lib/utils/toast-error";
 import {
   clearStoredWishlist,
   loadWishlist,
@@ -124,9 +125,7 @@ export function WishlistCompareProvider({ children }: { children: React.ReactNod
           setWishlist(items);
           toast.success(exists ? "Đã bỏ khỏi yêu thích" : "Đã thêm vào yêu thích");
         } catch (error) {
-          toast.error(
-            error instanceof Error ? error.message : "Không thể cập nhật yêu thích",
-          );
+          toast.error(getToastErrorMessage(error, "Không thể cập nhật yêu thích"));
         }
         return;
       }

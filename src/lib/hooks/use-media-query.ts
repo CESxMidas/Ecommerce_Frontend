@@ -1,23 +1,22 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useSyncExternalStore } from "react";
 
-export function useMediaQuery(query: string, defaultValue = false) {
-  const [matches, setMatches] = useState(() => {
-    if (typeof window === "undefined") return defaultValue;
-    return window.matchMedia(query).matches;
-  });
+function subscribeMediaQuery(query: string, callback: () => void) {
+  const media = window.matchMedia(query);
+  media.addEventListener("change", callback);
+  return () => media.removeEventListener("change", callback);
+}
 
-  useEffect(() => {
-    const media = window.matchMedia(query);
-    const update = () => setMatches(media.matches);
-
-    update();
-    media.addEventListener("change", update);
-    return () => media.removeEventListener("change", update);
-  }, [query]);
-
-  return matches;
+/**
+ * SSR-safe media query — server + hydration dùng `fallback`, sau đó sync client.
+ */
+export function useMediaQuery(query: string, fallback = false) {
+  return useSyncExternalStore(
+    (callback) => subscribeMediaQuery(query, callback),
+    () => window.matchMedia(query).matches,
+    () => fallback,
+  );
 }
 
 /** Tablet trở lên (≥768px) — đủ chỗ cho modal xem nhanh */

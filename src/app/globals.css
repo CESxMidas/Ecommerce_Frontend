@@ -492,6 +492,17 @@
   overflow: hidden;
 }
 
+/* Ẩn mũi tên carousel trên mobile — tránh hydration + vuốt tay đủ dùng */
+.keyshop-product-carousel .keyshop-swiper-nav {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .keyshop-product-carousel .keyshop-swiper-nav {
+    display: flex;
+  }
+}
+
 @media (min-width: 640px) {
   .keyshop-product-carousel {
     min-height: 30rem;

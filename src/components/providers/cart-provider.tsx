@@ -29,6 +29,7 @@ import {
   resolvePurchaseVariant,
 } from "@/lib/utils/product-schema";
 import { getAddToCartErrorMessage } from "@/lib/utils/order-errors";
+import { getToastErrorMessage } from "@/lib/utils/toast-error";
 import { getAccessToken } from "@/lib/api/client";
 import { useCartUi } from "@/components/providers/cart-ui-provider";
 import { useWishlistCompare } from "@/components/providers/wishlist-compare-provider";
@@ -235,9 +236,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
           toast.success("Đã thêm vào giỏ");
           return true;
         } catch (error) {
-          toast.error(
-            error instanceof Error ? error.message : "Không thể thêm vào giỏ",
-          );
+          toast.error(getToastErrorMessage(error, "Không thể thêm vào giỏ"));
           return false;
         }
       }
@@ -286,9 +285,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
           const items = await cartService.removeFromCart(productId, variant);
           setCartItems(items);
         } catch (error) {
-          toast.error(
-            error instanceof Error ? error.message : "Không thể cập nhật giỏ hàng",
-          );
+          toast.error(getToastErrorMessage(error, "Không thể cập nhật giỏ hàng"));
         }
         return;
       }
@@ -323,9 +320,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
           );
           setCartItems(items);
         } catch (error) {
-          toast.error(
-            error instanceof Error ? error.message : "Không thể cập nhật giỏ hàng",
-          );
+          toast.error(getToastErrorMessage(error, "Không thể cập nhật giỏ hàng"));
         }
         return;
       }
